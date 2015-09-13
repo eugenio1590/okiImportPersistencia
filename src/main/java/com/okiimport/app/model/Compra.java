@@ -1,0 +1,189 @@
+package com.okiimport.app.model;
+
+import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import com.okiimport.app.resource.model.AbstractEntity;
+
+/**
+ * The persistent class for the compra database table.
+ * 
+ */
+@Entity
+@Table(name="compra")
+@NamedQuery(name="Compra.findAll", query="SELECT c FROM Compra c")
+@JsonIgnoreProperties({"detalleOfertas"})
+public class Compra extends AbstractEntity implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="compra_id_seq")
+	@SequenceGenerator(name="compra_id_seq", sequenceName="compra_id_seq", initialValue=1, allocationSize=1)
+	@Column(name="id_compra")
+	private Integer idCompra;
+	
+	@Column(name="fecha_creacion")
+	private Timestamp fechaCreacion;
+	
+	@Column(name="precio_venta")
+	private Float precioVenta;
+	
+	@Column(name="precio_flete")
+	private Float precioFlete;
+	
+	@Column(name="tipo_flete")
+	private Boolean tipoFlete;
+	
+	private String observacion;
+	
+	private String estatus;
+	
+	//bi-directional one-to-one association to FormaPago
+	@OneToOne(mappedBy="compra")
+	private PagoCompra pagoCompra;
+	
+	//bi-directional many-to-one association to Requerimiento
+	@ManyToOne
+	@JoinColumn(name="id_requerimiento")
+	private Requerimiento requerimiento;
+	
+	//bi-directional many-to-one association to HistoricoMoneda
+	@ManyToOne
+	@JoinColumn(name="id_historico_moneda")
+	private HistoricoMoneda historicoMoneda;
+	
+	//bi-directional one-to-many association to DetalleOferta
+	@OneToMany(mappedBy="compra", fetch=FetchType.LAZY)
+	private List<DetalleOferta> detalleOfertas;
+
+	public Compra() {
+	}
+	
+	public Compra(Requerimiento requerimiento, Date fechaCreacion){
+		this.requerimiento = requerimiento;
+		this.fechaCreacion = new Timestamp(fechaCreacion.getTime());
+	}
+
+	public Integer getIdCompra() {
+		return idCompra;
+	}
+
+	public void setIdCompra(Integer idCompra) {
+		this.idCompra = idCompra;
+	}
+
+	public Timestamp getFechaCreacion() {
+		return fechaCreacion;
+	}
+
+	public void setFechaCreacion(Timestamp fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
+	}
+
+	public Float getPrecioVenta() {
+		return precioVenta;
+	}
+
+	public void setPrecioVenta(Float precioVenta) {
+		this.precioVenta = precioVenta;
+	}
+
+	public Float getPrecioFlete() {
+		return precioFlete;
+	}
+
+	public void setPrecioFlete(Float precioFlete) {
+		this.precioFlete = precioFlete;
+	}
+	
+	public Boolean getTipoFlete() {
+		return tipoFlete;
+	}
+
+	public void setTipoFlete(Boolean tipoFlete) {
+		this.tipoFlete = tipoFlete;
+	}
+
+	public String getObservacion() {
+		return observacion;
+	}
+
+	public void setObservacion(String observacion) {
+		this.observacion = observacion;
+	}
+
+	public String getEstatus() {
+		return estatus;
+	}
+
+	public void setEstatus(String estatus) {
+		this.estatus = estatus;
+	}
+
+	public PagoCompra getPagoCompra() {
+		return pagoCompra;
+	}
+
+	public void setPagoCompra(PagoCompra pagoCompra) {
+		this.pagoCompra = pagoCompra;
+	}
+
+	public Requerimiento getRequerimiento() {
+		return requerimiento;
+	}
+
+	public void setRequerimiento(Requerimiento requerimiento) {
+		this.requerimiento = requerimiento;
+	}
+
+	public HistoricoMoneda getHistoricoMoneda() {
+		return historicoMoneda;
+	}
+
+	public void setHistoricoMoneda(HistoricoMoneda historicoMoneda) {
+		this.historicoMoneda = historicoMoneda;
+	}
+
+	public List<DetalleOferta> getDetalleOfertas() {
+		return detalleOfertas;
+	}
+
+	public void setDetalleOfertas(List<DetalleOferta> detalleOfertas) {
+		this.detalleOfertas = detalleOfertas;
+	}
+	
+	public DetalleOferta addDetalleOferta(DetalleOferta detalleOferta){
+		getDetalleOfertas().add(detalleOferta);
+		detalleOferta.setCompra(this);
+		
+		return detalleOferta;
+	}
+	
+	public DetalleOferta removeDetalleOferta(DetalleOferta detalleOferta){
+		getDetalleOfertas().remove(detalleOferta);
+		detalleOferta.setCompra(null);
+		
+		return detalleOferta;
+	}
+
+	/**METODOS PROPIOS DE LA CLASE*/
+	public String determinarEstatus(){
+		return null;
+	}
+	
+	public Float calcularTotal(){
+		float total = 0;
+		if ( detalleOfertas != null && !detalleOfertas.isEmpty()){
+			for(DetalleOferta detalleOferta : detalleOfertas){
+				total = total + detalleOferta.calcularPrecioVenta();
+			}
+		}
+		return total;
+	}
+}

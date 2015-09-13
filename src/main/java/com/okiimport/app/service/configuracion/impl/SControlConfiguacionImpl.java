@@ -1,0 +1,73 @@
+package com.okiimport.app.service.configuracion.impl;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+
+import com.okiimport.app.dao.configuracion.ConfiguracionRepository;
+import com.okiimport.app.dao.configuracion.HistoricoMonedaRepository;
+import com.okiimport.app.dao.configuracion.MonedaRepository;
+import com.okiimport.app.dao.configuracion.impl.HistoricoMonedaDAO;
+import com.okiimport.app.dao.configuracion.impl.MonedaDAO;
+import com.okiimport.app.resource.service.AbstractServiceImpl;
+import com.okiimport.app.service.configuracion.SControlConfiguracion;
+import com.okiimport.app.model.Configuracion;
+import com.okiimport.app.model.HistoricoMoneda;
+import com.okiimport.app.model.Moneda;
+
+@Service
+public class SControlConfiguacionImpl extends AbstractServiceImpl implements SControlConfiguracion {
+
+	@Autowired
+	private MonedaRepository monedaRepository;
+	
+	@Autowired
+	private HistoricoMonedaRepository historicoMonedaRepository;
+	
+	@Autowired
+	private ConfiguracionRepository configuracionRepository;
+	
+	public SControlConfiguacionImpl() {
+	}
+	
+	//Configuracion
+	public Configuracion consultarConfiguracionActual() {
+		Page<Configuracion> configuraciones = configuracionRepository.findAll(new PageRequest(0, 1));
+		return configuraciones.getContent().get(0);
+	}
+
+	//Historico de Moneda
+	public Map<String, Object> consultarMonedasConHistorico(int page, int limite) {
+		Map<String, Object> parametros = new HashMap<String, Object>();
+		Integer total = 0;
+		List<Moneda> monedas = null;
+		if(limite > 0){
+			Specification<Moneda> specfMoneda = (new MonedaDAO()).consultarMonedasConHistorico("activo");
+			Page<Moneda> pageMoneda = this.monedaRepository.findAll(specfMoneda, new PageRequest(page, limite));
+			total = Long.valueOf(pageMoneda.getTotalElements()).intValue();
+			monedas = pageMoneda.getContent();
+		}
+		else {
+			total = Long.valueOf(this.monedaRepository.count()).intValue();
+			monedas = monedaRepository.findAll();
+		}
+		parametros.put("total", total);
+		parametros.put("monedas", monedas);
+		return parametros;
+	}
+	
+	public HistoricoMoneda consultarActualConversion(Moneda moneda) {
+		Integer idMoneda = moneda.getIdMoneda();
+		Specification<HistoricoMoneda> specfHistoricoMoneda = (new HistoricoMonedaDAO()).consultarActualConversion(idMoneda);
+		List<HistoricoMoneda> historicoMonedas = this.historicoMonedaRepository.findAll(specfHistoricoMoneda);
+		if(historicoMonedas!=null && !historicoMonedas.isEmpty())
+			return historicoMonedas.get(0);
+		return null;
+	}
+}
