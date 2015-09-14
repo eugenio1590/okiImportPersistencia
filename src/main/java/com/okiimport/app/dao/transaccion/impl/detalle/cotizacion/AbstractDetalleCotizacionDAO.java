@@ -23,11 +23,10 @@ import com.okiimport.app.resource.dao.AbstractJpaDao;
 public abstract class AbstractDetalleCotizacionDAO<T extends DetalleCotizacion> extends AbstractJpaDao<T> {
 
 	public Specification<T> consultarDetallesCotizacion(final DetalleCotizacion detalleF, 
-			final Integer idCotizacion, final Integer idRequerimiento, final boolean distinct,  final boolean cantExacta, 
-			final String fieldSort, final Boolean sortDirection){
+			final Integer idCotizacion, final Integer idRequerimiento, final boolean distinct,  final boolean cantExacta){
 		return new Specification<T>(){
 			public Predicate toPredicate(Root<T> entity, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-				//1. Inicializar Variables
+				// 1. Inicializar Variables
 				inicializar(entity, criteriaQuery, criteriaBuilder);
 				
 				// 2. Generamos los Joins
@@ -36,7 +35,7 @@ public abstract class AbstractDetalleCotizacionDAO<T extends DetalleCotizacion> 
 				entidades.put("detalleRequerimiento", JoinType.INNER);
 				Map<String, Join<?,?>> joins = crearJoins(entidades);
 				
-				//3. Creamos los campos a seleccionar
+				// 3. Creamos los campos a seleccionar
 				if(distinct){
 					criteriaQuery = criteriaBuilder.createTupleQuery();
 					criteriaQuery.multiselect(new Selection[]{
@@ -50,7 +49,7 @@ public abstract class AbstractDetalleCotizacionDAO<T extends DetalleCotizacion> 
 					}).distinct(distinct);
 				}
 				
-				//4. Creamos las Restricciones de la busqueda
+				// 4. Creamos las Restricciones de la busqueda
 				List<Predicate> restricciones = new ArrayList<Predicate>();
 				
 				agregarRestricciones(detalleF, restricciones, joins, cantExacta);
@@ -64,14 +63,9 @@ public abstract class AbstractDetalleCotizacionDAO<T extends DetalleCotizacion> 
 					restricciones.add(criteriaBuilder.equal(
 							joins.get("detalleRequerimiento").join("requerimiento").get("idRequerimiento"), 
 							idRequerimiento));
-				// 4. Creamos los campos de ordenamiento y ejecutamos
-				Map<String, Boolean> orders = new HashMap<String, Boolean>();
-				if(fieldSort!=null && sortDirection!=null)
-					orders.put(fieldSort, sortDirection);
-				else
-					orders.put("idDetalleCotizacion", true);
 				
-				return crearPredicate(restricciones, orders);
+				// 5. Ejecutamos
+				return crearPredicate(restricciones);
 			}
 			
 		};

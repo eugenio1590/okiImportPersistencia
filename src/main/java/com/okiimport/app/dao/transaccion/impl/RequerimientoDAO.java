@@ -7,24 +7,22 @@ import java.util.Map;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Selection;
 
 import org.springframework.data.jpa.domain.Specification;
 
-import com.okiimport.app.model.Requerimiento;
 import com.okiimport.app.model.Cliente;
 import com.okiimport.app.model.MarcaVehiculo;
+import com.okiimport.app.model.Requerimiento;
 import com.okiimport.app.resource.dao.AbstractJpaDao;
 
 public class RequerimientoDAO extends AbstractJpaDao<Requerimiento> {
 	
-	public Specification<Requerimiento> consultarRequerimientosGeneral(final Requerimiento regFiltro, final String fieldSort, final Boolean sortDirection){
+	public Specification<Requerimiento> consultarRequerimientosGeneral(final Requerimiento regFiltro){
 		return new Specification<Requerimiento>(){
 
 			public Predicate toPredicate(Root<Requerimiento> entity, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
@@ -42,49 +40,27 @@ public class RequerimientoDAO extends AbstractJpaDao<Requerimiento> {
 				
 				agregarRestriccionesFiltros(restricciones, regFiltro, joins);
 				
-				//4. Creamos los campos de ordenamiento y ejecutamos
-				List<Order> orders = new ArrayList<Order>();
-
-				if (fieldSort != null && sortDirection != null) {
-					if (fieldSort.equalsIgnoreCase("nombre"))
-						orders.add((sortDirection) ? criteriaBuilder.asc(joins
-								.get("cliente").get("nombre")) : criteriaBuilder
-								.desc(joins.get("cliente").get("nombre")));
-					else
-						orders.add((sortDirection) ? criteriaBuilder
-								.asc(entity.get(fieldSort)) : criteriaBuilder
-								.desc(entity.get(fieldSort)));
-
-				}
-				else
-					orders.add(criteriaBuilder.asc(entity.get("idRequerimiento")));
-				
-				criteriaQuery.orderBy(orders);
-				
-				List<Expression<?>> groupBy = new ArrayList<Expression<?>>();
-				 groupBy.add(entity.get("idRequerimiento"));
-				
-				return crearPredicate(restricciones, groupBy);
+				//4. Ejecutamos
+				return crearPredicate(restricciones);
 			}
 			
 		};
 	};
 
-	public Specification<Requerimiento> consultarRequerimientoUsuario(
-			final Requerimiento regFiltro, final String fieldSort, final Boolean sortDirection,
-			final Integer idusuario, final List<String> estatus) {
+	public Specification<Requerimiento> consultarRequerimientoUsuario(final Requerimiento regFiltro, final Integer idusuario, 
+			final List<String> estatus) {
 		return new Specification<Requerimiento>(){
 			public Predicate toPredicate(Root<Requerimiento> entity, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-				//1. Inicializar Variables
+				// 1. Inicializar Variables
 				inicializar(entity, criteriaQuery, criteriaBuilder);
 				
-				//2. Generamos los Joins
+				// 2. Generamos los Joins
 				Map<String, JoinType> entidades = new HashMap<String, JoinType>();
 				entidades.put("analista", JoinType.INNER);
 				entidades.put("cliente", JoinType.INNER);
 				Map<String, Join<?,?>> joins = crearJoins(entidades);
 				
-				//3. Creamos las Restricciones de la busqueda
+				// 3. Creamos las Restricciones de la busqueda
 				List<Predicate> restricciones = new ArrayList<Predicate>();
 
 				agregarRestriccionesFiltros(restricciones, regFiltro, joins);
@@ -95,32 +71,13 @@ public class RequerimientoDAO extends AbstractJpaDao<Requerimiento> {
 				if(estatus!=null && !estatus.isEmpty())
 					restricciones.add(entity.get("estatus").in(estatus));
 								
-				//4. Creamos los campos de ordenamiento y ejecutamos
-				List<Order> orders = new ArrayList<Order>();
-
-				if (fieldSort != null && sortDirection != null) {
-					if (fieldSort.equalsIgnoreCase("nombre"))
-						orders.add((sortDirection) ? criteriaBuilder.asc(joins
-								.get("cliente").get("nombre")) : criteriaBuilder
-								.desc(joins.get("cliente").get("nombre")));
-					else
-						orders.add((sortDirection) ? criteriaBuilder
-								.asc(entity.get(fieldSort)) : criteriaBuilder
-								.desc(entity.get(fieldSort)));
-
-				}
-				else
-					orders.add(criteriaBuilder.asc(entity.get("idRequerimiento")));
-				
-				criteriaQuery.orderBy(orders);
-				
+				// 4. Ejecutamos				
 				return crearPredicate(restricciones);
 			}
 		};
 	}
 	
-	public Specification<Requerimiento> consultarRequerimientosCliente(final Requerimiento regFiltro, 
-			final String fieldSort, final Boolean sortDirection, final String cedula){
+	public Specification<Requerimiento> consultarRequerimientosCliente(final Requerimiento regFiltro, final String cedula){
 		return new Specification<Requerimiento>(){
 			public Predicate toPredicate(Root<Requerimiento> entity, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
 				//1. Inicializar Variables
@@ -139,18 +96,13 @@ public class RequerimientoDAO extends AbstractJpaDao<Requerimiento> {
 				restricciones.add(criteriaBuilder.equal(
 						joins.get("cliente").get("cedula"), cedula));
 								
-				//4. Creamos los campos de ordenamiento y ejecutamos
-				Map<String, Boolean> orders = new HashMap<String, Boolean>();
-				orders.put("fechaCreacion", false); // true ascendente
-				orders.put("idRequerimiento", true);
-				
-				return crearPredicate(restricciones, orders);
+				//4. Ejecutamos
+				return crearPredicate(restricciones);
 			}
 		};
 	}
 	
-	public Specification<Requerimiento> consultarRequerimientosCotizados(final Requerimiento regFiltro, 
-			final String fieldSort, final Boolean sortDirection, final Integer idusuario){
+	public Specification<Requerimiento> consultarRequerimientosCotizados(final Requerimiento regFiltro, final Integer idusuario){
 		return new Specification<Requerimiento>(){
 			public Predicate toPredicate(Root<Requerimiento> entity, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
 				//1. Inicializar Variables
@@ -171,32 +123,14 @@ public class RequerimientoDAO extends AbstractJpaDao<Requerimiento> {
 						joins.get("analista").get("id"), idusuario));
 				restricciones.add(criteriaBuilder.equal(entity.get("estatus"), "CT"));
 
-				// 4. Creamos los campos de ordenamiento y ejecutamos
-				List<Order> orders = new ArrayList<Order>();
-
-				if (fieldSort != null && sortDirection != null) {
-					if (fieldSort.equalsIgnoreCase("nombre"))
-						orders.add((sortDirection) ? criteriaBuilder.asc(joins
-								.get("cliente").get("nombre")) : criteriaBuilder
-								.desc(joins.get("cliente").get("nombre")));
-					else
-						orders.add((sortDirection) ? criteriaBuilder
-								.asc(entity.get(fieldSort)) : criteriaBuilder
-								.desc(entity.get(fieldSort)));
-
-				}
-				else
-					orders.add(criteriaBuilder.asc(entity.get("idRequerimiento")));
-				
-				criteriaQuery.orderBy(orders);
-				
+				// 4. Ejecutamos				
 				return crearPredicate(restricciones);
 			}
 		};
 	}
 	
 	public Specification<Requerimiento> consultarRequerimientosConSolicitudesCotizacion(final Requerimiento regFiltro, 
-			final String fieldSort, final Boolean sortDirection, final Integer idProveedor, final List<String> estatus){
+			final Integer idProveedor, final List<String> estatus){
 		return new Specification<Requerimiento>(){
 			public Predicate toPredicate(Root<Requerimiento> entity, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
 				//1. Inicializar Variables
@@ -240,24 +174,7 @@ public class RequerimientoDAO extends AbstractJpaDao<Requerimiento> {
 				restricciones.add(criteriaBuilder.equal(joinCotizacion.get("estatus"), "SC"));
 				restricciones.add(criteriaBuilder.not(entity.get("estatus").in(estatus)));
 				
-				//4. Creamos los campos de ordenamiento y ejecutamos
-				List<Order> orders = new ArrayList<Order>();
-
-				if (fieldSort != null && sortDirection != null) {
-					if (fieldSort.equalsIgnoreCase("nombre"))
-						orders.add((sortDirection) ? criteriaBuilder.asc(joins
-								.get("cliente").get("nombre")) : criteriaBuilder
-								.desc(joins.get("cliente").get("nombre")));
-					else
-						orders.add((sortDirection) ? criteriaBuilder
-								.asc(entity.get(fieldSort)) : criteriaBuilder
-								.desc(entity.get(fieldSort)));
-				}
-				else
-					orders.add(criteriaBuilder.asc(entity.get("idRequerimiento")));
-				
-				criteriaQuery.orderBy(orders);
-				
+				//4. Ejecutamos
 				return crearPredicate(restricciones);
 			}
 		};

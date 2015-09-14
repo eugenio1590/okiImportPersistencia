@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -47,15 +48,16 @@ public class SControlConfiguacionImpl extends AbstractServiceImpl implements SCo
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		Integer total = 0;
 		List<Moneda> monedas = null;
+		Sort sortMoneda = new Sort(getDirection(true, null), "idMoneda");
+		Specification<Moneda> specfMoneda = (new MonedaDAO()).consultarMonedasConHistorico("activo");
 		if(limite > 0){
-			Specification<Moneda> specfMoneda = (new MonedaDAO()).consultarMonedasConHistorico("activo");
-			Page<Moneda> pageMoneda = this.monedaRepository.findAll(specfMoneda, new PageRequest(page, limite));
+			Page<Moneda> pageMoneda = this.monedaRepository.findAll(specfMoneda, new PageRequest(page, limite, sortMoneda));
 			total = Long.valueOf(pageMoneda.getTotalElements()).intValue();
 			monedas = pageMoneda.getContent();
 		}
 		else {
-			total = Long.valueOf(this.monedaRepository.count()).intValue();
-			monedas = monedaRepository.findAll();
+			monedas = monedaRepository.findAll(specfMoneda, sortMoneda);
+			total = monedas.size();
 		}
 		parametros.put("total", total);
 		parametros.put("monedas", monedas);
@@ -64,8 +66,10 @@ public class SControlConfiguacionImpl extends AbstractServiceImpl implements SCo
 	
 	public HistoricoMoneda consultarActualConversion(Moneda moneda) {
 		Integer idMoneda = moneda.getIdMoneda();
+		Sort sortHistoricoMoneda = new Sort(getDirection(false, null), "fechaCreacion")
+											.and(new Sort(getDirection(true, null), "idHistoria"));
 		Specification<HistoricoMoneda> specfHistoricoMoneda = (new HistoricoMonedaDAO()).consultarActualConversion(idMoneda);
-		List<HistoricoMoneda> historicoMonedas = this.historicoMonedaRepository.findAll(specfHistoricoMoneda);
+		List<HistoricoMoneda> historicoMonedas = this.historicoMonedaRepository.findAll(specfHistoricoMoneda, sortHistoricoMoneda);
 		if(historicoMonedas!=null && !historicoMonedas.isEmpty())
 			return historicoMonedas.get(0);
 		return null;
