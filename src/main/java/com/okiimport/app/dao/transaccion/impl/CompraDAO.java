@@ -19,8 +19,7 @@ import com.okiimport.app.resource.dao.AbstractJpaDao;
 
 public class CompraDAO extends AbstractJpaDao<Compra> {
 
-	public Specification<Compra> consultarComprasPorRequerimiento(final Compra compraF, final int idRequerimiento, 
-			final String fieldSort, final Boolean sortDirection){
+	public Specification<Compra> consultarComprasPorRequerimiento(final Compra compraF, final int idRequerimiento){
 		return new Specification<Compra>(){
 			public Predicate toPredicate(Root<Compra> entity, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
 				//1. Inicializar Variables
@@ -41,14 +40,8 @@ public class CompraDAO extends AbstractJpaDao<Compra> {
 				
 				agregarFiltros(compraF, restricciones);
 				
-				// 4. Creamos los campos de ordenamiento y ejecutamos
-				Map<String, Boolean> orders = new HashMap<String, Boolean>();
-				if(fieldSort!=null && sortDirection!=null)
-					orders.put(fieldSort, sortDirection);
-				else
-					orders.put("idCompra", true);
-				
-				return crearPredicate(restricciones, orders);
+				// 4. Ejecutamos				
+				return crearPredicate(restricciones);
 			}
 		};
 	}

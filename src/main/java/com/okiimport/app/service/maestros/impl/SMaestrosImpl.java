@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
 import com.okiimport.app.dao.maestros.AnalistaRepository;
@@ -147,8 +148,9 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 	}
 	
 	public Cliente consultarCliente(Cliente cliente) {
+		Sort sortCliente = new Sort(Sort.Direction.ASC, "id");
 		Specification<Cliente> specfCliente = (new ClienteDAO()).consultarPersona(cliente);
-		List<Cliente> clientes = this.clienteRepository.findAll(specfCliente);
+		List<Cliente> clientes = this.clienteRepository.findAll(specfCliente, sortCliente);
 		if(clientes!=null && clientes.size()>0)
 			return clientes.get(0);
 		return null;
@@ -160,14 +162,15 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		Integer total = 0;
 		List<Analista> analistas = null;
-		Specification<Analista> specfAnalista = (new AnalistaDAO()).consultarAnalistasSinUsuarios(personaF, fieldSort, sortDirection);
+		Sort sortAnalista = new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "id"));
+		Specification<Analista> specfAnalista = (new AnalistaDAO()).consultarAnalistasSinUsuarios(personaF);
 		if(limit>0){
-			Page<Analista> pageAnalista = this.analistaRepository.findAll(specfAnalista, new PageRequest(pagina, limit));
+			Page<Analista> pageAnalista = this.analistaRepository.findAll(specfAnalista, new PageRequest(pagina, limit, sortAnalista));
 			total = Long.valueOf(pageAnalista.getTotalElements()).intValue();
 			analistas = pageAnalista.getContent();
 		}
 		else {
-			analistas = this.analistaRepository.findAll(specfAnalista);
+			analistas = this.analistaRepository.findAll(specfAnalista, sortAnalista);
 			total = analistas.size();
 		}
 		parametros.put("total", total);
@@ -180,14 +183,16 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		Integer total = 0;
 		List<Analista> analistas = null;
-		Specification<Analista> specfAnalista = (new AnalistaDAO()).consultarAdministradoresSinUsuarios(personaF, fieldSort, sortDirection);
+		Sort sortAnalista = new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "id"));
+		Specification<Analista> specfAnalista = (new AnalistaDAO()).consultarAdministradoresSinUsuarios(personaF);
 		if(limit>0){
-			Page<Analista> pageAnalista = this.analistaRepository.findAll(specfAnalista, new PageRequest(page, limit));
+			Page<Analista> pageAnalista = this.analistaRepository
+					.findAll(specfAnalista, new PageRequest(page, limit, sortAnalista));
 			total = Long.valueOf(pageAnalista.getTotalElements()).intValue();
 			analistas = pageAnalista.getContent();
 		}
 		else {
-			analistas = this.analistaRepository.findAll(specfAnalista);
+			analistas = this.analistaRepository.findAll(specfAnalista, sortAnalista);
 			total = analistas.size();
 		}
 		parametros.put("total", total);
@@ -209,15 +214,17 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		Integer total = 0;
 		List<Analista> analistas = null;
+		Sort sortAnalista = new Sort(Sort.Direction.ASC, "id");
 		Specification<Analista> specfAnalista = (new AnalistaDAO()).consultarPersona(analista);
 		
 		if(limit>0){
-			Page<Analista> pageAnalista = this.analistaRepository.findAll(specfAnalista, new PageRequest(page, limit));
+			Page<Analista> pageAnalista = this.analistaRepository
+					.findAll(specfAnalista, new PageRequest(page, limit, sortAnalista));
 			total = Long.valueOf(pageAnalista.getTotalElements()).intValue();
 			analistas = pageAnalista.getContent();
 		}
 		else {
-			analistas = this.analistaRepository.findAll(specfAnalista);
+			analistas = this.analistaRepository.findAll(specfAnalista, sortAnalista);
 			total = analistas.size();
 		}
 		parametros.put("total", total);
@@ -235,15 +242,16 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		Integer total = 0;
 		List<Proveedor> proveedores = null;
-		Specification<Proveedor> specfProveedro = 
-				(new ProveedorDAO()).consultarProveedoresSinUsuarios(personaF, fieldSort, sortDirection);
+		Sort sortProveedor = new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "id"));
+		Specification<Proveedor> specfProveedro = (new ProveedorDAO()).consultarProveedoresSinUsuarios(personaF);
 		if(limit>0){
-			Page<Proveedor> pageProveedor = this.proveedorRepository.findAll(specfProveedro, new PageRequest(page, limit));
+			Page<Proveedor> pageProveedor = this.proveedorRepository
+					.findAll(specfProveedro, new PageRequest(page, limit, sortProveedor));
 			total = Long.valueOf(pageProveedor.getTotalElements()).intValue();
 			proveedores = pageProveedor.getContent();
 		}
 		else {
-			proveedores = this.proveedorRepository.findAll(specfProveedro);
+			proveedores = this.proveedorRepository.findAll(specfProveedro, sortProveedor);
 			total = proveedores.size();
 		}
 		parametros.put("total", total);
@@ -265,14 +273,17 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		Integer total = 0;
 		List<Proveedor> proveedores = null;
-		Specification<Proveedor> specfProveedor = (new ProveedorDAO()).consultarProveedoresListaClasificacionRepuesto(persona, fieldSort, sortDirection, idRequerimiento, idsClasificacionRepuesto);
+		Sort sortProveedor = new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "id"));
+		Specification<Proveedor> specfProveedor = (new ProveedorDAO())
+				.consultarProveedoresListaClasificacionRepuesto(persona, idRequerimiento, idsClasificacionRepuesto);
 		if(limit>0){
-			Page<Proveedor> pageProveedor = this.proveedorRepository.findAll(specfProveedor, new PageRequest(page, limit));
+			Page<Proveedor> pageProveedor = this.proveedorRepository
+					.findAll(specfProveedor, new PageRequest(page, limit, sortProveedor));
 			total = Long.valueOf(pageProveedor.getTotalElements()).intValue();
 			proveedores = pageProveedor.getContent();
 		}
 		else {
-			proveedores = this.proveedorRepository.findAll(specfProveedor);
+			proveedores = this.proveedorRepository.findAll(specfProveedor, sortProveedor);
 			total = proveedores.size();
 		}
 		parametros.put("total", total);
@@ -284,14 +295,16 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		Integer total = 0;
 		List<Proveedor> proveedores = null;
+		Sort sortProveedor = new Sort(Sort.Direction.ASC, "id");
 		Specification<Proveedor> specfProveedor = (new ProveedorDAO()).consultarPersona(proveedor);
 		if(limit>0){
-			Page<Proveedor> pageProveedor = this.proveedorRepository.findAll(specfProveedor, new PageRequest(page, limit));
+			Page<Proveedor> pageProveedor = this.proveedorRepository
+					.findAll(specfProveedor, new PageRequest(page, limit, sortProveedor));
 			total = Long.valueOf(pageProveedor.getTotalElements()).intValue();
 			proveedores = pageProveedor.getContent();
 		}
 		else {
-			proveedores = this.proveedorRepository.findAll(specfProveedor);
+			proveedores = this.proveedorRepository.findAll(specfProveedor, sortProveedor);
 			total = proveedores.size();
 		}
 		parametros.put("total", total);
@@ -304,14 +317,17 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		Integer total = 0;
 		List<Proveedor> proveedores = null;
-		Specification<Proveedor> specfProveedor = (new ProveedorDAO()).consultarProveedoresConSolicitudCotizaciones(proveedor, idRequerimiento, fieldSort, sortDirection);
+		Sort sortProveedor = new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "id"));
+		Specification<Proveedor> specfProveedor = (new ProveedorDAO())
+				.consultarProveedoresConSolicitudCotizaciones(proveedor, idRequerimiento);
 		if(limit>0){
-			Page<Proveedor> pageProveedor = this.proveedorRepository.findAll(specfProveedor, new PageRequest(page, limit));
+			Page<Proveedor> pageProveedor = this.proveedorRepository
+					.findAll(specfProveedor, new PageRequest(page, limit, sortProveedor));
 			total = Long.valueOf(pageProveedor.getTotalElements()).intValue();
 			proveedores = pageProveedor.getContent();
 		}
 		else {
-			proveedores = this.proveedorRepository.findAll(specfProveedor);
+			proveedores = this.proveedorRepository.findAll(specfProveedor, sortProveedor);
 			total = proveedores.size();
 		}
 		parametros.put("total", total);
@@ -325,7 +341,8 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 		Integer total = 0;
 		List<ClasificacionRepuesto> clasfRepuestos = null;
 		if(limit>0){
-			Page<ClasificacionRepuesto> pageClasfRepuesto = this.clasificacionRepuestoRepository.findAll(new PageRequest(page, limit));
+			Page<ClasificacionRepuesto> pageClasfRepuesto = this.clasificacionRepuestoRepository
+					.findAll(new PageRequest(page, limit));
 			total = Long.valueOf(pageClasfRepuesto.getTotalElements()).intValue();
 			clasfRepuestos = pageClasfRepuesto.getContent();
 		}

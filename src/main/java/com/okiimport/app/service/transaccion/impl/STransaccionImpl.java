@@ -33,7 +33,6 @@ import com.okiimport.app.model.Oferta;
 import com.okiimport.app.model.Requerimiento;
 import com.okiimport.app.resource.service.AbstractServiceImpl;
 
-
 public class STransaccionImpl extends AbstractServiceImpl implements STransaccion {
 	
 	private static List<String> ESTATUS_EMITIDOS;
@@ -129,14 +128,17 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		Map<String, Object> parametros= new HashMap<String, Object>();
 		Integer total = 0;
 		List<Requerimiento> requerimientos = null;
-		Specification<Requerimiento> specfRequerimiento = (new RequerimientoDAO()).consultarRequerimientosGeneral(regFiltro, fieldSort, sortDirection);
+		Sort sortRequerimiento 
+			= new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idRequerimiento"));
+		Specification<Requerimiento> specfRequerimiento = (new RequerimientoDAO()).consultarRequerimientosGeneral(regFiltro);
 		if(limit>0){
-			Page<Requerimiento> pageRequerimiento = this.requerimientoRepository.findAll(specfRequerimiento, new PageRequest(page, limit));
+			Page<Requerimiento> pageRequerimiento = this.requerimientoRepository
+					.findAll(specfRequerimiento, new PageRequest(page, limit, sortRequerimiento));
 			total = Long.valueOf(pageRequerimiento.getTotalElements()).intValue();
 			requerimientos = pageRequerimiento.getContent();
 		}
 		else {
-			requerimientos = this.requerimientoRepository.findAll(specfRequerimiento);
+			requerimientos = this.requerimientoRepository.findAll(specfRequerimiento, sortRequerimiento);
 			total = requerimientos.size();
 		}
 		parametros.put("total", total);
@@ -149,15 +151,18 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		Map<String, Object> parametros= new HashMap<String, Object>();
 		Integer total = 0;
 		List<Requerimiento> requerimientos = null;
+		Sort sortRequerimiento 
+			= new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idRequerimiento"));
 		Specification<Requerimiento> specfRequerimiento = (new RequerimientoDAO())
-				.consultarRequerimientoUsuario(regFiltro, fieldSort, sortDirection, idusuario, ESTATUS_EMITIDOS);
+				.consultarRequerimientoUsuario(regFiltro, idusuario, ESTATUS_EMITIDOS);
 		if(limit>0){
-			Page<Requerimiento> pageRequerimiento = this.requerimientoRepository.findAll(specfRequerimiento, new PageRequest(page, limit));
+			Page<Requerimiento> pageRequerimiento = this.requerimientoRepository
+					.findAll(specfRequerimiento, new PageRequest(page, limit, sortRequerimiento));
 			total = Long.valueOf(pageRequerimiento.getTotalElements()).intValue();
 			requerimientos = pageRequerimiento.getContent();
 		}
 		else {
-			requerimientos = this.requerimientoRepository.findAll(specfRequerimiento);
+			requerimientos = this.requerimientoRepository.findAll(specfRequerimiento, sortRequerimiento);
 			total = requerimientos.size();
 		}
 		parametros.put("total", total);
@@ -170,15 +175,18 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		Map<String, Object> parametros= new HashMap<String, Object>();
 		Integer total = 0;
 		List<Requerimiento> requerimientos = null;
+		Sort sortRequerimiento 
+			= new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idRequerimiento"));
 		Specification<Requerimiento> specfRequerimiento = (new RequerimientoDAO())
-				.consultarRequerimientoUsuario(regFiltro, fieldSort, sortDirection, idusuario, ESTATUS_PROCESADOS);
+				.consultarRequerimientoUsuario(regFiltro, idusuario, ESTATUS_PROCESADOS);
 		if(limit>0){
-			Page<Requerimiento> pageRequerimiento = this.requerimientoRepository.findAll(specfRequerimiento, new PageRequest(page, limit));
+			Page<Requerimiento> pageRequerimiento = this.requerimientoRepository
+					.findAll(specfRequerimiento, new PageRequest(page, limit, sortRequerimiento));
 			total = Long.valueOf(pageRequerimiento.getTotalElements()).intValue();
 			requerimientos = pageRequerimiento.getContent();
 		}
 		else {
-			requerimientos = this.requerimientoRepository.findAll(specfRequerimiento);
+			requerimientos = this.requerimientoRepository.findAll(specfRequerimiento, sortRequerimiento);
 			total = requerimientos.size();
 		}
 		parametros.put("total", total);
@@ -191,21 +199,24 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		Map<String, Object> parametros= new HashMap<String, Object>();
 		Integer total = 0, nroOfertas = 0;
 		List<Requerimiento> requerimientos = null;
+		Sort sortRequerimiento 
+			= new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idRequerimiento"));
 		Specification<Requerimiento> specfRequerimiento = (new RequerimientoDAO())
-				.consultarRequerimientoUsuario(regFiltro, fieldSort, sortDirection, idusuario, ESTATUS_OFERTADOS);
+				.consultarRequerimientoUsuario(regFiltro, idusuario, ESTATUS_OFERTADOS);
 		
 		if(limit>0){
-			Page<Requerimiento> pageRequerimiento = this.requerimientoRepository.findAll(specfRequerimiento, new PageRequest(page, limit));
+			Page<Requerimiento> pageRequerimiento = this.requerimientoRepository
+					.findAll(specfRequerimiento, new PageRequest(page, limit, sortRequerimiento));
 			total = Long.valueOf(pageRequerimiento.getTotalElements()).intValue();
 			requerimientos = pageRequerimiento.getContent();
 		}
 		else {
-			requerimientos = this.requerimientoRepository.findAll(specfRequerimiento);
+			requerimientos = this.requerimientoRepository.findAll(specfRequerimiento, sortRequerimiento);
 			total = requerimientos.size();
 		}
 		
 		for(Requerimiento requerimiento : requerimientos){
-			nroOfertas = (Integer) this.consultarOfertasPorRequerimiento(requerimiento.getIdRequerimiento(), null, null, 0, 1).get("total");
+			nroOfertas = (Integer) consultarOfertasPorRequerimiento(requerimiento.getIdRequerimiento(), null, null, 0, 1).get("total");
 			requerimiento.setNroOfertas(nroOfertas);
 		}
 		
@@ -219,16 +230,20 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		Map<String, Object> parametros= new HashMap<String, Object>();
 		Integer total = 0;
 		List<Requerimiento> requerimientos = null;
+		Sort sortRequerimiento = new Sort(Sort.Direction.DESC, "fechaCreacion")
+			.and(new Sort(Sort.Direction.ASC, "idRequerimiento"))
+			.and(new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idRequerimiento")));
 		Specification<Requerimiento> specfRequerimiento = (new RequerimientoDAO())
-				.consultarRequerimientosCliente(regFiltro, fieldSort, sortDirection, cedula);
+				.consultarRequerimientosCliente(regFiltro, cedula);
 		
 		if(limit>0){
-			Page<Requerimiento> pageRequerimiento = this.requerimientoRepository.findAll(specfRequerimiento, new PageRequest(page, limit));
+			Page<Requerimiento> pageRequerimiento = this.requerimientoRepository
+					.findAll(specfRequerimiento, new PageRequest(page, limit, sortRequerimiento));
 			total = Long.valueOf(pageRequerimiento.getTotalElements()).intValue();
 			requerimientos = pageRequerimiento.getContent();
 		}
 		else {
-			requerimientos = this.requerimientoRepository.findAll(specfRequerimiento);
+			requerimientos = this.requerimientoRepository.findAll(specfRequerimiento, sortRequerimiento);
 			total = requerimientos.size();
 		}
 		parametros.put("total", total);
@@ -241,16 +256,19 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		Map<String, Object> parametros= new HashMap<String, Object>();
 		Integer total = 0;
 		List<Requerimiento> requerimientos = null;
+		Sort sortRequerimiento 
+			= new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idRequerimiento"));
 		Specification<Requerimiento> specfRequerimiento = (new RequerimientoDAO())
-				.consultarRequerimientosCotizados(regFiltro, fieldSort, sortDirection, idusuario);
+				.consultarRequerimientosCotizados(regFiltro, idusuario);
 		
 		if(limit>0){
-			Page<Requerimiento> pageRequerimiento = this.requerimientoRepository.findAll(specfRequerimiento, new PageRequest(page, limit));
+			Page<Requerimiento> pageRequerimiento = this.requerimientoRepository
+					.findAll(specfRequerimiento, new PageRequest(page, limit, sortRequerimiento));
 			total = Long.valueOf(pageRequerimiento.getTotalElements()).intValue();
 			requerimientos = pageRequerimiento.getContent();
 		}
 		else {
-			requerimientos = this.requerimientoRepository.findAll(specfRequerimiento);
+			requerimientos = this.requerimientoRepository.findAll(specfRequerimiento, sortRequerimiento);
 			total = requerimientos.size();
 		}
 		parametros.put("total", total);
@@ -266,16 +284,18 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		Map<String, Object> parametros= new HashMap<String, Object>();
 		Integer total = 0;
 		List<Cotizacion> cotizaciones = null;
+		Sort sortCotizacion = new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idCotizacion"));
 		Specification<Cotizacion> specfCotizacion = (new CotizacionDAO())
-				.consultarCotizacionesAsignadas(cotFiltro, fieldSort, sortDirection, idrequerimiento,estatus);
+				.consultarCotizacionesAsignadas(cotFiltro, idrequerimiento,estatus);
 		
 		if(limit>0){
-			Page<Cotizacion> pageCotizacion = this.cotizacionRepository.findAll(specfCotizacion, new PageRequest(page, limit));
+			Page<Cotizacion> pageCotizacion = this.cotizacionRepository
+					.findAll(specfCotizacion, new PageRequest(page, limit, sortCotizacion));
 			total = Long.valueOf(pageCotizacion.getTotalElements()).intValue();
 			cotizaciones = pageCotizacion.getContent();
 		}
 		else {
-			cotizaciones = this.cotizacionRepository.findAll(specfCotizacion);
+			cotizaciones = this.cotizacionRepository.findAll(specfCotizacion, sortCotizacion);
 			total = cotizaciones.size();
 		}
 		parametros.put("total", total);
@@ -291,16 +311,19 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		Integer total = 0;
 		List<Requerimiento> requerimientos = null;
+		Sort sortRequerimiento 
+			= new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idRequerimiento"));
 		Specification<Requerimiento> specfRequerimiento = (new RequerimientoDAO())
-				.consultarRequerimientosConSolicitudesCotizacion(regFiltro, fieldSort, sortDirection, idProveedor, estatus);
+				.consultarRequerimientosConSolicitudesCotizacion(regFiltro, idProveedor, estatus);
 		
 		if(limit>0){
-			Page<Requerimiento> pageRequerimiento = this.requerimientoRepository.findAll(specfRequerimiento, new PageRequest(page, limit));
+			Page<Requerimiento> pageRequerimiento = this.requerimientoRepository
+					.findAll(specfRequerimiento, new PageRequest(page, limit, sortRequerimiento));
 			total = Long.valueOf(pageRequerimiento.getTotalElements()).intValue();
 			requerimientos = pageRequerimiento.getContent();
 		}
 		else {
-			requerimientos = this.requerimientoRepository.findAll(specfRequerimiento);
+			requerimientos = this.requerimientoRepository.findAll(specfRequerimiento, sortRequerimiento);
 			total = requerimientos.size();
 		}
 		parametros.put("total", total);
@@ -318,19 +341,19 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		return detalleRequerimiento;
 	}
 	
-	public Map<String, Object> ConsultarDetalleCotizacion(Integer idcotizacion, int page, int limit) {
+	public Map<String, Object> ConsultarDetalleCotizacion(Integer idCotizacion, int page, int limit) {
 		Map<String, Object> parametros= new HashMap<String, Object>();
 		Integer total = 0;
 		List<DetalleCotizacion> detallesCotizacion = null;
-		Specification<DetalleCotizacion> specfDetalleCotizacion = (new DetalleCotizacionDAO()).consultarDetalleCotizacion(idcotizacion);
-		
+				
 		if(limit>0){
-			Page<DetalleCotizacion> pageDetalleCotizacion = this.detalleCotizacionRepository.findAll(specfDetalleCotizacion, new PageRequest(page, limit));
+			Page<DetalleCotizacion> pageDetalleCotizacion 
+				= this.detalleCotizacionRepository.findByCotizacion_IdCotizacion(idCotizacion, new PageRequest(page, limit));
 			total = Long.valueOf(pageDetalleCotizacion.getTotalElements()).intValue();
 			detallesCotizacion = pageDetalleCotizacion.getContent();
 		}
 		else {
-			detallesCotizacion = this.detalleCotizacionRepository.findAll(specfDetalleCotizacion);
+			detallesCotizacion = this.detalleCotizacionRepository.findByCotizacion_IdCotizacion(idCotizacion);
 			total = detallesCotizacion.size();
 		}
 		parametros.put("total", total);
@@ -351,16 +374,18 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		Integer total = 0;
 		List<Cotizacion> cotizaciones = null;
+		Sort sortCotizacion = new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idCotizacion"));
 		Specification<Cotizacion> specfCotizacion = (new CotizacionDAO())
-				.consultarSolicitudCotizaciones(cotizacionF, fieldSort, sortDirection, idRequerimiento, idProveedor, estatus);
+				.consultarSolicitudCotizaciones(cotizacionF, idRequerimiento, idProveedor, estatus);
 		
 		if(limit>0){
-			Page<Cotizacion> pageCotizacion = this.cotizacionRepository.findAll(specfCotizacion, new PageRequest(page, limit));
+			Page<Cotizacion> pageCotizacion = this.cotizacionRepository
+					.findAll(specfCotizacion, new PageRequest(page, limit, sortCotizacion));
 			total = Long.valueOf(pageCotizacion.getTotalElements()).intValue();
 			cotizaciones = pageCotizacion.getContent();
 		}
 		else {
-			cotizaciones = this.cotizacionRepository.findAll(specfCotizacion);
+			cotizaciones = this.cotizacionRepository.findAll(specfCotizacion, sortCotizacion);
 			total = cotizaciones.size();
 		}
 		parametros.put("total", total);
@@ -427,16 +452,18 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		Integer total = 0;
 		List<Cotizacion> cotizaciones = null;
+		Sort sortCotizacion = new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idCotizacion"));
 		Specification<Cotizacion> specfCotizacion = (new CotizacionDAO())
-				.consultarCotizacionesParaEditar(cotizacionF, fieldSort, sortDirection, idRequerimiento, estatus);
+				.consultarCotizacionesParaEditar(cotizacionF, idRequerimiento, estatus);
 		
 		if(limit>0){
-			Page<Cotizacion> pageCotizacion = this.cotizacionRepository.findAll(specfCotizacion, new PageRequest(page, limit));
+			Page<Cotizacion> pageCotizacion = this.cotizacionRepository
+					.findAll(specfCotizacion, new PageRequest(page, limit, sortCotizacion));
 			total = Long.valueOf(pageCotizacion.getTotalElements()).intValue();
 			cotizaciones = pageCotizacion.getContent();
 		}
 		else {
-			cotizaciones = this.cotizacionRepository.findAll(specfCotizacion);
+			cotizaciones = this.cotizacionRepository.findAll(specfCotizacion, sortCotizacion);
 			total = cotizaciones.size();
 		}
 		parametros.put("total", total);
@@ -450,16 +477,19 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		Integer total = 0;
 		List<DetalleCotizacion> detallesCotizacion = null;
+		Sort sortDetalleCotizacion 
+			= new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idDetalleCotizacion"));
 		Specification<DetalleCotizacion> specfDetalleCotizacion = (new DetalleCotizacionDAO())
-				.consultarDetallesCotizacion(detalleF, idCotizacion, null, false, true, fieldSort, sortDirection);
+				.consultarDetallesCotizacion(detalleF, idCotizacion, null, false, true);
 		
 		if(limit>0){
-			Page<DetalleCotizacion> pageDetalleCotizacion = this.detalleCotizacionRepository.findAll(specfDetalleCotizacion, new PageRequest(page, limit));
+			Page<DetalleCotizacion> pageDetalleCotizacion = this.detalleCotizacionRepository
+					.findAll(specfDetalleCotizacion, new PageRequest(page, limit, sortDetalleCotizacion));
 			total = Long.valueOf(pageDetalleCotizacion.getTotalElements()).intValue();
 			detallesCotizacion = pageDetalleCotizacion.getContent();
 		}
 		else {
-			detallesCotizacion = this.detalleCotizacionRepository.findAll(specfDetalleCotizacion);
+			detallesCotizacion = this.detalleCotizacionRepository.findAll(specfDetalleCotizacion, sortDetalleCotizacion);
 			total = detallesCotizacion.size();
 		}
 		parametros.put("total", total);
@@ -479,15 +509,18 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		}
 		Integer total = 0;
 		List<DetalleCotizacion> detallesCotizacion = null;
+		Sort sortDetalleCotizacion 
+			= new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idDetalleCotizacion"));
 		Specification<DetalleCotizacion> specfDetalleCotizacion = (new DetalleCotizacionDAO())
-				.consultarDetallesCotizacion(detalleF, null, idRequerimiento, true, false, fieldSort, sortDirection);
+				.consultarDetallesCotizacion(detalleF, null, idRequerimiento, true, false);
 		if(limit>0){
-			Page<DetalleCotizacion> pageDetalleCotizacion = this.detalleCotizacionRepository.findAll(specfDetalleCotizacion, new PageRequest(page, limit));
+			Page<DetalleCotizacion> pageDetalleCotizacion = this.detalleCotizacionRepository
+					.findAll(specfDetalleCotizacion, new PageRequest(page, limit, sortDetalleCotizacion));
 			total = Long.valueOf(pageDetalleCotizacion.getTotalElements()).intValue();
 			detallesCotizacion = pageDetalleCotizacion.getContent();
 		}
 		else {
-			detallesCotizacion = this.detalleCotizacionRepository.findAll(specfDetalleCotizacion);
+			detallesCotizacion = this.detalleCotizacionRepository.findAll(specfDetalleCotizacion, sortDetalleCotizacion);
 			total = detallesCotizacion.size();
 		}
 		
@@ -513,17 +546,21 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		Integer total = 0;
 		List<DetalleCotizacionInternacional> detallesCotizacion = null;
+		Sort sortDetalleCotizacion 
+			= new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idDetalleCotizacion"));
 		Specification<DetalleCotizacionInternacional> specfDetalleCotizacion = (new DetalleCotizacionInternacionalDAO())
-				.consultarDetallesCotizacion(detalleF, idCotizacion, null, false, true, fieldSort, sortDirection);
+				.consultarDetallesCotizacion(detalleF, idCotizacion, null, false, true);
 		
 		if(limit>0){
 			Page<DetalleCotizacionInternacional> pageDetalleCotizacion = 
-					this.detalleCotizacionInternacionalRepository.findAll(specfDetalleCotizacion, new PageRequest(page, limit));
+					this.detalleCotizacionInternacionalRepository
+						.findAll(specfDetalleCotizacion, new PageRequest(page, limit, sortDetalleCotizacion));
 			total = Long.valueOf(pageDetalleCotizacion.getTotalElements()).intValue();
 			detallesCotizacion = pageDetalleCotizacion.getContent();
 		}
 		else {
-			detallesCotizacion = this.detalleCotizacionInternacionalRepository.findAll(specfDetalleCotizacion);
+			detallesCotizacion = this.detalleCotizacionInternacionalRepository
+					.findAll(specfDetalleCotizacion, sortDetalleCotizacion);
 			total = detallesCotizacion.size();
 		}
 		parametros.put("total", total);
@@ -537,15 +574,16 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		Integer total = 0;
 		List<Oferta> ofertas = null;
-		Specification<Oferta> specfOferta = (new OfertaDAO()).consultarOfertasPorRequerimiento(idRequerimiento, null, fieldSort, sortDirection);
+		Sort sortOferta = new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idOferta"));
+		Specification<Oferta> specfOferta = (new OfertaDAO()).consultarOfertasPorRequerimiento(idRequerimiento, null);
 		
 		if(limit>0){
-			Page<Oferta> pageOferta = this.ofertaRepository.findAll(specfOferta, new PageRequest(page, limit));
+			Page<Oferta> pageOferta = this.ofertaRepository.findAll(specfOferta, new PageRequest(page, limit, sortOferta));
 			total = Long.valueOf(pageOferta.getTotalElements()).intValue();
 			ofertas = pageOferta.getContent();
 		}
 		else {
-			ofertas = this.ofertaRepository.findAll(specfOferta);
+			ofertas = this.ofertaRepository.findAll(specfOferta, sortOferta);
 			total = ofertas.size();
 		}
 		parametros.put("total", total);
@@ -559,15 +597,16 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		Integer total = 0;
 		List<Oferta> ofertas = null;
-		Specification<Oferta> specfOferta = (new OfertaDAO()).consultarOfertasPorRequerimiento(idRequerimiento, estatus, "fechaCreacion", true);
+		Sort sortOferta = new Sort(Sort.Direction.ASC, "fechaCreacion");
+		Specification<Oferta> specfOferta = (new OfertaDAO()).consultarOfertasPorRequerimiento(idRequerimiento, estatus);
 		
 		if(limit>0){
-			Page<Oferta> pageOferta = this.ofertaRepository.findAll(specfOferta, new PageRequest(page, limit));
+			Page<Oferta> pageOferta = this.ofertaRepository.findAll(specfOferta, new PageRequest(page, limit, sortOferta));
 			total = Long.valueOf(pageOferta.getTotalElements()).intValue();
 			ofertas = pageOferta.getContent();
 		}
 		else {
-			ofertas = this.ofertaRepository.findAll(specfOferta);
+			ofertas = this.ofertaRepository.findAll(specfOferta, sortOferta);
 			total = ofertas.size();
 		}
 		parametros.put("total", total);
@@ -579,8 +618,9 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		Oferta oferta = null;
 		List<String> estatus = new ArrayList<String>();
 		estatus.add("enviada");
-		Specification<Oferta> specfOferta = (new OfertaDAO()).consultarOfertasPorRequerimiento(idRequerimiento, estatus, "fechaCreacion", true);
-		List<Oferta> ofertas = ofertaRepository.findAll(specfOferta);
+		Sort sortOferta = new Sort(Sort.Direction.ASC, "fechaCreacion");
+		Specification<Oferta> specfOferta = (new OfertaDAO()).consultarOfertasPorRequerimiento(idRequerimiento, estatus);
+		List<Oferta> ofertas = ofertaRepository.findAll(specfOferta, sortOferta);
 		if(ofertas!=null && !ofertas.isEmpty()){
 			oferta = ofertas.get(0);
 			oferta.setDetalleOfertas(consultarDetallesOferta(oferta.getIdOferta()));
@@ -604,15 +644,16 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		Integer total = 0;
 		List<Compra> compras = null;
-		Specification<Compra> specfCompra = (new CompraDAO()).consultarComprasPorRequerimiento(compraF, idRequerimiento, fieldSort, sortDirection);
+		Sort sortCompra = new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idCompra"));
+		Specification<Compra> specfCompra = (new CompraDAO()).consultarComprasPorRequerimiento(compraF, idRequerimiento);
 		
 		if(limit>0){
-			Page<Compra> pageCompra = this.compraRepository.findAll(specfCompra, new PageRequest(page, limit));
+			Page<Compra> pageCompra = this.compraRepository.findAll(specfCompra, new PageRequest(page, limit, sortCompra));
 			total = Long.valueOf(pageCompra.getTotalElements()).intValue();
 			compras = pageCompra.getContent();
 		}
 		else {
-			compras = this.compraRepository.findAll(specfCompra);
+			compras = this.compraRepository.findAll(specfCompra, sortCompra);
 			total = compras.size();
 		}
 		
@@ -652,12 +693,10 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	//DetalleCompra
 	public Map<String, Object> consultarDetallesCompra(int idCompra, String fieldSort, Boolean sortDirection, 
 			int page, int limit) {
-		fieldSort = (fieldSort==null) ? "idDetalleOferta" : fieldSort;
-		sortDirection = (sortDirection==null) ? true : sortDirection;
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		Integer total = 0;
 		List<DetalleOferta> detallesCompra = null;
-		Sort sortCompra = new Sort((sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC, fieldSort);	
+		Sort sortCompra = new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idDetalleOferta"));	
 		if(limit>0){
 			Page<DetalleOferta> pageDetallesCompra = this.detalleOfertaRepository
 					.findByCompra_IdCompra(idCompra, new PageRequest(page, limit, sortCompra));

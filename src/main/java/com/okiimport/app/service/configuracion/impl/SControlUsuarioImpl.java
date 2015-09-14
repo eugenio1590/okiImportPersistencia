@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 //import org.springframework.security.authentication.AuthenticationManager;
 //import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +19,7 @@ import org.springframework.data.jpa.domain.Specification;
 //import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 
 
 import com.okiimport.app.dao.configuracion.MenuRepository;
@@ -83,15 +85,16 @@ public class SControlUsuarioImpl extends AbstractServiceImpl implements SControl
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		Integer total = 0;
 		List<Usuario> usuarios = null;
+		Sort sortUsuario = new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "id"));
+		Specification<Usuario> specfUsuario = (new UsuarioDAO()).consultarUsuarios(usuarioF);
 		if(limit != -1){
-			Specification<Usuario> specfUsuario = (new UsuarioDAO()).consultarUsuarios(usuarioF, fieldSort, sortDirection);
-			Page<Usuario> pageUsuario = this.usuarioRepository.findAll(specfUsuario, new PageRequest(pagina, limit));
+			Page<Usuario> pageUsuario = this.usuarioRepository.findAll(specfUsuario, new PageRequest(pagina, limit, sortUsuario));
 			total = Long.valueOf(pageUsuario.getTotalElements()).intValue();
 			usuarios = pageUsuario.getContent();
 		}
 		else {
-			total = Long.valueOf(this.usuarioRepository.count()).intValue();
-			usuarios = this.usuarioRepository.findAll();
+			usuarios = this.usuarioRepository.findAll(specfUsuario, sortUsuario);
+			total = usuarios.size();
 		}
 		parametros.put("total", total);
 		parametros.put("usuarios", usuarios);
@@ -109,7 +112,8 @@ public class SControlUsuarioImpl extends AbstractServiceImpl implements SControl
 	
 	//2. Menus
 	public List<Menu> consultarPadresMenuUsuario(Integer tipo) {
+		Sort sortMenu = new Sort(this.getDirection(true, null), "idMenu");
 		Specification<Menu> specfMenu = (new MenuDAO()).consultarPadresMenuUsuario(tipo);
-		return this.menuRepository.findAll(specfMenu);
+		return this.menuRepository.findAll(specfMenu, sortMenu);
 	}
 }

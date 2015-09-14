@@ -22,38 +22,39 @@ import com.okiimport.app.model.Persona;
 
 public class AnalistaDAO extends PersonaDAO<Analista> {
 	
-	public Specification<Analista> consultarAnalistasSinUsuarios(Persona persona, String fieldSort, Boolean sortDirection){
+	public Specification<Analista> consultarAnalistasSinUsuarios(Persona persona){
 		Analista analista = (persona == null) ? new Analista() : new Analista(persona);
 		analista.setAdministrador(false);
-		return consultarPersonaSinUsuarios(analista, fieldSort, sortDirection);
+		return consultarPersonaSinUsuarios(analista);
 	}
 	
-	public Specification<Analista> consultarAdministradoresSinUsuarios(Persona persona, String fieldSort, Boolean sortDirection){
+	public Specification<Analista> consultarAdministradoresSinUsuarios(Persona persona){
 		Analista analista = (persona == null) ? new Analista() : new Analista(persona);
 		analista.setAdministrador(true);
-		return consultarPersonaSinUsuarios(analista, fieldSort, sortDirection);
+		return consultarPersonaSinUsuarios(analista);
 	}
 
 	public Specification<Analista> consultarCantRequerimientos(final List<String> estatus) {
 		return new Specification<Analista>(){
 			public Predicate toPredicate(Root<Analista> entity, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-				//1. Inicializar Variables
+				// 1. Inicializar Variables
 				inicializar(entity, criteriaQuery, criteriaBuilder);
 				
-				//2. Generamos los Joins
+				// 2. Generamos los Joins
 				Map<String, JoinType> entidades=new HashMap<String, JoinType>();
 				entidades.put("requerimientos", JoinType.LEFT);
 				Map<String, Join<?,?>> joins = crearJoins(entidades);
 				
-				//3. Creamos los campos a seleccionar
+				// 3. Creamos los campos a seleccionar
 				Expression<Long> cantRequerimientos = criteriaBuilder.countDistinct(joins.get("requerimientos"));
 				
+				criteriaQuery = criteriaBuilder.createTupleQuery();
 				criteriaQuery.multiselect(new Selection[]{
 						cantRequerimientos.alias("cantRequerimientos"),
 						entity.get("id")
 				});
 				
-				//4. Creamos las Restricciones de la busqueda
+				// 4. Creamos las Restricciones de la busqueda
 				List<Predicate> restricciones = new ArrayList<Predicate>();
 				restricciones.add(
 						criteriaBuilder.notEqual(entity.get("administrador"), true)
@@ -66,15 +67,15 @@ public class AnalistaDAO extends PersonaDAO<Analista> {
 									)
 							);
 				
-				//5. Creamos los campos de ordenamiento y ejecutamos
+				// 5. Creamos los campos de ordenamiento y ejecutamos
 				List<Order> orders = new ArrayList<Order>();
 				orders.add(criteriaBuilder.asc(cantRequerimientos));
-				//criteriaQuery.orderBy(orders); //Se elimino el orgder by
+				criteriaQuery.orderBy(orders);
 
 				 List<Expression<?>> groupBy = new ArrayList<Expression<?>>();
 				 groupBy.add(entity.get("id"));
 				 
-				 return crearPredicate(restricciones); //Se Elimino el Group By
+				 return crearPredicate(restricciones);
 			}
 			
 		};

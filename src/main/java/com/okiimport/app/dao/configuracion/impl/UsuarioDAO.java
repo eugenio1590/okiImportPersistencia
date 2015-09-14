@@ -1,9 +1,7 @@
 package com.okiimport.app.dao.configuracion.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -17,17 +15,16 @@ import com.okiimport.app.resource.dao.AbstractJpaDao;
 
 public class UsuarioDAO extends AbstractJpaDao<Usuario> {
 	
-	public Specification<Usuario> consultarUsuarios(final Usuario usuarioF, final String fieldSort, 
-			final Boolean sortDirection){
+	public Specification<Usuario> consultarUsuarios(final Usuario usuarioF){
 		
 		return new Specification<Usuario>() {
 			public Predicate toPredicate(Root<Usuario> entity, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-				//1. Inicializar Variables
+				// 1. Inicializar Variables
 				inicializar(entity, criteriaQuery, criteriaBuilder);
 				
-				//2. Generamos los Joins
+				// 2. Generamos los Joins
 				
-				//3. Creamos las Restricciones de la busqueda
+				// 3. Creamos las Restricciones de la busqueda
 				List<Predicate> restricciones = new ArrayList<Predicate>();
 				
 				if(usuarioF.getId()!=null)
@@ -47,15 +44,8 @@ public class UsuarioDAO extends AbstractJpaDao<Usuario> {
 							usuarioF.getActivo()
 					));
 				
-				//4. Creamos los campos de ordenamiento y ejecutamos
-				Map<String, Boolean> orders = new HashMap<String, Boolean>();
-				
-				if(fieldSort!=null && sortDirection!=null)
-					orders.put(fieldSort, sortDirection);
-				else
-					orders.put("id", true);
-				
-				return crearPredicate(restricciones, orders);
+				// 4. Ejecutamos				
+				return crearPredicate(restricciones);
 			}
 		};
 	}

@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 
 import com.okiimport.app.service.mail.MailService;
 
@@ -29,6 +30,7 @@ public abstract class AbstractServiceImpl {
 		this.mailService = mailService;
 	}
 	
+	/**METODOS ESTATICOS DE LA CLASE*/
 	/**SUMA Y RESTAS PARA FECHAS*/
 	private static Date sumarORestarFecha(Date fecha, int field, int value){
 		Calendar calendar = GregorianCalendar.getInstance();
@@ -65,4 +67,12 @@ public abstract class AbstractServiceImpl {
 		return (milis2 - milis1) / (60 * 60 * 1000);
 	}
 
+	/**PAGINACION*/
+	protected static Sort.Direction getDirection(Boolean sortDirection, Sort.Direction defaultSort){
+		return (sortDirection==null) ? defaultSort : (sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC;
+	}
+	
+	protected static String getFieldSort(String fieldSort, String defaultField){
+		return (defaultField==null) ? defaultField : fieldSort;
+	}
 }

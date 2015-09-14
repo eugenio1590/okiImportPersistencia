@@ -21,27 +21,22 @@ public class HistoricoMonedaDAO extends AbstractJpaDao<HistoricoMoneda> {
 	
 	public Specification<HistoricoMoneda> consultarActualConversion(final Integer idMoneda){
 		return new Specification<HistoricoMoneda>() {
-			@SuppressWarnings("rawtypes")
 			public Predicate toPredicate(Root<HistoricoMoneda> entity, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-				//1. Inicializar Variables
+				// 1. Inicializar Variables
 				inicializar(entity, criteriaQuery, criteriaBuilder);
 				
-				//2. Generamos los Joins
+				// 2. Generamos los Joins
 				Map<String, JoinType> entidades = new HashMap<String, JoinType>();
 				entidades.put("moneda", JoinType.INNER);
 				Map<String, Join<?,?>> joins = crearJoins(entidades);
 				
-				//3. Creamos las Restricciones de la busqueda
+				// 3. Creamos las Restricciones de la busqueda
 				List<Predicate> restricciones = new ArrayList<Predicate>();
 				
 				restricciones.add(criteriaBuilder.equal(joins.get("moneda").get("idMoneda"), idMoneda));
 				
-				//4. Creamos los campos de ordenamiento y ejecutamos
-				Map<String, Boolean> orders = new HashMap<String, Boolean>();
-				orders.put("fechaCreacion", false);
-				orders.put("idHistoria", true);
-				
-				return crearPredicate(restricciones, orders);
+				// 4. Ejecutamos				
+				return crearPredicate(restricciones);
 			}
 		};
 	}

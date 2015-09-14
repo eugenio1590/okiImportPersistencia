@@ -9,8 +9,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.Order;
-import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -24,56 +22,46 @@ public abstract class PersonaDAO<T extends Persona> extends AbstractJpaDao<T> {
 	public Specification<T> consultarPersona(final T personaF){
 		return new Specification<T>() {
 			public Predicate toPredicate(Root<T> entity, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-				//1. Inicializar Variables
+				// 1. Inicializar Variables
 				inicializar(entity, criteriaQuery, criteriaBuilder);
 				
-				//2. Generamos los Joins
+				// 2. Generamos los Joins
 				
-				//3. Creamos las Restricciones de la busqueda
+				// 3. Creamos las Restricciones de la busqueda
 				List<Predicate> restricciones = new ArrayList<Predicate>();
 				
 				agregarFiltros(personaF, restricciones);
 				
-				//4. Creamos los campos de ordenamiento y ejecutamos
-				Map<String, Boolean> orders = new HashMap<String, Boolean>();
-				orders.put("id", true);
-				
-				return null;
-			}
-		};
-	}
-	
-	public Specification<T> consultarPersonaSinUsuarios(final T persona, final String fieldSort, final Boolean sortDirection) {
-		return new Specification<T>() {
-
-			public Predicate toPredicate(Root<T> entity, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-				//1. Inicializar Variables
-				inicializar(entity, criteriaQuery, criteriaBuilder);
-				
-				//2. Generamos los Joins
-				Map<String, JoinType> entidades=new HashMap<String, JoinType>();
-				entidades.put("usuario", JoinType.LEFT);
-				Map<String, Join<?,?>> joins = crearJoins(entidades);
-				
-				//3. Creamos las Restricciones de la busqueda
-				List<Predicate> restricciones = new ArrayList<Predicate>();
-				restricciones.add(criteriaBuilder.isNull(joins.get("usuario")));
-				agregarFiltros(persona, restricciones);
-
-				//4. Creamos los campos de ordenamiento y ejecutamos
-				List<Order> orders = new ArrayList<Order>();
-				
-				if(fieldSort!=null && sortDirection!=null){
-					Path<Object> field = entity.get(fieldSort);
-					orders.add((sortDirection) ? criteriaBuilder.asc(entity.get(fieldSort)) : criteriaBuilder.desc(field));
-				}else
-					orders.add( criteriaBuilder.asc(entity.get("id")));
-				
+				// 4. Ejecutamos
 				return crearPredicate(restricciones);
 			}
 		};
 	}
 	
+	public Specification<T> consultarPersonaSinUsuarios(final T persona) {
+		return new Specification<T>() {
+
+			public Predicate toPredicate(Root<T> entity, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+				// 1. Inicializar Variables
+				inicializar(entity, criteriaQuery, criteriaBuilder);
+				
+				// 2. Generamos los Joins
+				Map<String, JoinType> entidades=new HashMap<String, JoinType>();
+				entidades.put("usuario", JoinType.LEFT);
+				Map<String, Join<?,?>> joins = crearJoins(entidades);
+				
+				// 3. Creamos las Restricciones de la busqueda
+				List<Predicate> restricciones = new ArrayList<Predicate>();
+				restricciones.add(criteriaBuilder.isNull(joins.get("usuario")));
+				agregarFiltros(persona, restricciones);
+
+				// 4. Ejecutamos				
+				return crearPredicate(restricciones);
+			}
+		};
+	}
+	
+	/**METODOS PROPIOS DE LA CLASE*/
 	protected void agregarFiltros(T personaF, List<Predicate> restricciones){
 		if(personaF!=null){
 			if(personaF.getCedula()!=null){

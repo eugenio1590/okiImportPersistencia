@@ -26,7 +26,7 @@ public class DetalleCotizacionInternacionalDAO extends AbstractDetalleCotizacion
 
 	public Specification<DetalleCotizacionInternacional> consultarDetallesCotizacion(
 			final DetalleCotizacionInternacional detalleF, final Integer idCotizacion, final Integer idRequerimiento,
-			final boolean distinct, final boolean cantExacta, final String fieldSort, final Boolean sortDirection){
+			final boolean distinct, final boolean cantExacta){
 		return new Specification<DetalleCotizacionInternacional>(){
 			public Predicate toPredicate(Root<DetalleCotizacionInternacional> entity, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
 				//1. Inicializar Variables
@@ -40,6 +40,7 @@ public class DetalleCotizacionInternacionalDAO extends AbstractDetalleCotizacion
 				
 				//3. Creamos los campos a seleccionar
 				if(distinct){
+					criteriaQuery = criteriaBuilder.createTupleQuery();
 					criteriaQuery.multiselect(new Selection[]{
 							entity.get("idDetalleCotizacion"),
 							entity.get("marcaRepuesto"),
@@ -66,14 +67,8 @@ public class DetalleCotizacionInternacionalDAO extends AbstractDetalleCotizacion
 							joins.get("detalleRequerimiento").join("requerimiento").get("idRequerimiento"), 
 							idRequerimiento));
 				
-				// 4. Creamos los campos de ordenamiento y ejecutamos
-				Map<String, Boolean> orders = new HashMap<String, Boolean>();
-				if(fieldSort!=null && sortDirection!=null)
-					orders.put(fieldSort, sortDirection);
-				else
-					orders.put("idDetalleCotizacion", true);
-				
-				return crearPredicate(restricciones, orders);
+				// 4. Ejecutamos				
+				return crearPredicate(restricciones);
 			}
 			
 		};

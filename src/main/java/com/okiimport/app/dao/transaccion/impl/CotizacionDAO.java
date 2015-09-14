@@ -20,11 +20,11 @@ import com.okiimport.app.resource.dao.AbstractJpaDao;
 
 public class CotizacionDAO extends AbstractJpaDao<Cotizacion> {
 
-	public Specification<Cotizacion> consultarCotizacionesAsignadas(final Cotizacion cotizacion, 
-			final String fieldSort, final Boolean sortDirection, final int idRequerimiento, final List<String> estatus){
+	public Specification<Cotizacion> consultarCotizacionesAsignadas(final Cotizacion cotizacion, final int idRequerimiento, 
+			final List<String> estatus){
 		return new Specification<Cotizacion>(){
 			public Predicate toPredicate(Root<Cotizacion> entity, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-				//1. Inicializar Variables
+				// 1. Inicializar Variables
 				inicializar(entity, criteriaQuery, criteriaBuilder);
 				
 				// 2. Generamos los Joins
@@ -33,7 +33,8 @@ public class CotizacionDAO extends AbstractJpaDao<Cotizacion> {
 				entidades.put("proveedor", JoinType.INNER);
 				Map<String, Join<?,?>> joins = crearJoins(entidades);
 				
-				//3. Creamos los campos a seleccionar
+				// 3. Creamos los campos a seleccionar
+				criteriaQuery = criteriaBuilder.createTupleQuery();
 				criteriaQuery.multiselect(new Selection[]{
 						entity.get("idCotizacion"),
 						entity.get("fechaCreacion"),
@@ -43,7 +44,7 @@ public class CotizacionDAO extends AbstractJpaDao<Cotizacion> {
 						entity.get("proveedor"),
 				}).distinct(true);
 				
-				//4. Creamos las Restricciones de la busqueda
+				// 4. Creamos las Restricciones de la busqueda
 				List<Predicate> restricciones = new ArrayList<Predicate>();
 				
 				agregarFiltro(cotizacion,restricciones,joins);
@@ -54,25 +55,18 @@ public class CotizacionDAO extends AbstractJpaDao<Cotizacion> {
 								.join("requerimiento").get("idRequerimiento"), 
 							idRequerimiento));
 				
-				// 4. Creamos los campos de ordenamiento y ejecutamos
-				Map<String, Boolean> orders = new HashMap<String, Boolean>();
-				if(fieldSort!=null && sortDirection!=null)
-					orders.put(fieldSort, sortDirection);
-				else
-					orders.put("idCotizacion", true);
-				
-				return crearPredicate(restricciones, orders);
+				// 5. Ejecutamos
+				return crearPredicate(restricciones);
 			}
 			
 		};
 	}
 	
-	public Specification<Cotizacion> consultarSolicitudCotizaciones(final Cotizacion cotizacionF, 
-			final String fieldSort, final Boolean sortDirection, final Integer idRequerimiento, final int idProveedor, 
-			final List<String> estatus){
+	public Specification<Cotizacion> consultarSolicitudCotizaciones(final Cotizacion cotizacionF, final Integer idRequerimiento, 
+			final int idProveedor, final List<String> estatus){
 		return new Specification<Cotizacion>(){
 			public Predicate toPredicate(Root<Cotizacion> entity, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-				//1. Inicializar Variables
+				// 1. Inicializar Variables
 				inicializar(entity, criteriaQuery, criteriaBuilder);
 				
 				// 2. Generamos los Joins
@@ -82,7 +76,8 @@ public class CotizacionDAO extends AbstractJpaDao<Cotizacion> {
 				entidades.put("historicoMoneda", JoinType.LEFT);
 				Map<String, Join<?,?>> joins = crearJoins(entidades);
 				
-				//3. Creamos los campos a seleccionar
+				// 3. Creamos los campos a seleccionar
+				criteriaQuery = criteriaBuilder.createTupleQuery();
 				criteriaQuery.multiselect(new Selection[]{
 						entity.get("idCotizacion"),
 						entity.get("fechaCreacion"),
@@ -93,7 +88,7 @@ public class CotizacionDAO extends AbstractJpaDao<Cotizacion> {
 						joins.get("historicoMoneda")
 				}).distinct(true);
 				
-				//4. Creamos las Restricciones de la busqueda
+				// 4. Creamos las Restricciones de la busqueda
 				List<Predicate> restricciones = new ArrayList<Predicate>();
 
 				agregarFiltro(cotizacionF, restricciones, joins);
@@ -104,26 +99,17 @@ public class CotizacionDAO extends AbstractJpaDao<Cotizacion> {
 						joins.get("detalleCotizacions").join("detalleRequerimiento").join("requerimiento").get("idRequerimiento"), 
 						idRequerimiento));
 				
-				
-				
-				// 4. Creamos los campos de ordenamiento y ejecutamos
-				Map<String, Boolean> orders = new HashMap<String, Boolean>();
-				if(fieldSort!=null && sortDirection!=null)
-					orders.put(fieldSort, sortDirection);
-				else
-					orders.put("idCotizacion", true);
-				
-				return crearPredicate(restricciones, orders);
+				// 5. Ejecutamos				
+				return crearPredicate(restricciones);
 			}
 		};
 	}
 	
-	public Specification<Cotizacion> consultarCotizacionesParaEditar(final Cotizacion cotizacionF, 
-			final String fieldSort, final Boolean sortDirection, final Integer idRequerimiento, 
+	public Specification<Cotizacion> consultarCotizacionesParaEditar(final Cotizacion cotizacionF, final Integer idRequerimiento, 
 			final List<String> estatus){
 		return new Specification<Cotizacion>(){
 			public Predicate toPredicate(Root<Cotizacion> entity, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-				//1. Inicializar Variables
+				// 1. Inicializar Variables
 				inicializar(entity, criteriaQuery, criteriaBuilder);
 				
 				// 2. Generamos los Joins
@@ -133,7 +119,8 @@ public class CotizacionDAO extends AbstractJpaDao<Cotizacion> {
 				entidades.put("historicoMoneda", JoinType.LEFT);
 				Map<String, Join<?,?>> joins = crearJoins(entidades);
 				
-				//3. Creamos los campos a seleccionar
+				// 3. Creamos los campos a seleccionar
+				criteriaQuery = criteriaBuilder.createTupleQuery();
 				criteriaQuery.multiselect(new Selection[]{
 						entity.get("idCotizacion"),
 						entity.get("fechaCreacion"),
@@ -144,7 +131,7 @@ public class CotizacionDAO extends AbstractJpaDao<Cotizacion> {
 						joins.get("historicoMoneda")
 				}).distinct(true);
 				
-				//4. Creamos las Restricciones de la busqueda
+				// 4. Creamos las Restricciones de la busqueda
 				List<Predicate> restricciones = new ArrayList<Predicate>();
 
 				agregarFiltro(cotizacionF, restricciones, joins);
@@ -155,14 +142,8 @@ public class CotizacionDAO extends AbstractJpaDao<Cotizacion> {
 							.join("requerimiento").get("idRequerimiento"), 
 						idRequerimiento));
 				
-				// 4. Creamos los campos de ordenamiento y ejecutamos
-				Map<String, Boolean> orders = new HashMap<String, Boolean>();
-				if(fieldSort!=null && sortDirection!=null)
-					orders.put(fieldSort, sortDirection);
-				else
-					orders.put("idCotizacion", true);
-				
-				return crearPredicate(restricciones, orders);
+				// 5. Ejecutamos				
+				return crearPredicate(restricciones);
 			}
 			
 		};

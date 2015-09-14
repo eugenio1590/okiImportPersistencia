@@ -1,9 +1,7 @@
 package com.okiimport.app.dao.configuracion.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -21,12 +19,12 @@ public class MonedaDAO extends AbstractJpaDao<Moneda> {
 		return new Specification<Moneda>(){
 
 			public Predicate toPredicate(Root<Moneda> entity, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-				//1. Inicializar Variables
+				// 1. Inicializar Variables
 				inicializar(entity, criteriaQuery, criteriaBuilder);
 				
-				//2. Generamos los Joins
+				// 2. Generamos los Joins
 				
-				//3. Creamos las Restricciones de la busqueda
+				// 3. Creamos las Restricciones de la busqueda
 				List<Predicate> restricciones = new ArrayList<Predicate>();
 
 				restricciones.add(criteriaBuilder.isNotEmpty(entity.get("historicoMonedas").as(List.class)));
@@ -35,11 +33,8 @@ public class MonedaDAO extends AbstractJpaDao<Moneda> {
 						criteriaBuilder.lower(entity.get("estatus").as(String.class)), 
 						"%"+estatus+"%"));
 				
-				//4. Creamos los campos de ordenamiento y ejecutamos
-				Map<String, Boolean> orders = new HashMap<String, Boolean>();
-				orders.put("idMoneda", true);
-				
-				return crearPredicate(restricciones, orders);
+				// 4. Ejecutamos				
+				return crearPredicate(restricciones);
 			}
 			
 		};
