@@ -34,6 +34,7 @@ public class CotizacionDAO extends AbstractJpaDao<Cotizacion> {
 				Map<String, Join<?,?>> joins = crearJoins(entidades);
 				
 				//3. Creamos los campos a seleccionar
+				criteriaQuery = criteriaBuilder.createTupleQuery();
 				criteriaQuery.multiselect(new Selection[]{
 						entity.get("idCotizacion"),
 						entity.get("fechaCreacion"),
@@ -83,6 +84,7 @@ public class CotizacionDAO extends AbstractJpaDao<Cotizacion> {
 				Map<String, Join<?,?>> joins = crearJoins(entidades);
 				
 				//3. Creamos los campos a seleccionar
+				criteriaQuery = criteriaBuilder.createTupleQuery();
 				criteriaQuery.multiselect(new Selection[]{
 						entity.get("idCotizacion"),
 						entity.get("fechaCreacion"),
@@ -134,6 +136,7 @@ public class CotizacionDAO extends AbstractJpaDao<Cotizacion> {
 				Map<String, Join<?,?>> joins = crearJoins(entidades);
 				
 				//3. Creamos los campos a seleccionar
+				criteriaQuery = criteriaBuilder.createTupleQuery();
 				criteriaQuery.multiselect(new Selection[]{
 						entity.get("idCotizacion"),
 						entity.get("fechaCreacion"),

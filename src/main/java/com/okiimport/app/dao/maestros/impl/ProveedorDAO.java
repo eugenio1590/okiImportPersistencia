@@ -42,6 +42,7 @@ public class ProveedorDAO extends PersonaDAO<Proveedor> {
 				Map<String, Join<?,?>> joins = crearJoins(entidades);
 				
 				//3. Creamos los campos a seleccionar
+				criteriaQuery = criteriaBuilder.createTupleQuery();
 				criteriaQuery.multiselect(new Selection[]{
 						entity.get("id"),
 						entity.get("cedula"),
@@ -111,6 +112,7 @@ public class ProveedorDAO extends PersonaDAO<Proveedor> {
 				Map<String, Join<?,?>> joins = crearJoins(entidades);
 				
 				//3. Creamos los campos a seleccionar
+				criteriaQuery = criteriaBuilder.createTupleQuery();
 				criteriaQuery.multiselect(new Selection[]{
 						entity.get("id"),
 						entity.get("cedula"),

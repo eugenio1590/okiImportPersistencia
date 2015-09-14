@@ -212,6 +212,7 @@ public class RequerimientoDAO extends AbstractJpaDao<Requerimiento> {
 				Map<String, Join<?,?>> joins = crearJoins(entidades);
 				
 				//3. Creamos los campos a seleccionar
+				criteriaQuery = criteriaBuilder.createTupleQuery();
 				criteriaQuery.multiselect(new Selection[]{
 						entity.get("idRequerimiento"),
 						entity.get("estatus"),

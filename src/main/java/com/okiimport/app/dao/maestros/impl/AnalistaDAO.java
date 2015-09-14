@@ -48,6 +48,7 @@ public class AnalistaDAO extends PersonaDAO<Analista> {
 				//3. Creamos los campos a seleccionar
 				Expression<Long> cantRequerimientos = criteriaBuilder.countDistinct(joins.get("requerimientos"));
 				
+				criteriaQuery = criteriaBuilder.createTupleQuery();
 				criteriaQuery.multiselect(new Selection[]{
 						cantRequerimientos.alias("cantRequerimientos"),
 						entity.get("id")
@@ -69,7 +70,7 @@ public class AnalistaDAO extends PersonaDAO<Analista> {
 				//5. Creamos los campos de ordenamiento y ejecutamos
 				List<Order> orders = new ArrayList<Order>();
 				orders.add(criteriaBuilder.asc(cantRequerimientos));
-				//criteriaQuery.orderBy(orders); //Se elimino el orgder by
+				criteriaQuery.orderBy(orders); //Se elimino el orgder by
 
 				 List<Expression<?>> groupBy = new ArrayList<Expression<?>>();
 				 groupBy.add(entity.get("id"));

@@ -11,6 +11,8 @@ import org.springframework.data.repository.NoRepositoryBean;
 
 @NoRepositoryBean
 public interface IGenericJPARepository<T, ID extends Serializable> extends JpaRepository<T, ID> {
-	Page<T> findAll(Specification<T> specification, Pageable pageable);
+	long count(Specification<T> specification);
+	T findOne(Specification<T> specification);
 	List<T> findAll(Specification<T> specification);
+	Page<T> findAll(Specification<T> specification, Pageable pageable);
 }
