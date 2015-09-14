@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.okiimport.app.model.Analista;
@@ -17,6 +18,8 @@ import com.okiimport.app.model.Proveedor;
 public interface SMaestros {
 	//Marcas
 	Map<String,Object> consultarMarcas(int page, int limit);
+	
+	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
 	MarcaVehiculo registrarMarca(MarcaVehiculo marca);
 	
 	//Estados
@@ -26,10 +29,13 @@ public interface SMaestros {
 	Map<String,Object> ConsultarCiudad(Integer idEstado, int page, int limit);
 	
 	//Personas
+	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
 	<T extends Persona> T acutalizarPersona(T persona);
 	
 	//Cliente
+	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
 	Cliente registrarOActualizarCliente(Cliente cliente);
+	
 	Cliente consultarCliente(Cliente cliente);
 
 	//Analistas
@@ -41,6 +47,8 @@ public interface SMaestros {
 	Map<String, Object> consultarAnalistas(Analista analista, int page, int limit);
 	/*public Map<String, Object> consultarAnalistas(Analista analistaF, String fieldSort, Boolean sortDirection, 
 			int pagina, int limit);*/
+	
+	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
 	Analista registrarAnalista(Analista analista);
 	
 	
@@ -50,6 +58,7 @@ public interface SMaestros {
 	
 	Map<String,Object> ConsultarClasificacionRepuesto(int page, int limit);
 	
+	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
 	Proveedor registrarProveedor(Proveedor proveedor);
 	
 	Map<String,Object> ConsultarMotor(int page, int limit);
