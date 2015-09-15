@@ -7,10 +7,12 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.velocity.app.VelocityEngine;
 import org.hibernate.cache.HashtableCacheProvider;
 import org.hibernate.dialect.PostgreSQLDialect;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -24,7 +26,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import com.okiimport.app.service.mail.MailService;
-import com.okiimport.app.service.mail.MailServiceImpl;
+import com.okiimport.app.service.mail.impl.MailServiceImpl;
 import com.okiimport.persistencia.mail.ConfigMail;
 
 //@EnableTransactionManagement
@@ -79,8 +81,10 @@ public class AbstractJpaConfiguration {
 
 	@Bean
 	public PlatformTransactionManager transactionManager() {
-		//return new JpaTransactionManager( entityManagerFactory().getObject() );
-		return new JpaTransactionManager( entityManagerFactory() );
+		//return new JpaTransactionManager( entityManagerFactory().getObject() ); 4000
+		JpaTransactionManager transactionManager = new JpaTransactionManager( entityManagerFactory() );
+		transactionManager.setDefaultTimeout(4000);
+		return transactionManager;
 	}
 
 	@Bean(name = "entityManagerFactory")
@@ -112,12 +116,21 @@ public class AbstractJpaConfiguration {
 	}
 	
 	/**MAIL*/
-	@Bean
+	@Bean(name="mailService")
 	public MailService mailService(){
-		this.configMail = new ConfigMail("requerimientos.urbicars@gmail.com", "R123456789");
 		MailService mailService = new MailServiceImpl();
-		mailService.setMailSender(this.configMail.getMailSender());
-		mailService.setVelocityEngine(this.configMail.getVelocityEngine());
+		mailService.setMailSender(mailSender());
+		mailService.setVelocityEngine(velocityEngine());
 		return mailService;
+	}
+	
+	@Bean(name="mailSender")
+	public JavaMailSender mailSender(){
+		return this.configMail.getMailSender();
+	}
+	
+	@Bean(name="velocityEngine")
+	public VelocityEngine velocityEngine(){
+		return this.configMail.getVelocityEngine();
 	}
 }
