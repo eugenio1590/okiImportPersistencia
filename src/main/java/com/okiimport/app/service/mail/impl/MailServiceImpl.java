@@ -1,4 +1,4 @@
-package com.okiimport.app.service.mail;
+package com.okiimport.app.service.mail.impl;
 
 import java.io.File;
 import java.util.Map;
@@ -13,6 +13,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.ui.velocity.VelocityEngineUtils;
+
+import com.okiimport.app.service.mail.MailService;
 
 public class MailServiceImpl implements MailService {
 
@@ -37,29 +39,40 @@ public class MailServiceImpl implements MailService {
 	
 	public void send(String to, String subject, String text) {
 		// TODO Auto-generated method stub
+		System.out.println("Send 1");
 		send(to, subject, text, null, null, null);
 	}
 	
 	public void send(String to, String subject, String text, File... attachments) {
 		// TODO Auto-generated method stub
+		System.out.println("Send 2");
 		send(to, subject, text, null, null, attachments);
 	}
 	
 	public void send(String to, String subject, String template,
-			Map<String, Object> model) {
+			final Map<String, Object> model) {
 		// TODO Auto-generated method stub
-		send(to, subject, null, template, model, null);
+		System.out.println("Send 3");
+		send(to, subject, null, template, model);
 	}
 	
 	public void send(String to, String subject, String template,
-			Map<String, Object> model, File... attachments) {
+			final Map<String, Object> model, File... attachments) {
 		// TODO Auto-generated method stub
+		System.out.println("Send 4");
 		send(to, subject, null, template, model, attachments);
 	}
 	
 	/**METODOS PROPIOS DE LA CLASE*/
 	private void send(final String to, final String subject, final String text, 
 			final String template, final Map<String, Object> model, final File... attachments){
+//		System.out.println("NULO To: "+(to==null)+" "+to);
+//		System.out.println("NULO Subject: "+(null==subject)+" "+subject);
+//		System.out.println("NULO Text: "+(null==text)+" "+text);
+//		System.out.println("NULO Template: "+(null==template)+" "+template);
+//		System.out.println("NULO Model: "+(null==model));
+//		System.out.println("NULO VELOC: "+(velocityEngine==null));
+		
 		MimeMessagePreparator preparator = new MimeMessagePreparator() {
             public void prepare(MimeMessage mimeMessage) throws Exception {
                 MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true);
@@ -71,6 +84,7 @@ public class MailServiceImpl implements MailService {
                 else if(template!=null && !template.equalsIgnoreCase("")){
                 	String text = VelocityEngineUtils.mergeTemplateIntoString(
                 			velocityEngine, "mail_template/"+template, "UTF-8", model);
+//                	System.out.println("NULO TEXT: "+text);
                 	message.setText(text, true);
                 }
                 else

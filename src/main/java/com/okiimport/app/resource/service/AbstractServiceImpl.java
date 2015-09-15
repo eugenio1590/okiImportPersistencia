@@ -73,6 +73,6 @@ public abstract class AbstractServiceImpl {
 	}
 	
 	protected static String getFieldSort(String fieldSort, String defaultField){
-		return (defaultField==null) ? defaultField : fieldSort;
+		return (fieldSort==null) ? defaultField : fieldSort;
 	}
 }
