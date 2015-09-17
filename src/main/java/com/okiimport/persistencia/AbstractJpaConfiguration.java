@@ -10,31 +10,29 @@ import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.velocity.app.VelocityEngine;
 import org.hibernate.cache.HashtableCacheProvider;
 import org.hibernate.dialect.PostgreSQLDialect;
+import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
+import org.jasypt.encryption.pbe.config.EnvironmentStringPBEConfig;
+import org.jasypt.spring3.properties.EncryptablePropertyPlaceholderConfigurer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.orm.hibernate4.HibernateExceptionTranslator;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor;
-import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-import org.springframework.orm.hibernate4.HibernateExceptionTranslator;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import com.okiimport.app.service.mail.MailService;
 import com.okiimport.app.service.mail.impl.MailServiceImpl;
 import com.okiimport.persistencia.mail.ConfigMail;
 
-//@EnableTransactionManagement
 //@EnableJpaRepositories("com.okiimport.app.dao")
 public class AbstractJpaConfiguration {
-
-//	@Value("#{dataSource}")
-//	private javax.sql.DataSource dataSource;
 	
 	private ConfigMail configMail;
 	
@@ -43,12 +41,40 @@ public class AbstractJpaConfiguration {
 	}
 	
 	@Bean
-    public DataSource dataSource() {
+	public EnvironmentStringPBEConfig environmentVariablesConfiguration(){
+		EnvironmentStringPBEConfig environmentVariablesConfiguration = new EnvironmentStringPBEConfig();
+		environmentVariablesConfiguration.setAlgorithm("PBEWithMD5AndDES");
+		environmentVariablesConfiguration.setPasswordEnvName("APP_ENCRYPTION_PASSWORD");
+		return environmentVariablesConfiguration;
+	}
+	
+	@Bean
+	public StandardPBEStringEncryptor configurationEncryptor(){
+		StandardPBEStringEncryptor configurationEncryptor = new StandardPBEStringEncryptor();
+		configurationEncryptor.setPassword("euge17");
+		return configurationEncryptor;
+	}
+	
+	@Bean
+	public EncryptablePropertyPlaceholderConfigurer propertyConfigurer(){
+		String pathProperties = System.getenv("JDBC_PROPERTIES");
+		System.out.println("Archivo de Propiedades: "+pathProperties);
+		EncryptablePropertyPlaceholderConfigurer propertyConfigurer = new EncryptablePropertyPlaceholderConfigurer(configurationEncryptor());
+		propertyConfigurer.setLocation(new DefaultResourceLoader().getResource("file:"+pathProperties));
+		return propertyConfigurer;
+	}
+	
+	@Bean
+    public DataSource dataSource(
+    		@Value("${datasource.driver}") String driver,
+    		@Value("${datasource.url}") String url,
+    		@Value("${datasource.username}") String usuario,
+    		@Value("${datasource.password}") String clave) {
         BasicDataSource dataSource = new BasicDataSource();
-        dataSource.setDriverClassName("org.postgresql.Driver");
-        dataSource.setUrl("jdbc:postgresql://localhost:5432/requerimientos_fase_final");
-        dataSource.setUsername("postgres");
-        dataSource.setPassword("postgres");
+        dataSource.setDriverClassName(driver);
+        dataSource.setUrl(url);
+        dataSource.setUsername(usuario);
+        dataSource.setPassword(clave);
 //        dataSource.setTestOnBorrow(Boolean.TRUE);
 //        dataSource.setTestOnReturn(Boolean.TRUE);
 //        dataSource.setTestWhileIdle(Boolean.TRUE);
@@ -81,17 +107,17 @@ public class AbstractJpaConfiguration {
 
 	@Bean
 	public PlatformTransactionManager transactionManager() {
-		//return new JpaTransactionManager( entityManagerFactory().getObject() ); 4000
+		//return new JpaTransactionManager( entityManagerFactory().getObject() );
 		JpaTransactionManager transactionManager = new JpaTransactionManager( entityManagerFactory() );
 		transactionManager.setDefaultTimeout(4000);
 		return transactionManager;
 	}
-
+	
 	@Bean(name = "entityManagerFactory")
 	//public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
 	public EntityManagerFactory entityManagerFactory() {
 		LocalContainerEntityManagerFactoryBean lef = new LocalContainerEntityManagerFactoryBean();
-		lef.setDataSource(dataSource());
+		lef.setDataSource(dataSource(null, null, null, null));
 		lef.setJpaPropertyMap(this.jpaProperties());
 		lef.setJpaVendorAdapter(this.jpaVendorAdapter());
 		lef.setPersistenceUnitName("okiImportPersistencia");

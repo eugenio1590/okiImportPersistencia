@@ -17,6 +17,7 @@
 		<spring.framework.version>3.2.6.RELEASE</spring.framework.version><!-- 3.1.1.RELEASE -->
 		<org.aspectj-version>1.6.10</org.aspectj-version>
 		<hibernate.version>3.6.10.Final</hibernate.version>
+		<jasypt>1.9.2</jasypt>
 <!-- 		<jersey.version>1.8</jersey.version> -->
 		<jackson.version>2.2.3</jackson.version>
 	</properties>
@@ -228,6 +229,18 @@
             <artifactId>commons-dbcp</artifactId>
             <version>1.4</version>
         </dependency>
+        
+        <!-- Encriptacion de la BD -->   
+		<dependency>
+			<groupId>org.jasypt</groupId>
+			<artifactId>jasypt-spring3</artifactId>
+			<version>${jasypt}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jasypt</groupId>
+			<artifactId>jasypt</artifactId>
+			<version>${jasypt}</version>
+		</dependency>
         
         <!-- JUNIT -->
 		<dependency>
