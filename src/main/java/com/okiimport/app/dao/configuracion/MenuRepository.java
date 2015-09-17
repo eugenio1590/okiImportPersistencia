@@ -9,5 +9,5 @@ import com.okiimport.app.resource.dao.IGenericJPARepository;
 
 @Repository
 public interface MenuRepository extends IGenericJPARepository<Menu, Integer> {
-	List<Menu> findByPadreIsNullAndTipoOrderByIdMenu(Integer tipo);
+	//List<Menu> findByPadre_IdMenuIsNullAndTipoOrderByIdMenu(Integer tipo);
 }

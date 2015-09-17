@@ -107,7 +107,7 @@ public class SControlUsuarioImpl extends AbstractServiceImpl implements SControl
 	}
 	
 	public Usuario consultarUsuario(int idPersona) {
-		return this.usuarioRepository.findByPersonaIdOrderById(idPersona);
+		return this.usuarioRepository.findByPersonaId(idPersona);
 	}
 	
 	//2. Menus
