@@ -59,6 +59,8 @@ public interface STransaccion {
 	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
 	DetalleRequerimiento registrarDetalleRequerimiento(int idRequerimiento, DetalleRequerimiento detalleRequerimiento);
 	
+	Map<String, Object> consultarDetallesRequerimiento(int idRequerimiento, int pagina, int limit);
+	
 	//Cotizaciones
 	Map<String, Object> consultarSolicitudCotizaciones(Cotizacion cotizacionF, String fieldSort, Boolean sortDirection,
 			Integer idRequerimiento, int idProveedor, int pagina, int limit);

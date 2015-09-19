@@ -341,6 +341,25 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		return detalleRequerimiento;
 	}
 	
+	public Map<String, Object> consultarDetallesRequerimiento(int idRequerimiento, int page, int limit){
+		Map<String, Object> parametros= new HashMap<String, Object>();
+		Integer total = 0;
+		List<DetalleRequerimiento> detallesRequerimiento = null;
+		if(limit>0){
+			Page<DetalleRequerimiento> pageDetallesRequerimiento 
+				= this.detalleRequerimientoRepository.findByRequerimiento_IdRequerimiento(idRequerimiento, new PageRequest(page, limit));
+			total = Long.valueOf(pageDetallesRequerimiento.getTotalElements()).intValue();
+			detallesRequerimiento = pageDetallesRequerimiento.getContent();
+		}
+		else {
+			detallesRequerimiento = this.detalleRequerimientoRepository.findByRequerimiento_IdRequerimiento(idRequerimiento);
+			total = detallesRequerimiento.size();
+		}
+		parametros.put("total", total);
+		parametros.put("detallesRequerimiento", detallesRequerimiento);
+		return parametros;
+	}
+	
 	public Map<String, Object> ConsultarDetalleCotizacion(Integer idCotizacion, int page, int limit) {
 		Map<String, Object> parametros= new HashMap<String, Object>();
 		Integer total = 0;
