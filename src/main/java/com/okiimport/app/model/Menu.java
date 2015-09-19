@@ -1,11 +1,11 @@
 package com.okiimport.app.model;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import com.okiimport.app.resource.model.AbstractEntity;
 import com.okiimport.app.resource.model.ModelNavbar;
 
@@ -135,8 +135,12 @@ public class Menu extends AbstractEntity implements  Serializable, ModelNavbar{
 		return menu;
 	}
 
-	/**INTERFAZ*/
-	//1.ModelNavbar
+	/**METODOS OVERRIDE*/
+	//1. ModelNavbar
+	public int getIdNode(){
+		return this.getIdMenu();
+	}
+	
 	public String getLabel() {
 		return this.getNombre();
 	}
@@ -148,6 +152,12 @@ public class Menu extends AbstractEntity implements  Serializable, ModelNavbar{
 	public String getUriLocation() {
 		return this.getRuta();
 	}
+	
+	public List<ModelNavbar> getRootTree() {
+		List<ModelNavbar> rootTree = new ArrayList<ModelNavbar>();
+		calculateRootTree(rootTree, this);
+		return rootTree;
+	}
 
 	public List<ModelNavbar> getChilds() {
 		List<ModelNavbar> temp = new ArrayList<ModelNavbar>();
@@ -155,6 +165,55 @@ public class Menu extends AbstractEntity implements  Serializable, ModelNavbar{
 			for(Menu menu : this.getHijos())
 				temp.add(menu);
 		return temp;
+	}
+	
+	/**METODOS PROPIOS DE LA CLASE*/
+	public Menu getParentRoot(){
+		Menu rootParent=(Menu) padre;
+		while(rootParent!=null)
+			rootParent = (Menu) rootParent.padre;
+		return rootParent;
+	}
+	
+	//Hijos
+	public Menu getParent(Integer id){
+		Menu parent=(Menu) padre;
+		if(parent!=null)
+			while(parent.getIdMenu()!=id && parent.getPadre()!=null)
+				parent = (Menu) parent.padre;
+		else
+			parent = this;
+		return parent;
+	}
+	
+	protected void calculateRootTree(List<ModelNavbar> root, ModelNavbar nodo){
+		if(nodo.isRootParent())
+			root.add(nodo);
+		else {
+			calculateRootTree(root, nodo.getParent());
+			root.add(nodo);
+		}
+	}
+
+	public void setParent(ModelNavbar parent) {
+		this.setPadre((Menu) parent);
+	}
+
+	public ModelNavbar getParent() {
+		return this.getPadre();
+	}
+
+	public Boolean isRootParent() {
+		return (this.getPadre()==null);
+	}
+
+	public <T> T[] childToArray(Class<?> clazz) {
+		return childToArray(clazz, this.hijos.size());
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> T[] childToArray(Class<?> clazz, int element) {
+		return getChilds().toArray( (T[]) Array.newInstance(clazz, element));
 	}
 
 }

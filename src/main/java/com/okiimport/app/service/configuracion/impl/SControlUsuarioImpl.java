@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 
 
+
 import com.okiimport.app.dao.configuracion.MenuRepository;
 import com.okiimport.app.dao.configuracion.UsuarioRepository;
 import com.okiimport.app.dao.configuracion.impl.MenuDAO;
@@ -50,8 +51,13 @@ public class SControlUsuarioImpl extends AbstractServiceImpl implements SControl
 		return this.usuarioRepository.findOne(id);
 	}
 	
-	public Usuario consultarUsuario(String usuario, String clave) {
-		return this.usuarioRepository.findByUsernameIgnoreCaseAndPaswordIgnoreCase(usuario, clave);
+	public Usuario consultarUsuario(String username, String clave) {
+		Usuario usuario = null;
+		if(clave != null)
+			usuario = this.usuarioRepository.findByUsernameIgnoreCaseAndPaswordIgnoreCase(username, clave);
+		else
+			usuario = this.usuarioRepository.findByUsernameIgnoreCase(username);
+		return usuario;
 	}
 	
 	public Usuario grabarUsuario(Usuario usuario, SMaestros sMaestros) {
@@ -112,8 +118,14 @@ public class SControlUsuarioImpl extends AbstractServiceImpl implements SControl
 	
 	//2. Menus
 	public List<Menu> consultarPadresMenuUsuario(Integer tipo) {
-		Sort sortMenu = new Sort(this.getDirection(true, null), "idMenu");
+		Sort sortMenu = new Sort(Sort.Direction.ASC, "idMenu");
 		Specification<Menu> specfMenu = (new MenuDAO()).consultarPadresMenuUsuario(tipo);
+		return this.menuRepository.findAll(specfMenu, sortMenu);
+	}
+
+	public List<Menu> consultarHijosMenuUsuario(Integer tipo) {
+		Sort sortMenu = new Sort(Sort.Direction.ASC, "idMenu");
+		Specification<Menu> specfMenu = (new MenuDAO()).consultarHijosTipoMenu(tipo);
 		return this.menuRepository.findAll(specfMenu, sortMenu);
 	}
 }

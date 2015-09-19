@@ -42,4 +42,5 @@ public interface SControlUsuario {
 
 	//Menu
 	List<Menu> consultarPadresMenuUsuario(Integer tipo);
+	List<Menu> consultarHijosMenuUsuario(Integer tipo);
 }
