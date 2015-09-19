@@ -40,12 +40,15 @@ public interface SControlUsuario {
 	Map<String, Object> consultarUsuarios(Usuario usuarioF, String fieldSort, Boolean sortDirection, 
 			int pagina, int limit);
 	
+	@Transactional(readOnly=true)
 	boolean verificarUsername(String username);
 	
 	@Transactional(readOnly=true)
 	Usuario consultarUsuario(int idPersona);
 
 	//Menu
+	@Transactional(readOnly=true)
 	List<Menu> consultarPadresMenuUsuario(Integer tipo);
+	@Transactional(readOnly=true)
 	List<Menu> consultarHijosMenuUsuario(Integer tipo);
 }
