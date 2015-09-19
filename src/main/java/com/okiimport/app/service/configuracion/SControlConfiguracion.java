@@ -13,9 +13,11 @@ import com.okiimport.app.model.Moneda;
 @Transactional
 public interface SControlConfiguracion {
 	//Configuracion
+	@Transactional(readOnly=true)
 	Configuracion consultarConfiguracionActual();
 	
 	//Historico de Moneda
+	@Transactional(readOnly=true)
 	Map<String, Object> consultarMonedasConHistorico(int page, int limite);
 	HistoricoMoneda consultarActualConversion(Moneda moneda);
 }
