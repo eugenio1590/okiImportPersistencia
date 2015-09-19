@@ -21,8 +21,10 @@ import com.okiimport.app.model.Usuario;
 @Transactional
 public interface SControlUsuario {
 	//Usuarios
+	@Transactional(readOnly=true)
 	Usuario consultarUsuario(Integer id);
 	
+	@Transactional(readOnly=true)
 	Usuario consultarUsuario(String usuario, String clave);
 	
 	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
@@ -31,13 +33,16 @@ public interface SControlUsuario {
 	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
 	Usuario actualizarUsuario(Usuario usuario, boolean encriptar);
 	
+	@Transactional(readOnly=true)
 	Boolean cambiarEstadoUsuario(Usuario usuario, boolean estado);
 	
+	@Transactional(readOnly=true)
 	Map<String, Object> consultarUsuarios(Usuario usuarioF, String fieldSort, Boolean sortDirection, 
 			int pagina, int limit);
 	
 	boolean verificarUsername(String username);
 	
+	@Transactional(readOnly=true)
 	Usuario consultarUsuario(int idPersona);
 
 	//Menu
