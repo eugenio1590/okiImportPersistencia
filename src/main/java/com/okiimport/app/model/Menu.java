@@ -158,6 +158,18 @@ public class Menu extends AbstractEntity implements  Serializable, ModelNavbar{
 		calculateRootTree(rootTree, this);
 		return rootTree;
 	}
+	
+	public ModelNavbar getParent() {
+		return this.getPadre();
+	}
+	
+	public void setParent(ModelNavbar parent) {
+		this.setPadre((Menu) parent);
+	}
+	
+	public Boolean isRootParent() {
+		return (this.getPadre()==null);
+	}
 
 	public List<ModelNavbar> getChilds() {
 		List<ModelNavbar> temp = new ArrayList<ModelNavbar>();
@@ -165,6 +177,15 @@ public class Menu extends AbstractEntity implements  Serializable, ModelNavbar{
 			for(Menu menu : this.getHijos())
 				temp.add(menu);
 		return temp;
+	}
+	
+	public <T> T[] childToArray(Class<?> clazz) {
+		return childToArray(clazz, this.hijos.size());
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> T[] childToArray(Class<?> clazz, int element) {
+		return getChilds().toArray( (T[]) Array.newInstance(clazz, element));
 	}
 	
 	/**METODOS PROPIOS DE LA CLASE*/
@@ -194,26 +215,4 @@ public class Menu extends AbstractEntity implements  Serializable, ModelNavbar{
 			root.add(nodo);
 		}
 	}
-
-	public void setParent(ModelNavbar parent) {
-		this.setPadre((Menu) parent);
-	}
-
-	public ModelNavbar getParent() {
-		return this.getPadre();
-	}
-
-	public Boolean isRootParent() {
-		return (this.getPadre()==null);
-	}
-
-	public <T> T[] childToArray(Class<?> clazz) {
-		return childToArray(clazz, this.hijos.size());
-	}
-
-	@SuppressWarnings("unchecked")
-	public <T> T[] childToArray(Class<?> clazz, int element) {
-		return getChilds().toArray( (T[]) Array.newInstance(clazz, element));
-	}
-
 }

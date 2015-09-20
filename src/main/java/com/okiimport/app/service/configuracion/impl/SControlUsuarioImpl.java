@@ -125,7 +125,8 @@ public class SControlUsuarioImpl extends AbstractServiceImpl implements SControl
 
 	public List<Menu> consultarHijosMenuUsuario(Integer tipo) {
 		Sort sortMenu = new Sort(Sort.Direction.ASC, "idMenu");
-		Specification<Menu> specfMenu = (new MenuDAO()).consultarHijosTipoMenu(tipo);
-		return this.menuRepository.findAll(specfMenu, sortMenu);
+		return this.menuRepository.findByHijosNullAndTipo(tipo, sortMenu);
+//		Specification<Menu> specfMenu = (new MenuDAO()).consultarHijosTipoMenu(tipo);
+//		return this.menuRepository.findAll(specfMenu, sortMenu);
 	}
 }
