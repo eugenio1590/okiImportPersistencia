@@ -48,7 +48,7 @@ public interface STransaccion {
 			int pagina, int limit);
 
 	@Transactional(readOnly=true)
-	Map<String, Object> ConsultarRequerimientosCliente(Requerimiento regFiltro, String fieldSort, Boolean sortDirection, String cedula,
+	Map<String, Object> consultarRequerimientosCliente(Requerimiento regFiltro, String fieldSort, Boolean sortDirection, String cedula,
 			int pagina, int limit);
 	
 	@Transactional(readOnly=true)

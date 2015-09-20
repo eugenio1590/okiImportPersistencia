@@ -225,14 +225,14 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		return parametros;
 	}
 	
-	public Map<String, Object> ConsultarRequerimientosCliente (Requerimiento regFiltro, String fieldSort, 
+	public Map<String, Object> consultarRequerimientosCliente (Requerimiento regFiltro, String fieldSort, 
 			Boolean sortDirection, String cedula, int page, int limit) {
 		Map<String, Object> parametros= new HashMap<String, Object>();
 		Integer total = 0;
 		List<Requerimiento> requerimientos = null;
-		Sort sortRequerimiento = new Sort(Sort.Direction.DESC, "fechaCreacion")
-			.and(new Sort(Sort.Direction.ASC, "idRequerimiento"))
-			.and(new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idRequerimiento")));
+		Sort sortRequerimiento = new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idRequerimiento"))
+			.and(new Sort(Sort.Direction.DESC, "fechaCreacion"))
+			.and(new Sort(Sort.Direction.ASC, "idRequerimiento"));
 		Specification<Requerimiento> specfRequerimiento = (new RequerimientoDAO())
 				.consultarRequerimientosCliente(regFiltro, cedula);
 		
