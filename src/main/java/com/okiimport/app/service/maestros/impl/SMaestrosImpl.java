@@ -18,6 +18,7 @@ import com.okiimport.app.dao.maestros.ClienteRepository;
 import com.okiimport.app.dao.maestros.EstadoRepository;
 import com.okiimport.app.dao.maestros.MarcaVehiculoRepository;
 import com.okiimport.app.dao.maestros.MotorRepository;
+import com.okiimport.app.dao.maestros.PaisRepository;
 import com.okiimport.app.dao.maestros.PersonaRepository;
 import com.okiimport.app.dao.maestros.ProveedorRepository;
 import com.okiimport.app.dao.maestros.impl.AnalistaDAO;
@@ -31,6 +32,7 @@ import com.okiimport.app.model.Cliente;
 import com.okiimport.app.model.Estado;
 import com.okiimport.app.model.MarcaVehiculo;
 import com.okiimport.app.model.Motor;
+import com.okiimport.app.model.Pais;
 import com.okiimport.app.model.Persona;
 import com.okiimport.app.model.Proveedor;
 import com.okiimport.app.resource.service.AbstractServiceImpl;
@@ -64,6 +66,9 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 	
 	@Autowired
 	private BancoRepository bancoRepository;
+	
+	@Autowired
+	private PaisRepository paisRepository;
 		
 	//Marcas
 	public Map<String, Object> consultarMarcas(int page, int limit) {
@@ -393,6 +398,25 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 		return parametros;
 	}
 	
+	//Pais
+	public Map<String, Object> consultarPaises(int page, int limit) {
+		Map<String, Object> parametros = new HashMap<String, Object>();
+		Integer total = 0;
+		List<Pais> paises = null;
+		if(limit>0){
+			Page<Pais> pagePais = this.paisRepository.findAll(new PageRequest(page, limit));
+			total = Long.valueOf(pagePais.getTotalElements()).intValue();
+			paises = pagePais.getContent();
+		}
+		else {
+			paises = this.paisRepository.findAll();
+			total = paises.size();
+		}
+		parametros.put("total", total);
+		parametros.put("paises", paises);
+		return parametros;
+	}
+	
 	/**METODOS PROPIOS DE LA CLASE*/
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private <T extends PersonaRepository, Y extends Persona> T determinarPersonaDAO(Class<Y> clase){
@@ -406,5 +430,5 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 				dao = (T) this.clienteRepository;
 		}
 		return dao;
-	}
+	}	
 }

@@ -17,6 +17,7 @@ import com.okiimport.app.model.Proveedor;
 @Transactional
 public interface SMaestros {
 	//Marcas
+	@Transactional(readOnly=true)
 	Map<String,Object> consultarMarcas(int page, int limit);
 	
 	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
@@ -87,10 +88,12 @@ public interface SMaestros {
 	Map<String, Object> consultarProveedoresConSolicitudCotizaciones(Proveedor proveedor, Integer idRequerimiento, 
 			String fieldSort, Boolean sortDirection, int page, int limit);
 	
-	
-	  
 	//Banco
 	@Transactional(readOnly=true)
 	Map<String, Object> consultarBancos(int page, int limit);
+	
+	//Pais
+	@Transactional(readOnly=true)
+	Map<String, Object> consultarPaises(int page, int limit);
 
 }

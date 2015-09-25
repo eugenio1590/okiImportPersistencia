@@ -24,6 +24,11 @@ public class Proveedor extends Persona implements Serializable {
 	@Column(name="tipo_proveedor")
 	private Boolean tipoProveedor;
 	
+	//bi-directional one-to-many association to Pais
+	@ManyToOne
+	@JoinColumn(name="id_pais")
+	private Pais pais;
+	
 	//bi-directional one-to-many association to Cotizacion
 	@OneToMany(mappedBy="proveedor", fetch=FetchType.LAZY, orphanRemoval=true)
 	private List<Cotizacion> cotizacions;
@@ -84,6 +89,14 @@ public class Proveedor extends Persona implements Serializable {
 
 	public void setTipoProveedor(Boolean tipoProveedor) {
 		this.tipoProveedor = tipoProveedor;
+	}
+
+	public Pais getPais() {
+		return pais;
+	}
+
+	public void setPais(Pais pais) {
+		this.pais = pais;
 	}
 
 	public List<Cotizacion> getCotizacions() {
