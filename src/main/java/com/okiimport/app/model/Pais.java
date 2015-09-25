@@ -18,7 +18,7 @@ public class Pais {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="pais_id_seq")
-	@SequenceGenerator(name="banco_id_seq", sequenceName="pais_id_seq", initialValue=1, allocationSize=1)
+	@SequenceGenerator(name="pais_id_seq", sequenceName="pais_id_seq", initialValue=1, allocationSize=1)
 	@Column(name="id_pais")
 	private Integer idPais;
 	
