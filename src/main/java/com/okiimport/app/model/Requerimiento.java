@@ -166,7 +166,7 @@ public class Requerimiento extends AbstractEntity implements Serializable {
 	}
 
 	@JsonSerialize(using=JsonDateSerializer.class)
-	public Date getFechaCreacion() {
+	public Timestamp getFechaCreacion() {
 		return this.fechaCreacion;
 	}
 
