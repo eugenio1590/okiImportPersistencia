@@ -7,11 +7,13 @@ import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.okiimport.app.resource.model.AbstractEntity;
+
 import com.okiimport.app.resource.model.JsonDateSerializer;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -318,6 +320,15 @@ public class Requerimiento extends AbstractEntity implements Serializable {
 	}
 
 	/**METODOS PROPIOS DE LA CLASE*/
+	@Transient
+	public static Comparator<Requerimiento> getComparator(){
+		return new Comparator<Requerimiento>(){
+			public int compare(Requerimiento requer1, Requerimiento requer2) {
+				return requer1.getIdRequerimiento().compareTo(requer2.getIdRequerimiento());
+			}
+		};
+	}
+	
 	public String determinarTransmision(){
 		String texto = null;
 		if(transmisionV!=null)

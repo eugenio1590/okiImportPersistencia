@@ -1,12 +1,12 @@
 package com.okiimport.app.model;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import com.okiimport.app.resource.model.AbstractEntity;
 
 /**
@@ -162,6 +162,15 @@ public class DetalleCotizacion extends AbstractEntity implements Serializable {
 	}
 	
 	/**METODOS PROPIOS DE LA CLASE*/
+	public static Comparator<DetalleCotizacion> getComparator(){
+		return new Comparator<DetalleCotizacion>(){
+			public int compare(DetalleCotizacion detalle1, DetalleCotizacion detalle2) {
+				return detalle1.getIdDetalleCotizacion().compareTo(detalle2.getIdDetalleCotizacion());
+			}
+			
+		};
+	}
+	
 	public Float calcularTotal(){
 		if(this.precioFlete!=null)
 			return calcularCosto()+calcularFlete();

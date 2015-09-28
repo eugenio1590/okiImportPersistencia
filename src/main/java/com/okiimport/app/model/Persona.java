@@ -1,12 +1,12 @@
 package com.okiimport.app.model;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import com.okiimport.app.resource.model.AbstractEntity;
 
 
@@ -194,6 +194,14 @@ public abstract class Persona extends AbstractEntity implements Serializable {
 			public Integer getTipoMenu() {
 				// TODO Auto-generated method stub
 				return null;
+			}
+		};
+	}
+	
+	public static <T extends Persona> Comparator<T> getComparator(){
+		return new Comparator<T>(){
+			public int compare(T pers1, T pers2) {
+				return pers1.getId().compareTo(pers2.getId());
 			}
 		};
 	}

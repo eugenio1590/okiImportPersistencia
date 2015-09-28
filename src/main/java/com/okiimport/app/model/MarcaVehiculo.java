@@ -5,10 +5,10 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import com.okiimport.app.resource.model.AbstractEntity;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -104,5 +104,13 @@ public class MarcaVehiculo extends AbstractEntity implements Serializable {
 		this.proveedores = proveedores;
 	}
 	
+	/**METODOS PROPIOS DE LA CLASE*/
+	public static Comparator<MarcaVehiculo> getComparator(){
+		return new Comparator<MarcaVehiculo>(){
+			public int compare(MarcaVehiculo marca1, MarcaVehiculo marca2) {
+				return marca1.getIdMarcaVehiculo().compareTo(marca2.getIdMarcaVehiculo());
+			}
+		};
+	}
 	
 }

@@ -2,12 +2,12 @@ package com.okiimport.app.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import com.okiimport.app.resource.model.AbstractEntity;
 
 
@@ -97,5 +97,15 @@ public class ClasificacionRepuesto extends AbstractEntity implements Serializabl
 
 	public void setProveedores(List<Proveedor> proveedores) {
 		this.proveedores = proveedores;
+	}
+	
+	/**METODOS PROPIOS DE LA CLASE*/
+	public static Comparator<ClasificacionRepuesto> getComparator(){
+		return new Comparator<ClasificacionRepuesto>(){
+			public int compare(ClasificacionRepuesto clasificacion1, ClasificacionRepuesto clasificacion2) {
+				return clasificacion1.getIdClasificacionRepuesto().compareTo(clasificacion2.getIdClasificacionRepuesto());
+			}
+			
+		};
 	}
 }
