@@ -21,6 +21,9 @@ public interface SMaestros {
 	@Transactional(readOnly=true)
 	Map<String,Object> consultarMarcas(int page, int limit);
 	
+	@Transactional(readOnly=true)
+	Map<String, Object> consultarMarcasVehiculoProveedor(Integer idProveedor, int page, int limit);
+	
 	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
 	MarcaVehiculo registrarMarca(MarcaVehiculo marca);
 	
@@ -68,9 +71,6 @@ public interface SMaestros {
 	Map<String, Object> consultarProveedoresSinUsuarios(Persona personaF, String fieldSort, Boolean sortDirection,
 			int page, int limit);
 	
-	@Transactional(readOnly=true)
-	Map<String,Object> ConsultarClasificacionRepuesto(int page, int limit);
-	
 	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
 	Proveedor registrarProveedor(Proveedor proveedor);
 	
@@ -84,6 +84,13 @@ public interface SMaestros {
 	@Transactional(readOnly=true)
 	Map<String, Object> ConsultarProveedoresListaClasificacionRepuesto(Persona persona, String fieldSort, Boolean sortDirection,
 			Integer idRequerimiento, List<Integer> idsClasificacionRepuesto, int page, int limit);
+	
+	//Clasificacion Repuesto
+	@Transactional(readOnly=true)
+	Map<String,Object> consultarClasificacionRepuesto(int page, int limit);
+	
+	@Transactional(readOnly=true)
+	Map<String, Object> consultarClasificacionRepuestoProveedor(Integer idProveedor, int page, int limit);
 	
 	//Motor
 	@Transactional(readOnly=true)
