@@ -64,10 +64,8 @@ public abstract class AbstractEntity implements Cloneable{
 		try {
 			return (T) this.clone();
 		} catch (CloneNotSupportedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
 	}
-
 }

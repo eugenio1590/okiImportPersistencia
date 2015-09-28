@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.okiimport.app.model.Analista;
 import com.okiimport.app.model.Cliente;
 import com.okiimport.app.model.MarcaVehiculo;
+import com.okiimport.app.model.Motor;
 import com.okiimport.app.model.Persona;
 import com.okiimport.app.model.Proveedor;
 
@@ -62,7 +63,6 @@ public interface SMaestros {
 	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
 	Analista registrarAnalista(Analista analista);
 	
-	
 	//Proveedores
 	@Transactional(readOnly=true)
 	Map<String, Object> consultarProveedoresSinUsuarios(Persona personaF, String fieldSort, Boolean sortDirection,
@@ -75,18 +75,19 @@ public interface SMaestros {
 	Proveedor registrarProveedor(Proveedor proveedor);
 	
 	@Transactional(readOnly=true)
-	Map<String,Object> ConsultarMotor(int page, int limit);
-	
-	@Transactional(readOnly=true)
-	Map<String, Object> ConsultarProveedoresListaClasificacionRepuesto(Persona persona, String fieldSort, Boolean sortDirection,
-			Integer idRequerimiento, List<Integer> idsClasificacionRepuesto, int page, int limit);
-	
-	@Transactional(readOnly=true)
 	Map<String, Object> consultarProveedores(Proveedor proveedor, int page, int limit);
 	
 	@Transactional(readOnly=true)
 	Map<String, Object> consultarProveedoresConSolicitudCotizaciones(Proveedor proveedor, Integer idRequerimiento, 
 			String fieldSort, Boolean sortDirection, int page, int limit);
+	
+	@Transactional(readOnly=true)
+	Map<String, Object> ConsultarProveedoresListaClasificacionRepuesto(Persona persona, String fieldSort, Boolean sortDirection,
+			Integer idRequerimiento, List<Integer> idsClasificacionRepuesto, int page, int limit);
+	
+	//Motor
+	@Transactional(readOnly=true)
+	Map<String,Object> consultarMotores(Motor motor, String fieldSort, Boolean sortDirection, int page, int limit);
 	
 	//Banco
 	@Transactional(readOnly=true)

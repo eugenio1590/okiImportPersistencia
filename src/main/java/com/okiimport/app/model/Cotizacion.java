@@ -25,6 +25,7 @@ public class Cotizacion extends AbstractEntity implements Serializable{
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="cotizacion_id_seq")
 	@SequenceGenerator(name="cotizacion_id_seq", sequenceName="cotizacion_id_seq", initialValue=1, allocationSize=1)
+	@Column(name="id_cotizacion")
 	private Integer idCotizacion;
 	
 	@Column(name="fecha_creacion")

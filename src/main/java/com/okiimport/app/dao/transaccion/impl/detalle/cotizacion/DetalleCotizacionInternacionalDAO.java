@@ -29,7 +29,7 @@ public class DetalleCotizacionInternacionalDAO extends AbstractDetalleCotizacion
 			final boolean distinct, final boolean cantExacta){
 		return new Specification<DetalleCotizacionInternacional>(){
 			public Predicate toPredicate(Root<DetalleCotizacionInternacional> entity, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-				//1. Inicializar Variables
+				// 1. Inicializar Variables
 				inicializar(entity, criteriaQuery, criteriaBuilder);
 				
 				// 2. Generamos los Joins

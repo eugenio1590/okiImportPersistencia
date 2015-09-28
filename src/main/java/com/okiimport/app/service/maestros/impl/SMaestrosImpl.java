@@ -23,6 +23,7 @@ import com.okiimport.app.dao.maestros.PersonaRepository;
 import com.okiimport.app.dao.maestros.ProveedorRepository;
 import com.okiimport.app.dao.maestros.impl.AnalistaDAO;
 import com.okiimport.app.dao.maestros.impl.ClienteDAO;
+import com.okiimport.app.dao.maestros.impl.MotorDAO;
 import com.okiimport.app.dao.maestros.impl.ProveedorDAO;
 import com.okiimport.app.model.Analista;
 import com.okiimport.app.model.Banco;
@@ -361,21 +362,23 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 	}
 	
 	//Motor
-	public Map<String, Object> ConsultarMotor(int page, int limit) {
+	public Map<String,Object> consultarMotores(Motor motor, String fieldSort, Boolean sortDirection, int page, int limit){
 		Map<String, Object> Parametros= new HashMap<String, Object>();
 		Integer total = 0;
 		List<Motor> motores = null;
+		Sort sortMotor = new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idMotor"));
+		Specification<Motor> specfMotor = (new MotorDAO()).consultarMotores(motor);
 		if(limit>0){
-			Page<Motor> pageMotor = this.motorRepository.findAll(new PageRequest(page, limit));
+			Page<Motor> pageMotor = this.motorRepository.findAll(specfMotor, new PageRequest(page, limit, sortMotor));
 			total = Long.valueOf(pageMotor.getTotalElements()).intValue();
 			motores = pageMotor.getContent();
 		}
 		else {
-			motores = this.motorRepository.findAll();
+			motores = this.motorRepository.findAll(specfMotor, sortMotor);
 			total = motores.size();
 		}
 		Parametros.put("total", total);
-		Parametros.put("motor", motores);
+		Parametros.put("motores", motores);
 		return Parametros;
 	}
 	
