@@ -394,6 +394,10 @@ public class Requerimiento extends AbstractEntity implements Serializable {
 		return this.estatus.equalsIgnoreCase("EC");
 	}
 	
+	public boolean verOfertas(){
+		return this.estatus.equalsIgnoreCase("O");
+	}
+	
 	public boolean seleccionarCotizacion(){
 		if(this.nroOfertas!=null && this.nroOfertas<3)
 			return true;
