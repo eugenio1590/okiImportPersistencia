@@ -94,6 +94,24 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 	   return marcaVehiculoRepository.save(marca);
 	}
 	
+	public Map<String, Object> consultarMarcasVehiculoProveedor(Integer idProveedor, int page, int limit){
+		Map<String, Object> Parametros= new HashMap<String, Object>();
+		Integer total = 0;
+		List<MarcaVehiculo> marcasVehiculo = null;
+		if(limit>0){
+			Page<MarcaVehiculo> pageMarcaVehiculo = this.marcaVehiculoRepository.findByProveedoresId(idProveedor, new PageRequest(page, limit));
+			total = Long.valueOf(pageMarcaVehiculo.getTotalElements()).intValue();
+			marcasVehiculo = pageMarcaVehiculo.getContent();
+		}
+		else {
+			marcasVehiculo = this.marcaVehiculoRepository.findByProveedoresId(idProveedor);
+			total = marcasVehiculo.size();
+		}
+		Parametros.put("total", total);
+		Parametros.put("marcas", marcasVehiculo);
+		return Parametros;
+	}
+	
 	//Estados
 	public Map<String, Object> ConsultarEstado(int page, int limit) {
 		Map<String, Object> Parametros= new HashMap<String, Object>();
@@ -342,7 +360,7 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 	}
 	
 	//Clasificacion Repuesto
-	public Map<String, Object> ConsultarClasificacionRepuesto(int page, int limit) {
+	public Map<String, Object> consultarClasificacionRepuesto(int page, int limit) {
 		Map<String, Object> Parametros= new HashMap<String, Object>();
 		Integer total = 0;
 		List<ClasificacionRepuesto> clasfRepuestos = null;
@@ -354,6 +372,25 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 		}
 		else {
 			clasfRepuestos = this.clasificacionRepuestoRepository.findAll();
+			total = clasfRepuestos.size();
+		}
+		Parametros.put("total", total);
+		Parametros.put("clasificacionRepuesto", clasfRepuestos);
+		return Parametros;
+	}
+	
+	public Map<String, Object> consultarClasificacionRepuestoProveedor(Integer idProveedor, int page, int limit){
+		Map<String, Object> Parametros= new HashMap<String, Object>();
+		Integer total = 0;
+		List<ClasificacionRepuesto> clasfRepuestos = null;
+		if(limit>0){
+			Page<ClasificacionRepuesto> pageClasfRepuesto = this.clasificacionRepuestoRepository
+					.findByProveedoresId(idProveedor, new PageRequest(page, limit));
+			total = Long.valueOf(pageClasfRepuesto.getTotalElements()).intValue();
+			clasfRepuestos = pageClasfRepuesto.getContent();
+		}
+		else {
+			clasfRepuestos = this.clasificacionRepuestoRepository.findByProveedoresId(idProveedor);
 			total = clasfRepuestos.size();
 		}
 		Parametros.put("total", total);

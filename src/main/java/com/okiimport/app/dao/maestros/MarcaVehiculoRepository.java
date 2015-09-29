@@ -13,4 +13,6 @@ import com.okiimport.app.resource.dao.IGenericJPARepository;
 public interface MarcaVehiculoRepository extends IGenericJPARepository<MarcaVehiculo, Integer> {
 	List<MarcaVehiculo> findByEstatusIgnoreCase(String estatus);
 	Page<MarcaVehiculo> findByEstatusIgnoreCase(String estatus, Pageable pageable);
+	List<MarcaVehiculo> findByProveedoresId(Integer id);
+	Page<MarcaVehiculo> findByProveedoresId(Integer id, Pageable pageable);
 }
