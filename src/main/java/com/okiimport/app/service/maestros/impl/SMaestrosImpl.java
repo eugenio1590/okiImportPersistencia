@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.okiimport.app.dao.maestros.AnalistaRepository;
 import com.okiimport.app.dao.maestros.BancoRepository;
@@ -284,12 +285,7 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 	}
 	
 	public Proveedor registrarProveedor(Proveedor proveedor) {
-		for(ClasificacionRepuesto clasificacion : proveedor.getClasificacionRepuestos())
-			clasificacion.getProveedores().add(proveedor);
-		for(MarcaVehiculo marca : proveedor.getMarcaVehiculos())
-			marca.getProveedores().add(proveedor);
-
-		return proveedor = this.proveedorRepository.save(proveedor);
+		return this.proveedorRepository.save(proveedor);
 	}
 	
 	public Map<String, Object> ConsultarProveedoresListaClasificacionRepuesto(Persona persona, String fieldSort, Boolean sortDirection,

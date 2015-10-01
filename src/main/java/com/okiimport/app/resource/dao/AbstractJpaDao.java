@@ -1,5 +1,6 @@
 package com.okiimport.app.resource.dao;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
@@ -33,6 +34,21 @@ public abstract class AbstractJpaDao<T> {
 	protected CriteriaQuery<?> criteriaQuery;
 	protected Root<T> entity;
 	
+	/**METODOS PROPIOS DE LA CLASE*/
+	
+	/**METODOS GENERALES*/
+	@SuppressWarnings({ "unchecked", "unused"})
+	private <X extends Object> X getGenericValue(Field field,  T object){
+		try {
+			Class<X> claseX = (Class<X>) Object.class.<X>newInstance().getClass();
+			field.setAccessible(true);
+			return claseX.cast(field.get(object));
+		} catch (InstantiationException | IllegalAccessException | ClassCastException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	protected void inicializar(Root<T> entity, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder){
 		this.criteriaBuilder = criteriaBuilder;
 		this.criteriaQuery = criteriaQuery;
@@ -56,17 +72,17 @@ public abstract class AbstractJpaDao<T> {
 		try {
 			for (Attribute<? super T, ?> a: entity.getModel().getAttributes()) {
 				if(!a.getClass().getCanonicalName().equalsIgnoreCase("org.hibernate.ejb.metamodel.PluralAttributeImpl.ListAttributeImpl")){
-					
-				String name = a.getName();
-				String javaName = a.getJavaMember().getName();
-				String getter = "get" + javaName.substring(0,1).toUpperCase() + javaName.substring(1);
-				Method method = exampleInstance.getClass().getDeclaredMethod(getter, (Class<?>[]) null);
-				Object result = method.invoke(exampleInstance, (Object[]) null);
-				if (result !=  null)
-					p = criteriaBuilder.and(p, criteriaBuilder.like(
-							criteriaBuilder.lower(entity.get(name).as(String.class)), 
-							"%"+String.valueOf(result).toLowerCase()+"%"
-							));
+
+					String name = a.getName();
+					String javaName = a.getJavaMember().getName();
+					String getter = "get" + javaName.substring(0,1).toUpperCase() + javaName.substring(1);
+					Method method = exampleInstance.getClass().getDeclaredMethod(getter, (Class<?>[]) null);
+					Object result = method.invoke(exampleInstance, (Object[]) null);
+					if (result !=  null)
+						p = criteriaBuilder.and(p, criteriaBuilder.like(
+								criteriaBuilder.lower(entity.get(name).as(String.class)), 
+								"%"+String.valueOf(result).toLowerCase()+"%"
+								));
 				}
 			}
 		} catch (NoSuchMethodException e) {
