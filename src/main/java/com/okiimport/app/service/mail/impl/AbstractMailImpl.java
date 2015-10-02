@@ -8,4 +8,7 @@ public abstract class AbstractMailImpl {
 	protected static SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 	protected static Calendar calendar = GregorianCalendar.getInstance();
 
+	protected void sendMail(Runnable hilo){		
+		new Thread(hilo).start();
+	}
 }

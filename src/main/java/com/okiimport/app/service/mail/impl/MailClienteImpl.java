@@ -10,15 +10,24 @@ import com.okiimport.app.service.mail.MailService;
 
 public class MailClienteImpl extends AbstractMailImpl implements MailCliente {
 
-	public void registrarRequerimiento(final Requerimiento requerimiento, MailService mailService) {
-		final Cliente cliente = requerimiento.getCliente();
-		final Map<String, Object> model = new HashMap<String, Object>();
-		model.put("fechaEnvio", dateFormat.format(calendar.getTime()));
-		model.put("cliente", cliente);
-		model.put("requerimiento", requerimiento);
-		
-		mailService.send(cliente.getCorreo(), "Registro de Requerimiento Nro. "+requerimiento.getIdRequerimiento(),
-				"registrarRequerimiento.html", model);
-	}
+	public void registrarRequerimiento(final Requerimiento requerimiento, final MailService mailService) {
+		super.sendMail(new Runnable(){
+			@Override
+			public void run() {
+				try {
+					final Cliente cliente = requerimiento.getCliente();
+					final Map<String, Object> model = new HashMap<String, Object>();
+					model.put("fechaEnvio", dateFormat.format(calendar.getTime()));
+					model.put("cliente", cliente);
+					model.put("requerimiento", requerimiento);
 
+					mailService.send(cliente.getCorreo(), "Registro de Requerimiento Nro. "+requerimiento.getIdRequerimiento(),
+							"registrarRequerimiento.html", model);
+				}
+				catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		});
+	}
 }
