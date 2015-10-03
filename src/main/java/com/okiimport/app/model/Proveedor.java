@@ -70,6 +70,9 @@ public class Proveedor extends Persona implements Serializable {
 		}
 	)
 	private List<ClasificacionRepuesto> clasificacionRepuestos;
+	
+	@Transient
+	private String ubicacion;
 		
 	public Proveedor() {
 		marcaVehiculos = new ArrayList<MarcaVehiculo>();
@@ -147,6 +150,15 @@ public class Proveedor extends Persona implements Serializable {
 	public void setClasificacionRepuestos(
 			List<ClasificacionRepuesto> clasificacionRepuestos) {
 		this.clasificacionRepuestos = clasificacionRepuestos;
+	}
+	
+	//Transient
+	public String getUbicacion() {
+		return ubicacion;
+	}
+
+	public void setUbicacion(String ubicacion) {
+		this.ubicacion = ubicacion;
 	}
 
 	/**METODOS OVERRIDE*/
