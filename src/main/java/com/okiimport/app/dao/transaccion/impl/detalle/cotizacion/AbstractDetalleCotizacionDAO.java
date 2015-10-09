@@ -15,8 +15,9 @@ import javax.persistence.criteria.Selection;
 
 import org.springframework.data.jpa.domain.Specification;
 
-import com.okiimport.app.model.DetalleCotizacion;
 import com.okiimport.app.model.Cotizacion;
+import com.okiimport.app.model.DetalleCotizacion;
+import com.okiimport.app.model.DetalleRequerimiento;
 import com.okiimport.app.model.Proveedor;
 import com.okiimport.app.resource.dao.AbstractJpaDao;
 
@@ -109,11 +110,54 @@ public abstract class AbstractDetalleCotizacionDAO<T extends DetalleCotizacion> 
 				//Proveedor
 				Proveedor proveedor = cotizacion.getProveedor();
 				if(proveedor!=null){
+					Join<?,?> joinProveedor = joins.get("cotizacion").join("proveedor");
+					
 					if(proveedor.getNombre()!=null)
 						restricciones.add(criteriaBuilder.like(
-								criteriaBuilder.lower(joins.get("cotizacion").join("proveedor").get("nombre").as(String.class)),
+								criteriaBuilder.lower(joinProveedor.get("nombre").as(String.class)),
 								"%"+String.valueOf(proveedor.getNombre()).toLowerCase()+"%"));
+					
+					String ubicacion = proveedor.getUbicacion();
+					if(ubicacion!=null){
+						Join<?,?> joinCiudad = joinProveedor.join("ciudad", JoinType.LEFT);
+						restricciones.add(
+								criteriaBuilder.or(
+										criteriaBuilder.like(
+												criteriaBuilder.lower(joinProveedor.join("pais").get("nombre").as(String.class)),
+												"%"+String.valueOf(ubicacion).toLowerCase()+"%"),
+										criteriaBuilder.like(
+												criteriaBuilder.lower(joinCiudad.get("nombre").as(String.class)),
+												"%"+String.valueOf(ubicacion).toLowerCase()+"%"),
+										criteriaBuilder.like(
+												criteriaBuilder.lower(joinCiudad.join("estado", JoinType.LEFT).get("nombre").as(String.class)),
+												"%"+String.valueOf(ubicacion).toLowerCase()+"%")
+								)
+						);
+					}
+					else {
+						//Pais, Ciudad, Estado Unitarios
+					}
+						
 				}
+			}
+			
+			//Detalle Requerimiento
+			DetalleRequerimiento detalleRequerimiento = detalleF.getDetalleRequerimiento();
+			if(detalleRequerimiento!=null){
+				Join<?,?> joinDetalleRequerimiento = joins.get("detalleRequerimiento");
+				if(detalleRequerimiento.getDescripcion()!=null)
+					restricciones.add(criteriaBuilder.like(
+							criteriaBuilder.lower(joinDetalleRequerimiento.get("descripcion").as(String.class)),
+							"%"+String.valueOf(detalleRequerimiento.getDescripcion()).toLowerCase()+"%"));
+				System.out.println("Cantidad Exacta: "+cantExacta);
+				if(detalleRequerimiento.getCantidad()!=null)
+					if(cantExacta)
+						restricciones.add(criteriaBuilder.like(
+								criteriaBuilder.lower(joinDetalleRequerimiento.get("cantidad").as(String.class)),
+								"%"+String.valueOf(detalleRequerimiento.getCantidad()).toLowerCase()+"%"));
+					else
+						restricciones.add(criteriaBuilder.greaterThanOrEqualTo(
+								joinDetalleRequerimiento.get("cantidad").as(Long.class), detalleRequerimiento.getCantidad()));
 			}
 		}
 	}

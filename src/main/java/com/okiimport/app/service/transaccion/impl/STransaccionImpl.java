@@ -552,8 +552,10 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 				detallesCotizacion.add(i, detalleInter);
 			}
 		}
+		
 		if(!detallesEliminar.isEmpty())
-			detallesCotizacion.removeAll(detallesEliminar);
+			detallesCotizacion = new ArrayList<DetalleCotizacion>(detallesCotizacion);
+		detallesCotizacion.removeAll(detallesEliminar);
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		parametros.put("total", total);
 		parametros.put("detallesCotizacion", detallesCotizacion);
