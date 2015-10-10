@@ -48,7 +48,6 @@ public class AnalistaDAO extends PersonaDAO<Analista> {
 				// 3. Creamos los campos a seleccionar
 				Expression<Long> cantRequerimientos = criteriaBuilder.countDistinct(joins.get("requerimientos"));
 				
-				criteriaQuery = criteriaBuilder.createTupleQuery();
 				criteriaQuery.multiselect(new Selection[]{
 						cantRequerimientos.alias("cantRequerimientos"),
 						entity.get("id")

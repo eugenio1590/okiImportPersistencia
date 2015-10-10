@@ -146,7 +146,6 @@ public class RequerimientoDAO extends AbstractJpaDao<Requerimiento> {
 				Map<String, Join<?,?>> joins = crearJoins(entidades);
 				
 				//3. Creamos los campos a seleccionar
-				criteriaQuery = criteriaBuilder.createTupleQuery();
 				criteriaQuery.multiselect(new Selection[]{
 						entity.get("idRequerimiento"),
 						entity.get("estatus"),
@@ -158,7 +157,8 @@ public class RequerimientoDAO extends AbstractJpaDao<Requerimiento> {
 						joins.get("cliente"),
 						joins.get("marcaVehiculo"),
 						joins.get("motor")
-				}).distinct(true);
+				});
+				criteriaQuery.distinct(true);
 				
 				//4. Creamos las Restricciones de la busqueda
 				List<Predicate> restricciones = new ArrayList<Predicate>();

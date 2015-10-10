@@ -41,7 +41,6 @@ public class ProveedorDAO extends PersonaDAO<Proveedor> {
 				Map<String, Join<?,?>> joins = crearJoins(entidades);
 				
 				// 3. Creamos los campos a seleccionar
-				criteriaQuery = criteriaBuilder.createTupleQuery();
 				criteriaQuery.multiselect(new Selection[]{
 						entity.get("id"),
 						entity.get("cedula"),
@@ -51,7 +50,8 @@ public class ProveedorDAO extends PersonaDAO<Proveedor> {
 						entity.get("telefono"),
 						entity.get("estatus"),
 						entity.get("tipoProveedor")
-				}).distinct(true);
+				});
+				criteriaQuery.distinct(true);
 				
 				// 4. Creamos las Restricciones de la busqueda
 				List<Predicate> restricciones = new ArrayList<Predicate>();
@@ -107,7 +107,6 @@ public class ProveedorDAO extends PersonaDAO<Proveedor> {
 				Map<String, Join<?,?>> joins = crearJoins(entidades);
 				
 				//3. Creamos los campos a seleccionar
-				criteriaQuery = criteriaBuilder.createTupleQuery();
 				criteriaQuery.multiselect(new Selection[]{
 						entity.get("id"),
 						entity.get("cedula"),
@@ -117,7 +116,8 @@ public class ProveedorDAO extends PersonaDAO<Proveedor> {
 						entity.get("telefono"),
 						entity.get("estatus"),
 						entity.get("tipoProveedor")
-				}).distinct(true);
+				});
+				criteriaQuery.distinct(true);
 				
 				//4. Creamos las Restricciones de la busqueda
 				List<Predicate> restricciones = new ArrayList<Predicate>();
