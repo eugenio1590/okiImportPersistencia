@@ -542,20 +542,27 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 			detallesCotizacion = this.detalleCotizacionRepository.findAll(specfDetalleCotizacion, sortDetalleCotizacion);
 			total = detallesCotizacion.size();
 		}
-
+		
 		List<DetalleCotizacion> detallesEliminar = new ArrayList<DetalleCotizacion>();
+		Map<Integer, DetalleCotizacion> detallesIncluir = new HashMap<Integer, DetalleCotizacion>();
 		for(int i=0; i<detallesCotizacion.size(); i++){
 			DetalleCotizacion detalle = detallesCotizacion.get(i);
 			DetalleCotizacionInternacional detalleInter = this.detalleCotizacionInternacionalRepository.findOne(detalle.getIdDetalleCotizacion());
 			if(detalleInter != null){
 				detallesEliminar.add(detalle);
-				detallesCotizacion.add(i, detalleInter);
+				detallesIncluir.put(i, detalleInter);
 			}
 		}
 		
-		if(!detallesEliminar.isEmpty())
-			detallesCotizacion = new ArrayList<DetalleCotizacion>(detallesCotizacion);
-		detallesCotizacion.removeAll(detallesEliminar);
+		if(!detallesEliminar.isEmpty()){
+			detallesCotizacion = new ArrayList(detallesCotizacion);
+			detallesCotizacion.removeAll(detallesEliminar);
+		}
+		
+		if(!detallesIncluir.isEmpty())
+			for(Integer index : detallesIncluir.keySet())
+				detallesCotizacion.add(index, detallesIncluir.get(index));
+		
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		parametros.put("total", total);
 		parametros.put("detallesCotizacion", detallesCotizacion);
