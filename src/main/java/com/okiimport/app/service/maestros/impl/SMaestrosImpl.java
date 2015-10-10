@@ -355,6 +355,15 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 		return parametros;
 	}
 	
+	public Proveedor consultarProveedor(Proveedor proveedor){
+		Sort sortProveedor = new Sort(Sort.Direction.ASC, "id");
+		Specification<Proveedor> specfProveedor = (new ProveedorDAO()).consultarPersona(proveedor);
+		List<Proveedor> proveedores = this.proveedorRepository.findAll(specfProveedor, sortProveedor);
+		if(proveedores!=null && proveedores.size()>0)
+			return proveedores.get(0);
+		return null;
+	}
+	
 	//Clasificacion Repuesto
 	public Map<String, Object> consultarClasificacionRepuesto(int page, int limit) {
 		Map<String, Object> Parametros= new HashMap<String, Object>();
