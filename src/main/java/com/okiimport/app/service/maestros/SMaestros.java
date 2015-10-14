@@ -78,6 +78,9 @@ public interface SMaestros {
 	Map<String, Object> consultarProveedores(Proveedor proveedor, int page, int limit);
 	
 	@Transactional(readOnly=true)
+	Proveedor consultarProveedor(Proveedor proveedor);
+	
+	@Transactional(readOnly=true)
 	Map<String, Object> consultarProveedoresConSolicitudCotizaciones(Proveedor proveedor, Integer idRequerimiento, 
 			String fieldSort, Boolean sortDirection, int page, int limit);
 	
