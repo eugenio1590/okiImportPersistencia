@@ -355,9 +355,9 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 		return parametros;
 	}
 	
-	
-	
-	public Proveedor consultarProveedor(Proveedor proveedor) {
+
+	public Proveedor consultarProveedor(Proveedor proveedor){
+
 		Sort sortProveedor = new Sort(Sort.Direction.ASC, "id");
 		Specification<Proveedor> specfProveedor = (new ProveedorDAO()).consultarPersona(proveedor);
 		List<Proveedor> proveedores = this.proveedorRepository.findAll(specfProveedor, sortProveedor);

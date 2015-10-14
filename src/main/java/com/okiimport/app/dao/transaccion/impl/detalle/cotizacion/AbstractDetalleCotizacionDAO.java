@@ -38,7 +38,6 @@ public abstract class AbstractDetalleCotizacionDAO<T extends DetalleCotizacion> 
 				
 				// 3. Creamos los campos a seleccionar
 				if(distinct){
-					criteriaQuery = criteriaBuilder.createTupleQuery();
 					criteriaQuery.multiselect(new Selection[]{
 							entity.get("idDetalleCotizacion"),
 							entity.get("marcaRepuesto"),
@@ -47,7 +46,8 @@ public abstract class AbstractDetalleCotizacionDAO<T extends DetalleCotizacion> 
 							entity.get("cantidad"),
 							joins.get("cotizacion"),
 							joins.get("detalleRequerimiento"),
-					}).distinct(distinct);
+					});
+					criteriaQuery.distinct(distinct);
 				}
 				
 				// 4. Creamos las Restricciones de la busqueda

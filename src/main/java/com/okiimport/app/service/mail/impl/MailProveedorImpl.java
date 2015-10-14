@@ -22,7 +22,7 @@ public class MailProveedorImpl extends AbstractMailImpl implements MailProveedor
 					model.put("proveedor", proveedor);
 
 					mailService.send(proveedor.getCorreo(), "Registro de Solicitud de Proveedor",
-							"registrarRequerimiento.html", model);
+							"registrarProveedor.html", model);
 				}
 				catch(Exception e){
 					e.printStackTrace();

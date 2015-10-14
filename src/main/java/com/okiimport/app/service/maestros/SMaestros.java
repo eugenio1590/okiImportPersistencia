@@ -88,6 +88,7 @@ public interface SMaestros {
 	Map<String, Object> ConsultarProveedoresListaClasificacionRepuesto(Persona persona, String fieldSort, Boolean sortDirection,
 			Integer idRequerimiento, List<Integer> idsClasificacionRepuesto, int page, int limit);
 	
+	
 	//Clasificacion Repuesto
 	@Transactional(readOnly=true)
 	Map<String,Object> consultarClasificacionRepuesto(int page, int limit);

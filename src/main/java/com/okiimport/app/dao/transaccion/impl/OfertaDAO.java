@@ -32,12 +32,12 @@ public class OfertaDAO extends AbstractJpaDao<Oferta> {
 				Map<String, Join<?,?>> joins = crearJoins(entidades);
 				
 				// 3. Creamos los campos a seleccionar
-				criteriaQuery = criteriaBuilder.createTupleQuery();
 				criteriaQuery.multiselect(new Selection[]{
 						entity.get("idOferta"),
 						entity.get("fechaCreacion"),
 						entity.get("estatus")
-				}).distinct(true);
+				});
+				criteriaQuery.distinct(true);
 				
 				// 4. Creamos las Restricciones de la busqueda
 				List<Predicate> restricciones = new ArrayList<Predicate>();
