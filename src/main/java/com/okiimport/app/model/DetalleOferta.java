@@ -24,8 +24,11 @@ public class DetalleOferta extends AbstractEntity implements Serializable{
 	
 	private String estatus;
 	
+	
+	
 	@Transient
-	private Boolean aprobado;
+	private Boolean aprobado = true;
+	
 	
 	//bi-directional many-to-one association to Oferta
 	@ManyToOne
@@ -69,6 +72,7 @@ public class DetalleOferta extends AbstractEntity implements Serializable{
 		this.aprobado = aprobado;
 	}
 
+	
 	public Oferta getOferta() {
 		return oferta;
 	}
