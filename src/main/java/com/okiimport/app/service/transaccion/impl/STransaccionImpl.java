@@ -555,7 +555,7 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		}
 		
 		if(!detallesEliminar.isEmpty()){
-			detallesCotizacion = new ArrayList(detallesCotizacion);
+			detallesCotizacion = new ArrayList<DetalleCotizacion>(detallesCotizacion);
 			detallesCotizacion.removeAll(detallesEliminar);
 		}
 		
@@ -659,14 +659,22 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		return oferta;
 	}
 	
-	public List<DetalleOferta> consultarDetallesOferta(Integer idOferta){
-		return detalleOfertaRepository.findByOferta_IdOferta(idOferta);
+	public Integer consultarCantOfertasCreadasPorRequermiento(int idRequerimiento){
+		List<String> estatus = new ArrayList<String>();
+		estatus.add("solicitado");
+		Specification<Oferta> specfOferta = (new OfertaDAO()).consultarOfertasPorRequerimiento(idRequerimiento, estatus);
+		return Long.valueOf(this.ofertaRepository.count(specfOferta)).intValue();		
 	}
 	
 	public Oferta actualizarOferta(Oferta oferta) {
 		if(oferta.getIdOferta()==null)
 			oferta.setEstatus("solicitado");
 		return oferta = ofertaRepository.save(oferta);
+	}
+	
+	//Detalles Oferta
+	public List<DetalleOferta> consultarDetallesOferta(Integer idOferta){
+		return detalleOfertaRepository.findByOferta_IdOferta(idOferta);
 	}
 
 	//Compras

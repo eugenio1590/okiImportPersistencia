@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.okiimport.app.model.DetalleCotizacion;
 import com.okiimport.app.model.Proveedor;
+import com.okiimport.app.model.Requerimiento;
 import com.okiimport.app.service.mail.MailProveedor;
 import com.okiimport.app.service.mail.MailService;
 
@@ -32,8 +33,8 @@ public class MailProveedorImpl extends AbstractMailImpl implements MailProveedor
 	}
 
 	@Override
-	public void enviarRequerimientoProveedor(final Proveedor proveedor, final List<DetalleCotizacion> detallesCotizacion, 
-			final MailService mailService) {
+	public void enviarRequerimientoProveedor(final Proveedor proveedor, final Requerimiento requerimiento,
+			final List<DetalleCotizacion> detallesCotizacion, final MailService mailService) {
 		super.sendMail(new Runnable(){
 			@Override
 			public void run() {
@@ -41,6 +42,7 @@ public class MailProveedorImpl extends AbstractMailImpl implements MailProveedor
 					final Map<String, Object> model = new HashMap<String, Object>();
 					model.put("fechaEnvio", dateFormat.format(calendar.getTime()));
 					model.put("proveedor", proveedor);
+					model.put("requerimiento", requerimiento);
 					model.put("detallesCotizacion", detallesCotizacion);
 
 					mailService.send(proveedor.getCorreo(), "Solicitud de Cotizacion",
