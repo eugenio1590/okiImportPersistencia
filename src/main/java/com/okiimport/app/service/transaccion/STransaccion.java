@@ -122,6 +122,10 @@ public interface STransaccion {
 	Oferta actualizarOferta(Oferta oferta);
 	
 	@Transactional(readOnly=true)
+	Integer consultarCantOfertasCreadasPorRequermiento(int idRequerimiento);
+	
+	//Detalle Oferta
+	@Transactional(readOnly=true)
 	List<DetalleOferta> consultarDetallesOferta(Integer idOferta);
 	
 	//Compras
