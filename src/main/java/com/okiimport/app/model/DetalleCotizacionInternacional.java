@@ -147,15 +147,15 @@ public class DetalleCotizacionInternacional extends DetalleCotizacion implements
 	
 	public Float calcularFlete(boolean conversion){
 		precioTotal = new Float(0);
+		Cotizacion cotizacion = this.getCotizacion();
 		
-		if(this.tipoFlete!=null && this.tipoFlete) //CIF
-			precioTotal = this.getPrecioFlete();
+		if(this.tipoFlete!=null && this.tipoFlete && cotizacion!=null) //CIF
+			precioTotal = cotizacion.getPrecioFlete();
 		else if(formaEnvio!=null && valorLibra!=null && verificarCondFlete() && verificarCondPeso()){ //FOB
 			Float pesoTotal = (formaEnvio) ?  /*Aereo*/ calcularPesoVolumetrico() : /*Maritimo*/ calcularPesoDeCubicaje();
 			precioTotal = valorLibra*pesoTotal; //Falta el Valor de la Libra = 5
 		}
 		
-		Cotizacion cotizacion = this.getCotizacion();
 		HistoricoMoneda hMoneda = null;
 		if(cotizacion!=null && (hMoneda=cotizacion.getHistoricoMoneda())!=null && precioTotal!=null && conversion)
 			precioTotal = precioTotal*hMoneda.getMontoConversion();
