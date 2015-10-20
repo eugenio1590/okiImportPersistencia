@@ -4,12 +4,12 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import com.okiimport.app.resource.model.AbstractEntity;
 
 /**
@@ -103,7 +103,10 @@ public class Oferta extends AbstractEntity implements Serializable{
 	}
 
 	public void setDetalleOfertas(List<DetalleOferta> detalleOfertas) {
-		this.detalleOfertas = detalleOfertas;
+		this.detalleOfertas = new ArrayList<DetalleOferta>();
+		if(detalleOfertas!=null && !detalleOfertas.isEmpty())
+			for (Iterator<DetalleOferta> iterator=detalleOfertas.iterator();iterator.hasNext();)
+				this.addDetalleOferta(iterator.next());
 	}
 	
 	public Float getTotal() {
