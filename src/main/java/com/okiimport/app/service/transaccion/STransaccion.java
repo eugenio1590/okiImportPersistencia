@@ -143,7 +143,7 @@ public interface STransaccion {
 	Compra registrarSolicitudCompra(Compra compra);
 	
 	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
-	Compra registrarCompra(Compra compra, Requerimiento requerimiento);
+	Compra registrarCompra(Compra compra, Requerimiento requerimiento, boolean cambiarEstatus);
 	
 	//DetalleCompra
 	@Transactional(readOnly=true)

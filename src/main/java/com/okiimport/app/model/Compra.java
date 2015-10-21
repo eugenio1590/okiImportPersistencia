@@ -182,7 +182,7 @@ public class Compra extends AbstractEntity implements Serializable {
 	}
 	
 	public boolean registrar(){
-		return (this.estatus.equalsIgnoreCase("solicitada") && this.requerimiento.getEstatus().equalsIgnoreCase("CC"));
+		return (this.estatus.equalsIgnoreCase("enviada") && this.requerimiento.getEstatus().equalsIgnoreCase("CC"));
 	}
 	
 	public Float calcularTotal(){

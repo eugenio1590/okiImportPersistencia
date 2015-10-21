@@ -77,6 +77,8 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		
 		ESTATUS_OFERTADOS = new ArrayList<String>();
 		ESTATUS_OFERTADOS.add("O");
+		ESTATUS_OFERTADOS.add("CC");
+		ESTATUS_OFERTADOS.add("CP");
 		ESTATUS_OFERTADOS.add("Z");
 	}
 
@@ -731,8 +733,9 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		return registrarOActualizarCompra(compra);
 	}
 	
-	public Compra registrarCompra(Compra compra, Requerimiento requerimiento) {
-		requerimiento.setEstatus((compra.getTipoFlete()) ? "CC" : "CP"); 
+	public Compra registrarCompra(Compra compra, Requerimiento requerimiento,  boolean cambiarEstatus) {
+		if(cambiarEstatus)
+			requerimiento.setEstatus((compra.getTipoFlete()) ? "CC" : "CP"); 
 		actualizarRequerimiento(requerimiento);
 		List<DetalleOferta> detalleCompra = compra.getDetalleOfertas();
 		compra.setDetalleOfertas(null);

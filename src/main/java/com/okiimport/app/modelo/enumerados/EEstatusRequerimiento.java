@@ -66,6 +66,7 @@ public enum EEstatusRequerimiento {
 		ArrayList<EEstatusRequerimiento> estatusOfertados = new ArrayList<EEstatusRequerimiento>();
 		estatusOfertados.add(OFERTADO);
 		estatusOfertados.add(CONCRETADO);
+		estatusOfertados.add(COMPRADO);
 		return estatusOfertados;
 	}
 }
