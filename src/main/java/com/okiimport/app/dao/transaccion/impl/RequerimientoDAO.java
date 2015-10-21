@@ -93,8 +93,9 @@ public class RequerimientoDAO extends AbstractJpaDao<Requerimiento> {
 
 				agregarRestriccionesFiltros(restricciones, regFiltro, joins);
 				
-				restricciones.add(criteriaBuilder.equal(
-						joins.get("cliente").get("cedula"), cedula));
+				if(cedula!=null)
+					restricciones.add(criteriaBuilder.equal(
+							joins.get("cliente").get("cedula"), cedula));
 								
 				//4. Ejecutamos
 				return crearPredicate(restricciones);
