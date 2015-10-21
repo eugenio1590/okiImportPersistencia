@@ -80,10 +80,11 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		ESTATUS_OFERTADOS.add("Z");
 	}
 
-	public Requerimiento registrarRequerimiento(Requerimiento requerimiento, SMaestros sMaestros) {
+	public Requerimiento registrarRequerimiento(Requerimiento requerimiento, boolean asignarAnalista, SMaestros sMaestros) {
 		Date fechaCreacion = calendar.getTime();
 		Date fechaVencimiento = sumarORestarFDia(fechaCreacion, 15);
-		asignarRequerimiento(requerimiento, sMaestros);
+		if(asignarAnalista)
+			asignarRequerimiento(requerimiento, sMaestros);
 		requerimiento.setFechaCreacion(new Timestamp(fechaCreacion.getTime()));
 		requerimiento.setFechaVencimiento(fechaVencimiento);
 		requerimiento.setEstatus("CR");
@@ -330,6 +331,23 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		parametros.put("requerimientos", requerimientos);
 		return parametros;
 
+	}
+	
+	public Requerimiento reactivarRequerimiento(Requerimiento requerimiento, SMaestros sMaestros){
+		boolean encontrado = false;
+		Analista analistaAnterior = requerimiento.getAnalista();
+		
+		do {
+			this.asignarRequerimiento(requerimiento, sMaestros);
+			if(requerimiento.getAnalista().getId() != analistaAnterior.getId())
+				encontrado = true;
+		} while(!encontrado);
+		
+		if(encontrado) {
+			requerimiento.setEstatus("CR");
+			this.registrarRequerimiento(requerimiento, false, sMaestros);
+		}
+		return requerimiento;
 	}
 	
 	public DetalleRequerimiento registrarDetalleRequerimiento(int idRequerimiento, DetalleRequerimiento detalleRequerimiento){

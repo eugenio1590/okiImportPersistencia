@@ -23,7 +23,7 @@ public interface STransaccion {
 	
 	//Requerimiento
 	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
-	Requerimiento registrarRequerimiento(Requerimiento requerimiento, SMaestros sMaestros);
+	Requerimiento registrarRequerimiento(Requerimiento requerimiento, boolean asignarAnalista, SMaestros sMaestros);
 	
 	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
 	Requerimiento actualizarRequerimiento(Requerimiento requerimiento);
@@ -54,14 +54,13 @@ public interface STransaccion {
 	@Transactional(readOnly=true)
 	Map<String, Object> RequerimientosCotizados(Requerimiento regFiltro, String fieldSort, Boolean sortDirection, Integer idusuario,
 			int pagina, int limit);
-	
-	@Transactional(readOnly=true)
-	Map<String, Object> ConsultarCotizacionesRequerimiento(Cotizacion cotFiltro, String fieldSort, Boolean sortDirection, Integer idrequerimiento,
-			int pagina, int limit);
 
 	@Transactional(readOnly=true)
 	Map <String, Object> ConsultarRequerimientosConSolicitudesCotizacion(Requerimiento regFiltro, String fieldSort, 
 			Boolean sortDirection, Integer idProveedor, int pagina, int limit);
+	
+	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
+	Requerimiento reactivarRequerimiento(Requerimiento requerimiento, SMaestros sMaestros);
 	
 	//DetalleRequerimiento
 	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
@@ -70,6 +69,10 @@ public interface STransaccion {
 	Map<String, Object> consultarDetallesRequerimiento(int idRequerimiento, int pagina, int limit);
 	
 	//Cotizaciones
+	@Transactional(readOnly=true)
+	Map<String, Object> ConsultarCotizacionesRequerimiento(Cotizacion cotFiltro, String fieldSort, Boolean sortDirection, Integer idrequerimiento,
+			int pagina, int limit);
+	
 	@Transactional(readOnly=true)
 	Map<String, Object> consultarSolicitudCotizaciones(Cotizacion cotizacionF, String fieldSort, Boolean sortDirection,
 			Integer idRequerimiento, int idProveedor, int pagina, int limit);
