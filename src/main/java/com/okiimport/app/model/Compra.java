@@ -174,7 +174,15 @@ public class Compra extends AbstractEntity implements Serializable {
 
 	/**METODOS PROPIOS DE LA CLASE*/
 	public String determinarEstatus(){
+		if(this.estatus.equalsIgnoreCase("solicitada"))
+			return "Solicitud de Pedido";
+		else if(this.estatus.equalsIgnoreCase("enviada"))
+			return "Compra Realizada y Enviada a Proveedores";
 		return null;
+	}
+	
+	public boolean registrar(){
+		return (this.estatus.equalsIgnoreCase("solicitada") && this.requerimiento.getEstatus().equalsIgnoreCase("CC"));
 	}
 	
 	public Float calcularTotal(){
