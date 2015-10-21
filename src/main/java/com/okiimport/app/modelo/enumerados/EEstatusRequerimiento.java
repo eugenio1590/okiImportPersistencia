@@ -10,7 +10,8 @@ public enum EEstatusRequerimiento {
 	CON_COTIZACIONES_A("CT", "Con Cotizaciones Asignadas"),
 	CON_COTIZACIONES_I("EC", "Con Cotizaciones Incompletas"),
 	OFERTADO("O", "Ofertado"),
-	CONCRETADO("CC", "Concretado")
+	CONCRETADO("CC", "Concretado"),
+	COMPRADO("CP", "Comprado")
 	;
 	
 	private String value;
