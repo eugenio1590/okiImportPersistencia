@@ -731,7 +731,9 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		return registrarOActualizarCompra(compra);
 	}
 	
-	public Compra registrarCompra(Compra compra) {
+	public Compra registrarCompra(Compra compra, Requerimiento requerimiento) {
+		requerimiento.setEstatus((compra.getTipoFlete()) ? "CC" : "CP"); 
+		actualizarRequerimiento(requerimiento);
 		List<DetalleOferta> detalleCompra = compra.getDetalleOfertas();
 		compra.setDetalleOfertas(null);
 		compra.setEstatus("enviada");
