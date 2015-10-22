@@ -30,4 +30,25 @@ public class MailClienteImpl extends AbstractMailImpl implements MailCliente {
 			}
 		});
 	}
+	
+	public void enviarOfertas(final Requerimiento requerimiento, final MailService mailService) {
+		super.sendMail(new Runnable(){
+			@Override
+			public void run() {
+				try {
+					final Cliente cliente = requerimiento.getCliente();
+					final Map<String, Object> model = new HashMap<String, Object>();
+					model.put("fechaEnvio", dateFormat.format(calendar.getTime()));
+					model.put("cliente", cliente);
+					model.put("requerimiento", requerimiento);
+
+					mailService.send(cliente.getCorreo(), "Tiene una Oferta en su Requerimiento Nro. "+requerimiento.getIdRequerimiento(),
+							"enviarOfertas.html", model);
+				}
+				catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		});
+	}
 }
