@@ -367,6 +367,8 @@ public class Requerimiento extends AbstractEntity implements Serializable {
 			return "Ofertado";
 		else if(this.estatus.equalsIgnoreCase("CC"))
 			return "Concretado";
+		else if(this.estatus.equalsIgnoreCase("CP"))
+			return "Concretado y Enviado a Proveedores";
 		return "";
 	}
 
