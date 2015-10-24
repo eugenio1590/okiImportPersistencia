@@ -49,9 +49,9 @@ public abstract class AbstractEntity implements Cloneable{
 	}
 	
 	public static Long diferenciaHoras(Date fecha1, Date fecha2){
-		Calendar calendar1 = GregorianCalendar.getInstance();
+		Calendar calendar1 = new GregorianCalendar();
 		calendar1.setTime(fecha1);
-		Calendar calendar2 = GregorianCalendar.getInstance();
+		Calendar calendar2 = new GregorianCalendar();
 		calendar2.setTime(fecha2);
 		long milis1 = calendar1.getTimeInMillis();
 		long milis2 = calendar2.getTimeInMillis();

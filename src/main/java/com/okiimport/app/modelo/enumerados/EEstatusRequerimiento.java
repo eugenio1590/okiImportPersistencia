@@ -12,7 +12,7 @@ public enum EEstatusRequerimiento {
 	OFERTADO("O", "Ofertado"),
 	CONCRETADO("CC", "Concretado"),
 	COMPRADO("CP", "Comprado"),
-	CERRADO("CR", "Cerrado")
+	CERRADO("C", "Cerrado")
 	;
 	
 	private String value;
@@ -68,6 +68,7 @@ public enum EEstatusRequerimiento {
 		estatusOfertados.add(OFERTADO);
 		estatusOfertados.add(CONCRETADO);
 		estatusOfertados.add(COMPRADO);
+		estatusOfertados.add(CERRADO);
 		return estatusOfertados;
 	}
 }

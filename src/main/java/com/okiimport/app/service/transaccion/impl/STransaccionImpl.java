@@ -79,7 +79,7 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		ESTATUS_OFERTADOS.add("O");
 		ESTATUS_OFERTADOS.add("CC");
 		ESTATUS_OFERTADOS.add("CP");
-		ESTATUS_OFERTADOS.add("CR");
+		ESTATUS_OFERTADOS.add("C");
 	}
 
 	public Requerimiento registrarRequerimiento(Requerimiento requerimiento, boolean asignarAnalista, SMaestros sMaestros) {

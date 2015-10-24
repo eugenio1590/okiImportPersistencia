@@ -369,7 +369,7 @@ public class Requerimiento extends AbstractEntity implements Serializable {
 			return "Concretado";
 		else if(this.estatus.equalsIgnoreCase("CP"))
 			return "Concretado y Enviado a Proveedores";
-		else if(this.estatus.equalsIgnoreCase("CR"))
+		else if(this.estatus.equalsIgnoreCase("C"))
 			return "Cerrado";
 		return "";
 	}
@@ -409,13 +409,13 @@ public class Requerimiento extends AbstractEntity implements Serializable {
 	}
 	
 	public void cerrarSolicitud(){
-		this.setEstatus("CR");
+		this.setEstatus("C");
 	}
 	
 	@Transient
 	public boolean isCerrarSolicitud(){
 		boolean solicitud = false;
-		if(this.estatus.equalsIgnoreCase("CR"))
+		if(this.estatus.equalsIgnoreCase("C"))
 			solicitud = true;
 		else if(this.fechaSolicitud!=null)
 			solicitud = (diferenciaHoras(fechaSolicitud, Calendar.getInstance().getTime()) >= 48) 
