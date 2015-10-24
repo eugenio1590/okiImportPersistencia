@@ -369,6 +369,8 @@ public class Requerimiento extends AbstractEntity implements Serializable {
 			return "Concretado";
 		else if(this.estatus.equalsIgnoreCase("CP"))
 			return "Concretado y Enviado a Proveedores";
+		else if(this.estatus.equalsIgnoreCase("CR"))
+			return "Cerrado";
 		return "";
 	}
 
@@ -406,11 +408,18 @@ public class Requerimiento extends AbstractEntity implements Serializable {
 		return false;
 	}
 	
-	public boolean cerrarSolicitud(){
+	public void cerrarSolicitud(){
+		this.setEstatus("CR");
+	}
+	
+	@Transient
+	public boolean isCerrarSolicitud(){
 		boolean solicitud = false;
-		if(this.fechaSolicitud!=null)
+		if(this.estatus.equalsIgnoreCase("CR"))
+			solicitud = true;
+		else if(this.fechaSolicitud!=null)
 			solicitud = (diferenciaHoras(fechaSolicitud, Calendar.getInstance().getTime()) >= 48) 
 					? true : false;
 		return solicitud;
-	}
+	}	
 }
