@@ -7,8 +7,10 @@ import java.util.GregorianCalendar;
 import javax.persistence.MappedSuperclass;
 import javax.xml.bind.DatatypeConverter;
 
+import com.okiimport.app.resource.model.patron.Prototipo;
+
 @MappedSuperclass
-public abstract class AbstractEntity implements Cloneable{
+public abstract class AbstractEntity implements Prototipo{
 	
 	public static String decodificarImagen(byte[] imagen){
 		if(imagen!=null){
@@ -59,13 +61,15 @@ public abstract class AbstractEntity implements Cloneable{
 	}
 	
 	/**METODOS PROPIOS DE LA CLASE*/
+	
+	/**1. Interface Prototipo*/
 	@SuppressWarnings("unchecked")
-	public <T extends AbstractEntity> T clon(){
+	public <T> T clon(){
 		try {
 			return (T) this.clone();
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
 		}
-		return null;
+		return (T) new Object();
 	}
 }
