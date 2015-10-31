@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.okiimport.app.model.Cotizacion;
 import com.okiimport.app.model.DetalleCotizacion;
 import com.okiimport.app.model.Proveedor;
 import com.okiimport.app.model.Requerimiento;
@@ -49,6 +50,28 @@ public class MailProveedorImpl extends AbstractMailImpl implements MailProveedor
 
 					mailService.send(proveedor.getCorreo(), "Solicitud de Cotizacion",
 							"enviarRequisitoProveedor.html", model);
+				}
+				catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+	
+	@Override
+	public void enviarCotAprobadaProveedor(final Proveedor proveedor, final Requerimiento requerimiento,
+			final Cotizacion cotizacion, final MailService mailService) {
+		super.sendMail(new Runnable(){
+			@Override
+			public void run() {
+				try {
+					final Map<String, Object> model = new HashMap<String, Object>();
+					model.put("proveedor", proveedor);
+					model.put("requerimiento", requerimiento);
+					model.put("cotizacion", cotizacion);
+
+					mailService.send(proveedor.getCorreo(), "Aprobacion de Cotizacion",
+							"enviarCotAprobadaProveedor.html", model);
 				}
 				catch(Exception e){
 					e.printStackTrace();
