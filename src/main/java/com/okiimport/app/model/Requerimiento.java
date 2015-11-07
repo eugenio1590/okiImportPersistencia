@@ -289,6 +289,11 @@ public class Requerimiento extends AbstractEntity implements Serializable {
 		return detalleRequerimiento;
 	}
 	
+	public void removeAllDetalleRequerimiento(){
+		for(DetalleRequerimiento detalle : getDetalleRequerimientos())
+			removeDetalleRequerimiento(detalle);
+	}
+	
 	public List<Compra> getCompras() {
 		return compras;
 	}
