@@ -1,21 +1,32 @@
 package com.okiimport.app.model;
 
 import java.io.Serializable;
-
-import javax.persistence.*;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.okiimport.app.resource.model.AbstractEntity;
-
-import com.okiimport.app.resource.model.JsonDateSerializer;
-
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.okiimport.app.resource.model.AbstractEntity;
+import com.okiimport.app.resource.model.JsonDateSerializer;
 
 
 /**
@@ -290,8 +301,9 @@ public class Requerimiento extends AbstractEntity implements Serializable {
 	}
 	
 	public void removeAllDetalleRequerimiento(){
-		for(DetalleRequerimiento detalle : getDetalleRequerimientos())
-			removeDetalleRequerimiento(detalle);
+		for(DetalleRequerimiento detalle : detalleRequerimientos)
+			detalle.setRequerimiento(null);
+		detalleRequerimientos.clear();
 	}
 	
 	public List<Compra> getCompras() {
