@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.okiimport.app.service.configuracion.SControlUsuario;
 import com.okiimport.app.service.maestros.SMaestros;
 import com.okiimport.app.model.Compra;
 import com.okiimport.app.model.Cotizacion;
@@ -62,10 +63,14 @@ public interface STransaccion {
 	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
 	Requerimiento reactivarRequerimiento(Requerimiento requerimiento, SMaestros sMaestros);
 	
+	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
+	Requerimiento cerrarRequerimiento(Requerimiento requerimiento, SMaestros sMaestros, SControlUsuario sControlUsuario, boolean aprobarProveedores);
+	
 	//DetalleRequerimiento
 	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
 	DetalleRequerimiento registrarDetalleRequerimiento(int idRequerimiento, DetalleRequerimiento detalleRequerimiento);
 	
+	@Transactional(readOnly=true)
 	Map<String, Object> consultarDetallesRequerimiento(int idRequerimiento, int pagina, int limit);
 	
 	//Cotizaciones
@@ -119,7 +124,7 @@ public interface STransaccion {
 	Map<String, Object> consultarOfertasRecibidasPorRequerimiento(int idRequerimiento, int pagina, int limit);
 	
 	@Transactional(readOnly=true)
-	Oferta consultarOfertaEnviadaPorRequerimiento(int idRequerimiento);
+	Oferta consultarOfertaEnviadaPorRequerimiento(int idRequerimiento, List<DetalleRequerimiento> detallesRequerimiento);
 	
 	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
 	Oferta actualizarOferta(Oferta oferta);
