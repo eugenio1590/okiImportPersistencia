@@ -49,7 +49,7 @@ public class Requerimiento extends AbstractEntity implements Serializable {
 	@Column(name="anno_v")
 	private Integer annoV;
 
-	private String estatus;
+	private String estatus; // Creo que aqui es donde se debe cambiar al eestatus
 
 	@Column(name="fecha_cierre", columnDefinition="date")
 	private Date fechaCierre;
