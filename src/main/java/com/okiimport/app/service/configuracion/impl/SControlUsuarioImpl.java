@@ -23,6 +23,8 @@ import org.springframework.stereotype.Service;
 
 
 
+
+
 import com.okiimport.app.dao.configuracion.MenuRepository;
 import com.okiimport.app.dao.configuracion.UsuarioRepository;
 import com.okiimport.app.dao.configuracion.impl.MenuDAO;
@@ -30,6 +32,7 @@ import com.okiimport.app.dao.configuracion.impl.UsuarioDAO;
 import com.okiimport.app.model.Menu;
 import com.okiimport.app.model.Persona;
 import com.okiimport.app.model.Usuario;
+import com.okiimport.app.resource.service.PasswordGenerator;
 import com.okiimport.app.resource.service.AbstractServiceImpl;
 import com.okiimport.app.service.configuracion.SControlUsuario;
 import com.okiimport.app.service.maestros.SMaestros;
@@ -105,6 +108,33 @@ public class SControlUsuarioImpl extends AbstractServiceImpl implements SControl
 		parametros.put("total", total);
 		parametros.put("usuarios", usuarios);
 		return parametros;
+	}
+	
+	public Usuario crearUsuario(Persona persona, SMaestros sMaestros){
+		persona.setEstatus("activo");
+		Usuario usuario = new Usuario();
+		persona.setUsuario(usuario);
+		usuario.setPersona(persona);
+		usuario.setUsername(buscarUsername(persona));
+		usuario.setPasword(PasswordGenerator.getPassword(PasswordGenerator.MINUSCULAS+PasswordGenerator.MAYUSCULAS
+				+PasswordGenerator.NUMEROS,10));
+		usuario = grabarUsuario(usuario, sMaestros);
+		sMaestros.acutalizarPersona(persona);
+		return usuario;
+	}
+	
+	public String buscarUsername(Persona persona) {
+		boolean noValido = true;
+		String usuario = persona.getNombre().split(" ")[0].toLowerCase();
+		String username = usuario;
+		while (noValido) {
+			noValido = verificarUsername(username);
+			if (noValido)
+				username = usuario
+						+ PasswordGenerator.getPassword(
+								PasswordGenerator.NUMEROS + PasswordGenerator.MAYUSCULAS, 3);
+		}
+		return username;
 	}
 	
 	public boolean verificarUsername(String username){

@@ -130,6 +130,12 @@ public class DetalleRequerimiento extends AbstractEntity implements Serializable
 	}
 
 	/**METODOS PROPIOS DE LA CLASE*/
+	@Transient
+	public boolean fotoVacia(){
+		return (foto==null);
+	}
+	
+	@Transient
 	public String getFoto64(){
 		return decodificarImagen(foto);
 	}

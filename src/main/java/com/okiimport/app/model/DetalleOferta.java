@@ -24,12 +24,9 @@ public class DetalleOferta extends AbstractEntity implements Serializable{
 	
 	private String estatus;
 	
-	
-	
 	@Transient
 	private Boolean aprobado = true;
-	
-	
+		
 	//bi-directional many-to-one association to Oferta
 	@ManyToOne
 	@JoinColumn(name="id_oferta")
