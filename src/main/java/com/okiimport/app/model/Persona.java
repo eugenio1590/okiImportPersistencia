@@ -47,7 +47,7 @@ public abstract class Persona extends AbstractEntity implements Serializable {
 	protected Integer tipoMenu;
 	
 	@Column(length=50)
-	private EEstatusPersona estatus;
+	protected EEstatusPersona estatus;
 	
 	//bi-directional one-to-one association to Usuario (Relacion Poliformica)
 	@OneToOne(mappedBy="persona")

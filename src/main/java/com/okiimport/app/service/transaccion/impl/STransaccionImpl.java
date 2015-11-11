@@ -83,7 +83,7 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	}
 
 	public Requerimiento registrarRequerimiento(Requerimiento requerimiento, boolean asignarAnalista, SMaestros sMaestros) {
-		Date fechaCreacion = calendar.getTime();
+		/*Date fechaCreacion = calendar.getTime();
 		Date fechaVencimiento = sumarORestarFDia(fechaCreacion, 15);
 		if(asignarAnalista)
 			asignarRequerimiento(requerimiento, sMaestros);
@@ -91,8 +91,9 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		requerimiento.setFechaVencimiento(fechaVencimiento);
 		requerimiento.setEstatus("CR");
 		for(DetalleRequerimiento detalle:requerimiento.getDetalleRequerimientos())
-			detalle.setEstatus("activo");
+			detalle.setEstatus("activo");*/
 		return requerimiento = actualizarRequerimiento(requerimiento);
+		
 	}
 	
 	public Requerimiento actualizarRequerimiento(Requerimiento requerimiento){
@@ -108,7 +109,7 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 			DetalleOferta detalleOferta = new DetalleOferta();
 			detalleOferta.setDetalleCotizacion(detalleCotizacion);
 			detalleOferta.setOferta(oferta);
-			detalleOferta.setEstatus("seleccion");
+			//detalleOferta.setEstatus("seleccion");
 			this.detalleOfertaRepository.save(detalleOferta);
 		}
 	}
@@ -346,7 +347,7 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		} while(!encontrado);
 		
 		if(encontrado) {
-			requerimiento.setEstatus("CR");
+			//requerimiento.setEstatus("CR");
 			this.registrarRequerimiento(requerimiento, false, sMaestros);
 		}
 		return requerimiento;
@@ -433,21 +434,21 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	}
 	
 	public Cotizacion registrarSolicitudCotizacion(Cotizacion cotizacion, List<DetalleCotizacion> detalleCotizacions) {
-		cotizacion.setEstatus("SC");
+		//cotizacion.setEstatus("SC");
 		cotizacion.setFechaCreacion(calendar.getTime());
 		cotizacion = cotizacionRepository.save(cotizacion);
 		for(DetalleCotizacion detalleCotizacion : detalleCotizacions){
-			detalleCotizacion.getDetalleRequerimiento().setEstatus("EP");
+			//detalleCotizacion.getDetalleRequerimiento().setEstatus("EP");
 			detalleCotizacion.setCotizacion(cotizacion); 
 			this.detalleCotizacionRepository.save(detalleCotizacion);
 			
 			DetalleRequerimiento detalleRequerimiento = detalleCotizacion.getDetalleRequerimiento();
-			detalleRequerimiento.setEstatus("EP");
+			//detalleRequerimiento.setEstatus("EP");
 			this.detalleRequerimientoRepository.save(detalleRequerimiento);
 			
 			Requerimiento requerimiento = detalleRequerimiento.getRequerimiento();
 			if(requerimiento.getFechaSolicitud()==null){
-				requerimiento.setEstatus("EP");
+				//requerimiento.setEstatus("EP");
 				requerimiento.setFechaSolicitud(new Timestamp(Calendar.getInstance().getTime().getTime()));
 				this.requerimientoRepository.save(requerimiento);
 			}
@@ -462,14 +463,14 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		String estatusRequerimiento = "CT";
 		List<Cotizacion> cotizaciones = (List<Cotizacion>) consultarCotizacionesParaEditar(null, null, null, requerimiento.getIdRequerimiento(), 0, 1).get("cotizaciones");
 		if(cotizacion.getEstatus()==null)
-			cotizacion.setEstatus("C");
+			//cotizacion.setEstatus("C");
 		
-		if(cotizacion.getEstatus().equalsIgnoreCase("EC")) //Incompleto
+			/*if(cotizacion.getEstatus().equalsIgnoreCase("EC")) //Incompleto
 			estatusRequerimiento = "EC";
 		else if(!cotizaciones.isEmpty()) //Completo
-			estatusRequerimiento = "EC";
+			estatusRequerimiento = "EC";*/
 		
-		requerimiento.setEstatus(estatusRequerimiento);
+		//requerimiento.setEstatus(estatusRequerimiento);
 		this.requerimientoRepository.save(requerimiento);
 		
 		List<DetalleCotizacion> detalles = cotizacion.getDetalleCotizacions();
@@ -478,7 +479,7 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 			this.detalleCotizacionRepository.save(detalle);
 			DetalleRequerimiento detalleRequerimiento = detalle.getDetalleRequerimiento();
 			
-			detalleRequerimiento.setEstatus("CT");
+		//	detalleRequerimiento.setEstatus("CT");
 			this.detalleRequerimientoRepository.save(detalleRequerimiento);
 		}
 		return cotizacion;
@@ -540,7 +541,7 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 			String fieldSort, Boolean sortDirection, int page, int limit){
 		boolean nuloCantidad = false;
 		if(detalleF!=null){
-			detalleF.getCotizacion().setEstatus("C");
+			//detalleF.getCotizacion().setEstatus("C");
 			if(detalleF.getCantidad()==null){
 				nuloCantidad = true;
 				detalleF.setCantidad(new Long(0));
@@ -687,8 +688,8 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	}
 	
 	public Oferta actualizarOferta(Oferta oferta) {
-		if(oferta.getIdOferta()==null)
-			oferta.setEstatus("solicitado");
+		//if(oferta.getIdOferta()==null)
+	    	//oferta.setEstatus("solicitado");
 		return oferta = ofertaRepository.save(oferta);
 	}
 	
@@ -729,17 +730,17 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	}
 	
 	public Compra registrarSolicitudCompra(Compra compra) {
-		compra.setEstatus("solicitada");
+	//	compra.setEstatus("solicitada");
 		return registrarOActualizarCompra(compra);
 	}
 	
 	public Compra registrarCompra(Compra compra, Requerimiento requerimiento,  boolean cambiarEstatus) {
 		if(cambiarEstatus)
-			requerimiento.setEstatus((compra.getTipoFlete()) ? "CC" : "CP"); 
+	//		requerimiento.setEstatus((compra.getTipoFlete()) ? "CC" : "CP"); 
 		actualizarRequerimiento(requerimiento);
 		List<DetalleOferta> detalleCompra = compra.getDetalleOfertas();
 		compra.setDetalleOfertas(null);
-		compra.setEstatus("enviada");
+	//	compra.setEstatus("enviada");
 		compra = registrarOActualizarCompra(compra);
 		if(detalleCompra!=null && !detalleCompra.isEmpty()){
 			for(DetalleOferta detalle : detalleCompra){

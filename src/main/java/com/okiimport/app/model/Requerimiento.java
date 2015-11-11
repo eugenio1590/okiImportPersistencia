@@ -372,25 +372,11 @@ public class Requerimiento extends AbstractEntity implements Serializable {
 	}
 	
 	public String determinarEstatus(){
-		if(this.estatus.equalsIgnoreCase("CR"))
-			return "Emitido";
-		else if(this.estatus.equalsIgnoreCase("E"))
-			return "Recibido y Editado";
-		else if(this.estatus.equalsIgnoreCase("EP"))
-			return "Enviado a Proveedores";
-		else if(this.estatus.equalsIgnoreCase("CT"))
-			return "Con Cotizaciones Asignadas";
-		else if(this.estatus.equalsIgnoreCase("EC"))
-			return "Con Cotizaciones Incompletas";
-		else if(this.estatus.equalsIgnoreCase("O"))
-			return "Ofertado";
-		else if(this.estatus.equalsIgnoreCase("CC"))
-			return "Concretado";
-		else if(this.estatus.equalsIgnoreCase("CP"))
-			return "Concretado y Enviado a Proveedores";
-		else if(this.estatus.equalsIgnoreCase("C"))
-			return "Cerrado";
-		return "";
+		
+		if(estatus!=null)
+			  return estatus.getValue();
+
+			return "";
 	}
 
 	public void especificarInformacionVehiculo(){
@@ -406,19 +392,20 @@ public class Requerimiento extends AbstractEntity implements Serializable {
 	}
 	
 	public boolean editar(){
-		return (this.estatus.equalsIgnoreCase("CR") || this.estatus.equalsIgnoreCase("E")) ? true : false;
+		return (estatus.equals(EEstatusRequerimiento.EMITIDO) || estatus.equals(EEstatusRequerimiento.RECIBIDO_EDITADO)) ? true : false;
 	}
 	
 	public boolean cotizar(){
-		return (this.estatus.equalsIgnoreCase("EC") || this.estatus.equalsIgnoreCase("EP") || this.estatus.equalsIgnoreCase("CT"));
+		return (estatus.equals(EEstatusRequerimiento.CON_COTIZACIONES_I) || estatus.equals(EEstatusRequerimiento.ENVIADO_PROVEEDOR) || estatus.equals(EEstatusRequerimiento.CON_COTIZACIONES_A));
 	}
 	
 	public boolean editarCotizacion(){
-		return this.estatus.equalsIgnoreCase("EC");
+		return ( estatus.equals(EEstatusRequerimiento.CON_COTIZACIONES_I));
 	}
 	
 	public boolean verOfertas(){
-		return this.estatus.equalsIgnoreCase("O");
+		
+		return (  estatus.equals(EEstatusRequerimiento.OFERTADO)  );
 	}
 	
 	public boolean seleccionarCotizacion(){
@@ -428,13 +415,13 @@ public class Requerimiento extends AbstractEntity implements Serializable {
 	}
 	
 	public void cerrarSolicitud(){
-		this.setEstatus("C");
+		this.estatus.equals(EEstatusRequerimiento.CERRADO);
 	}
 	
 	@Transient
 	public boolean isCerrarSolicitud(){
 		boolean solicitud = false;
-		if(this.estatus.equalsIgnoreCase("C"))
+		if(this.estatus.equals(EEstatusRequerimiento.CERRADO))
 			solicitud = true;
 		else if(this.fechaSolicitud!=null)
 			solicitud = (diferenciaHoras(fechaSolicitud, Calendar.getInstance().getTime()) >= 48) 

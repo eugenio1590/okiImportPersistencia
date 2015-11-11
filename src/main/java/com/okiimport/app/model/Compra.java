@@ -9,6 +9,7 @@ import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.okiimport.app.modelo.enumerados.EEstatusCompra;
+import com.okiimport.app.modelo.enumerados.EEstatusRequerimiento;
 import com.okiimport.app.resource.model.AbstractEntity;
 
 /**
@@ -176,15 +177,15 @@ public class Compra extends AbstractEntity implements Serializable {
 
 	/**METODOS PROPIOS DE LA CLASE*/
 	public String determinarEstatus(){
-		if(this.estatus.equalsIgnoreCase("solicitada"))
+		if(this.estatus.equals(EEstatusCompra.SOLICITUD_PEDIDO))
 			return "Solicitud de Pedido";
-		else if(this.estatus.equalsIgnoreCase("enviada"))
+		else if(this.estatus.equals(EEstatusCompra.COMPRA_REALIZADA_ENVIADA))
 			return "Compra Realizada y Enviada a Proveedores";
 		return null;
 	}
 	
 	public boolean registrar(){
-		return (this.estatus.equalsIgnoreCase("enviada") && this.requerimiento.getEstatus().equalsIgnoreCase("CC"));
+		return (this.estatus.equals(EEstatusCompra.COMPRA_REALIZADA_ENVIADA) && this.requerimiento.getEstatus().equals(EEstatusRequerimiento.CONCRETADO));
 	}
 	
 	public Float calcularTotal(){

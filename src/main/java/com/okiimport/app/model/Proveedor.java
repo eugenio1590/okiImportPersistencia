@@ -18,6 +18,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.okiimport.app.modelo.enumerados.EEstatusPersona;
+import com.okiimport.app.modelo.enumerados.EEstatusRequerimiento;
 
 
 /**
@@ -92,7 +94,7 @@ public class Proveedor extends Persona implements Serializable {
 	}
 	
 	public Proveedor(Integer id,String cedula, String correo, String direccion, 
-			String nombre, String telefono, String estatus, Boolean tipoProveedor) {
+			String nombre, String telefono, EEstatusPersona estatus, Boolean tipoProveedor) {
 		super(id, null, cedula, correo, direccion, nombre, telefono, null, estatus);
 		this.tipoProveedor = tipoProveedor;
 	}
@@ -190,6 +192,6 @@ public class Proveedor extends Persona implements Serializable {
 	
 	@Transient
 	public boolean isSolicitante(){
-		return this.getEstatus().equalsIgnoreCase("solicitante");
+		return this.estatus.equals(EEstatusPersona.SOLICITANTE);
 	}
 }
