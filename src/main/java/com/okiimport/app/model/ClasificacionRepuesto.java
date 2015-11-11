@@ -8,6 +8,7 @@ import java.util.List;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.okiimport.app.modelo.enumerados.EEstatusClasificacionRepuesto;
 import com.okiimport.app.resource.model.AbstractEntity;
 
 
@@ -30,7 +31,7 @@ public class ClasificacionRepuesto extends AbstractEntity implements Serializabl
 
 	private String descripcion;
 	
-	private String estatus;
+	private EEstatusClasificacionRepuesto estatus;
 	
 	//bi-directional one-to-many association to DetalleRequerimiento
 	@OneToMany(mappedBy="clasificacionRepuesto", fetch=FetchType.LAZY, orphanRemoval=true)
@@ -60,11 +61,13 @@ public class ClasificacionRepuesto extends AbstractEntity implements Serializabl
 		this.descripcion = descripcion;
 	}
 	
-	public String getEstatus() {
+	
+
+	public EEstatusClasificacionRepuesto getEstatus() {
 		return estatus;
 	}
 
-	public void setEstatus(String estatus) {
+	public void setEstatus(EEstatusClasificacionRepuesto estatus) {
 		this.estatus = estatus;
 	}
 

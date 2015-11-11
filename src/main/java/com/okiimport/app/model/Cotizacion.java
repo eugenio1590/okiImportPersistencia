@@ -8,7 +8,7 @@ import java.util.List;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
+import com.okiimport.app.modelo.enumerados.EEstatusCotizacion;
 import com.okiimport.app.resource.model.AbstractEntity;
 
 /**
@@ -36,7 +36,7 @@ public class Cotizacion extends AbstractEntity implements Serializable{
 	
 	private String condiciones;
 	
-	private String estatus;
+	private EEstatusCotizacion estatus;
 	
 	private String mensaje;
 	
@@ -87,7 +87,7 @@ public class Cotizacion extends AbstractEntity implements Serializable{
 	}
 
 	public Cotizacion(Integer idCotizacion,	Date fechaCreacion, Date fechaVencimiento, 
-			String estatus, String mensaje) {
+			EEstatusCotizacion estatus, String mensaje) {
 		this();
 		this.idCotizacion = idCotizacion;
 		this.fechaCreacion = fechaCreacion;
@@ -97,7 +97,7 @@ public class Cotizacion extends AbstractEntity implements Serializable{
 	}
 
 	public Cotizacion(Integer idCotizacion, Date fechaCreacion, Date fechaVencimiento, 
-			String estatus, String mensaje, Proveedor proveedor, HistoricoMoneda historicoMoneda) {
+			EEstatusCotizacion estatus, String mensaje, Proveedor proveedor, HistoricoMoneda historicoMoneda) {
 		this(idCotizacion, fechaCreacion, fechaVencimiento, estatus, mensaje);
 		this.proveedor = proveedor;
 		this.historicoMoneda = historicoMoneda;
@@ -139,11 +139,13 @@ public class Cotizacion extends AbstractEntity implements Serializable{
 		this.condiciones = condiciones;
 	}
 
-	public String getEstatus() {
+	
+
+	public EEstatusCotizacion getEstatus() {
 		return estatus;
 	}
 
-	public void setEstatus(String estatus) {
+	public void setEstatus(EEstatusCotizacion estatus) {
 		this.estatus = estatus;
 	}
 

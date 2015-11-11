@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.okiimport.app.modelo.enumerados.EEStatusDetalleCotizacion;
 import com.okiimport.app.resource.model.AbstractEntity;
 
 /**
@@ -38,7 +39,7 @@ public class DetalleCotizacion extends AbstractEntity implements Serializable {
 	
 	private Long cantidad = new Long(0);
 	
-	private String estatus;
+	private EEStatusDetalleCotizacion estatus;
 	
 	//bi-directional many-to-one association to Cotizacion
 	@ManyToOne
@@ -115,11 +116,12 @@ public class DetalleCotizacion extends AbstractEntity implements Serializable {
 		this.cantidad = cantidad;
 	}
 	
-	public String getEstatus() {
+
+	public EEStatusDetalleCotizacion getEstatus() {
 		return estatus;
 	}
 
-	public void setEstatus(String estatus) {
+	public void setEstatus(EEStatusDetalleCotizacion estatus) {
 		this.estatus = estatus;
 	}
 

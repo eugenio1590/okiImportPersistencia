@@ -25,6 +25,7 @@ import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.okiimport.app.modelo.enumerados.EEstatusRequerimiento;
 import com.okiimport.app.resource.model.AbstractEntity;
 import com.okiimport.app.resource.model.JsonDateSerializer;
 
@@ -49,7 +50,7 @@ public class Requerimiento extends AbstractEntity implements Serializable {
 	@Column(name="anno_v")
 	private Integer annoV;
 
-	private String estatus; // Creo que aqui es donde se debe cambiar al eestatus
+	private EEstatusRequerimiento estatus; // 
 
 	@Column(name="fecha_cierre", columnDefinition="date")
 	private Date fechaCierre;
@@ -130,7 +131,7 @@ public class Requerimiento extends AbstractEntity implements Serializable {
 		this.marcaVehiculo = marcaVehiculo;
 	}
 
-	public Requerimiento(Integer idRequerimiento, String estatus, Date fechaCreacion, Date fechaVencimiento,
+	public Requerimiento(Integer idRequerimiento, EEstatusRequerimiento estatus, Date fechaCreacion, Date fechaVencimiento,
 			String modeloV, Boolean tipoRepuesto, Analista analista, Cliente cliente, MarcaVehiculo marcaVehiculo, Motor motor) {
 		super();
 		this.idRequerimiento = idRequerimiento;
@@ -161,11 +162,12 @@ public class Requerimiento extends AbstractEntity implements Serializable {
 		this.annoV = annoV;
 	}
 
-	public String getEstatus() {
-		return this.estatus;
+
+	public EEstatusRequerimiento getEstatus() {
+		return estatus;
 	}
 
-	public void setEstatus(String estatus) {
+	public void setEstatus(EEstatusRequerimiento estatus) {
 		this.estatus = estatus;
 	}
 

@@ -8,7 +8,7 @@ import java.util.List;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
+import com.okiimport.app.modelo.enumerados.EEstatusCompra;
 import com.okiimport.app.resource.model.AbstractEntity;
 
 /**
@@ -42,7 +42,7 @@ public class Compra extends AbstractEntity implements Serializable {
 	
 	private String observacion;
 	
-	private String estatus;
+	private EEstatusCompra estatus;
 	
 	//bi-directional one-to-one association to FormaPago
 	@OneToOne(mappedBy="compra")
@@ -118,11 +118,13 @@ public class Compra extends AbstractEntity implements Serializable {
 		this.observacion = observacion;
 	}
 
-	public String getEstatus() {
+	
+
+	public EEstatusCompra getEstatus() {
 		return estatus;
 	}
 
-	public void setEstatus(String estatus) {
+	public void setEstatus(EEstatusCompra estatus) {
 		this.estatus = estatus;
 	}
 

@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
+import com.okiimport.app.modelo.enumerados.EEstatusDetalleOferta;
 import com.okiimport.app.resource.model.AbstractEntity;
 
 /**
@@ -22,7 +23,7 @@ public class DetalleOferta extends AbstractEntity implements Serializable{
 	@Column(name="id_detalle_oferta")
 	private Integer idDetalleOferta;
 	
-	private String estatus;
+	private EEstatusDetalleOferta estatus;
 	
 	
 	
@@ -56,11 +57,13 @@ public class DetalleOferta extends AbstractEntity implements Serializable{
 		this.idDetalleOferta = idDetalleOferta;
 	}
 
-	public String getEstatus() {
+	
+
+	public EEstatusDetalleOferta getEstatus() {
 		return estatus;
 	}
 
-	public void setEstatus(String estatus) {
+	public void setEstatus(EEstatusDetalleOferta estatus) {
 		this.estatus = estatus;
 	}
 

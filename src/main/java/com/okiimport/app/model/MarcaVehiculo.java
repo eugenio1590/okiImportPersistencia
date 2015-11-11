@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.okiimport.app.modelo.enumerados.EEstatusMarcaVehiculo;
 import com.okiimport.app.resource.model.AbstractEntity;
 
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class MarcaVehiculo extends AbstractEntity implements Serializable {
 
 	private String nombre;
 	
-	private String estatus;
+	private EEstatusMarcaVehiculo estatus;
 	
 	//bi-directional one-to-many association to Requerimiento
 	@OneToMany(mappedBy="marcaVehiculo", fetch=FetchType.LAZY, orphanRemoval=true)
@@ -88,11 +89,13 @@ public class MarcaVehiculo extends AbstractEntity implements Serializable {
 		return requerimiento;
 	}
 
-	public String getEstatus() {
+	
+
+	public EEstatusMarcaVehiculo getEstatus() {
 		return estatus;
 	}
 
-	public void setEstatus(String estatus) {
+	public void setEstatus(EEstatusMarcaVehiculo estatus) {
 		this.estatus = estatus;
 	}
 
