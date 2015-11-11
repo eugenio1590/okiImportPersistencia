@@ -1,8 +1,9 @@
 package com.okiimport.app.modelo.enumerados;
 
 public enum EEstatusDetalleOferta {
-	
-	SELECCION("SE", "Seleccionada");
+	//NO ESTAN DEFINIDAS
+	//SELECCION("SE", "Seleccionada")
+	;
 	
 	private String value;
 	private String nombre;

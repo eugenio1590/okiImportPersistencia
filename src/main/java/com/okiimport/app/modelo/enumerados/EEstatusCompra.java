@@ -4,6 +4,7 @@ public enum EEstatusCompra {
 
 	SOLICITUD_PEDIDO ("solicitada", "Solicitud de Pedido"),
 	COMPRA_REALIZADA_ENVIADA("enviada", "Compra Realizada y Enviada a Proveedores");
+	//Faltan estatus
 	
 	private String value;
 	private String nombre;

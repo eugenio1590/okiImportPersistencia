@@ -2,9 +2,9 @@ package com.okiimport.app.modelo.enumerados;
 
 public enum EEstatusOferta {
 
-	SOLICITADO ("SO", "solicitado"),
-	ENVIADA ("EN", "enviada"),
-	RECIBIDA ("RE", "recibida");
+	SOLICITADO ("SO", "Enviada al Cliente"),
+	ENVIADA ("EN", "Con Respuesta del Cliente"),
+	RECIBIDA ("RE", "Recibida por el Analista");
 	
 	private String value;
 	private String nombre;

@@ -454,7 +454,7 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		cotizacion.setFechaCreacion(calendar.getTime());
 		cotizacion = cotizacionRepository.save(cotizacion);
 		for(DetalleCotizacion detalleCotizacion : detalleCotizacions){
-			detalleCotizacion.getDetalleRequerimiento().setEstatus("EP");
+			
 			detalleCotizacion.setCotizacion(cotizacion); 
 			this.detalleCotizacionRepository.save(detalleCotizacion);
 			

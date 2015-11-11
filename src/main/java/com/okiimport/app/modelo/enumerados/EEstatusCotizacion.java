@@ -2,9 +2,10 @@ package com.okiimport.app.modelo.enumerados;
 
 public enum EEstatusCotizacion {
 	
-	// Los que estan por la Base de Datos
-	SOLICITUD_COTIZACION("SC", "Solicitud Cotizada"),
-	REQUERIMIENTO_COTIZADO("C", "Requerimiento Cotizado");
+	SOLICITUD_COTIZACION("SC", "Solicitud de Cotizacion"),
+	COTIZACION_PARA_EDITAR("EC", "Cotizacion Incompleta"),
+	COMPLETADA("C", "Cotizacion Completa");
+	//FALTAN ESTATUS
 	
 	private String value;
 	private String nombre;

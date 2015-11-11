@@ -1,14 +1,15 @@
 package com.okiimport.app.modelo.enumerados;
 
-public enum EEstatusBanco {
+public enum EEstatusProveedor {
 
-	ACTIVO("AC","Activo"),
-	INACTIVO ("IN", "Inactivo");
+	// Estatus para Proveedores
+	ACTIVO("AC", "Activo"),
+	SOLICITANTE("SO", "Solicitante");
 
 	private String value;
 	private String nombre;
 
-	EEstatusBanco(String value, String nombre){
+	EEstatusProveedor(String value, String nombre){
 		this.value = value;
 		this.nombre = nombre;
 	}
@@ -28,5 +29,4 @@ public enum EEstatusBanco {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
-
 }

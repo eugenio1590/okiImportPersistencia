@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum EEstatusRequerimiento {
+	//FALTAN ALGUNOS ESTATUS POR DEFINIR
 	EMITIDO("CR", "Emitido"),
 	RECIBIDO_EDITADO("E", "Recibido y Editado"),
 	ENVIADO_PROVEEDOR("EP", "Enviado a Proveedores"),
