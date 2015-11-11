@@ -19,6 +19,7 @@ import org.springframework.data.jpa.domain.Specification;
 import com.okiimport.app.model.Cotizacion;
 import com.okiimport.app.model.Persona;
 import com.okiimport.app.model.Proveedor;
+import com.okiimport.app.model.Requerimiento;
 
 public class ProveedorDAO extends PersonaDAO<Proveedor> {
 	
@@ -131,6 +132,33 @@ public class ProveedorDAO extends PersonaDAO<Proveedor> {
 				
 				Proveedor proveedorF = (proveedor==null) ? new Proveedor() : proveedor;
 				agregarFiltros(proveedorF, restricciones);
+				
+				//5. Ejecutamos
+				return crearPredicate(restricciones);
+			}
+			
+		};
+	}
+	
+	public Specification<Proveedor> consultarProveedoresHaAprobar(final Requerimiento requerimiento){
+		return new Specification<Proveedor>(){
+
+			@Override
+			public Predicate toPredicate(Root<Proveedor> entity, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+				//1. Inicializar Variables
+				inicializar(entity, criteriaQuery, criteriaBuilder);
+				
+				//2. Generamos los Joins
+				Map<String, JoinType> entidades = new HashMap<String, JoinType>();
+				entidades.put("cotizacions", JoinType.INNER);
+				Map<String, Join<?,?>> joins = crearJoins(entidades);
+				
+				criteriaQuery.distinct(true);
+				
+				//3. Creamos las Restricciones de la busqueda
+				List<Predicate> restricciones = new ArrayList<Predicate>();
+				restricciones.add(criteriaBuilder.equal(joins.get("cotizacions").join("detalleCotizacions")
+						.join("detalleOfertas").join("compra").get("requerimiento"), requerimiento));
 				
 				//4. Ejecutamos
 				return crearPredicate(restricciones);

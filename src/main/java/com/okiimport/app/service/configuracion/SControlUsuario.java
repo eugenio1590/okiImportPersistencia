@@ -9,12 +9,15 @@ import java.util.Map;
 
 
 
+
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.okiimport.app.service.maestros.SMaestros;
 import com.okiimport.app.model.Menu;
+import com.okiimport.app.model.Persona;
 import com.okiimport.app.model.Usuario;
 
 @Service
@@ -45,6 +48,12 @@ public interface SControlUsuario {
 	
 	@Transactional(readOnly=true)
 	Usuario consultarUsuario(int idPersona);
+	
+	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
+	Usuario crearUsuario(Persona persona, SMaestros sMaestros);
+	
+	@Transactional(readOnly=true)
+	String buscarUsername(Persona persona);
 
 	//Menu
 	@Transactional(readOnly=true)

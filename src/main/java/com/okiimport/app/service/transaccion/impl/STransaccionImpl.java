@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
+import com.okiimport.app.service.configuracion.SControlUsuario;
 import com.okiimport.app.service.maestros.SMaestros;
 import com.okiimport.app.service.transaccion.STransaccion;
 import com.okiimport.app.dao.transaccion.*;
@@ -22,6 +23,7 @@ import com.okiimport.app.dao.transaccion.detalle.oferta.DetalleOfertaRepository;
 import com.okiimport.app.dao.transaccion.detalle.requerimiento.DetalleRequerimientoRepository;
 import com.okiimport.app.dao.transaccion.impl.*;
 import com.okiimport.app.dao.transaccion.impl.detalle.cotizacion.*;
+import com.okiimport.app.dao.transaccion.impl.detalle.oferta.DetalleOfertaDAO;
 import com.okiimport.app.model.Analista;
 import com.okiimport.app.model.Compra;
 import com.okiimport.app.model.Cotizacion;
@@ -30,6 +32,7 @@ import com.okiimport.app.model.DetalleCotizacionInternacional;
 import com.okiimport.app.model.DetalleOferta;
 import com.okiimport.app.model.DetalleRequerimiento;
 import com.okiimport.app.model.Oferta;
+import com.okiimport.app.model.Proveedor;
 import com.okiimport.app.model.Requerimiento;
 import com.okiimport.app.resource.service.AbstractServiceImpl;
 
@@ -352,6 +355,20 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		return requerimiento;
 	}
 	
+	public Requerimiento cerrarRequerimiento(Requerimiento requerimiento, SMaestros sMaestros,  SControlUsuario sControlUsuario, boolean aprobarProveedores){
+		requerimiento.cerrarSolicitud();
+		actualizarRequerimiento(requerimiento);
+		if(aprobarProveedores){
+			List<Proveedor> proveedores = sMaestros.consultarProveedoresHaAprobar(requerimiento);
+			if(!proveedores.isEmpty())
+				for(Proveedor proveedor : proveedores){
+					sControlUsuario.crearUsuario(proveedor, sMaestros);
+					//Faltaria enviar el correo al proveedor
+				}
+		}
+		return requerimiento;
+	}
+	
 	public DetalleRequerimiento registrarDetalleRequerimiento(int idRequerimiento, DetalleRequerimiento detalleRequerimiento){
 		Requerimiento requerimiento = this.requerimientoRepository.findOne(idRequerimiento);
 		if(requerimiento!=null){
@@ -665,7 +682,7 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		return parametros;
 	}
 	
-	public Oferta consultarOfertaEnviadaPorRequerimiento(int idRequerimiento) {
+	public Oferta consultarOfertaEnviadaPorRequerimiento(int idRequerimiento, List<DetalleRequerimiento> detallesRequerimiento) {
 		Oferta oferta = null;
 		List<String> estatus = new ArrayList<String>();
 		estatus.add("enviada");
@@ -674,7 +691,13 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		List<Oferta> ofertas = ofertaRepository.findAll(specfOferta, sortOferta);
 		if(ofertas!=null && !ofertas.isEmpty()){
 			oferta = ofertas.get(0);
-			oferta.setDetalleOfertas(consultarDetallesOferta(oferta.getIdOferta()));
+			if(detallesRequerimiento == null || detallesRequerimiento.isEmpty())
+				oferta.setDetalleOfertas(consultarDetallesOferta(oferta.getIdOferta()));
+			else
+			{
+				Specification<DetalleOferta> specfDetalleOferta = (new DetalleOfertaDAO()).consultarDetallesOferta(oferta.getIdOferta(), detallesRequerimiento);
+				oferta.setDetalleOfertas(detalleOfertaRepository.findAll(specfDetalleOferta));
+			}
 		}
 		return oferta;
 	}

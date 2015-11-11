@@ -13,6 +13,7 @@ import com.okiimport.app.model.MarcaVehiculo;
 import com.okiimport.app.model.Motor;
 import com.okiimport.app.model.Persona;
 import com.okiimport.app.model.Proveedor;
+import com.okiimport.app.model.Requerimiento;
 
 @Service
 @Transactional
@@ -88,6 +89,8 @@ public interface SMaestros {
 	Map<String, Object> ConsultarProveedoresListaClasificacionRepuesto(Persona persona, String fieldSort, Boolean sortDirection,
 			Integer idRequerimiento, List<Integer> idsClasificacionRepuesto, int page, int limit);
 	
+	@Transactional(readOnly=true)
+	List<Proveedor> consultarProveedoresHaAprobar(Requerimiento requerimiento);
 	
 	//Clasificacion Repuesto
 	@Transactional(readOnly=true)
