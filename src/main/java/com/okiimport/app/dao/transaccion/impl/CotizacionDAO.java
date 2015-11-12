@@ -16,12 +16,13 @@ import javax.persistence.criteria.Selection;
 import org.springframework.data.jpa.domain.Specification;
 
 import com.okiimport.app.model.Cotizacion;
+import com.okiimport.app.modelo.enumerados.EEstatusCotizacion;
 import com.okiimport.app.resource.dao.AbstractJpaDao;
 
 public class CotizacionDAO extends AbstractJpaDao<Cotizacion> {
 
 	public Specification<Cotizacion> consultarCotizacionesAsignadas(final Cotizacion cotizacion, final int idRequerimiento, 
-			final List<String> estatus){
+			final List<EEstatusCotizacion> estatus){
 		return new Specification<Cotizacion>(){
 			public Predicate toPredicate(Root<Cotizacion> entity, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
 				// 1. Inicializar Variables
@@ -63,7 +64,7 @@ public class CotizacionDAO extends AbstractJpaDao<Cotizacion> {
 	}
 	
 	public Specification<Cotizacion> consultarSolicitudCotizaciones(final Cotizacion cotizacionF, final Integer idRequerimiento, 
-			final int idProveedor, final List<String> estatus){
+			final int idProveedor, final List<EEstatusCotizacion> estatus){
 		return new Specification<Cotizacion>(){
 			public Predicate toPredicate(Root<Cotizacion> entity, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
 				// 1. Inicializar Variables
@@ -106,7 +107,7 @@ public class CotizacionDAO extends AbstractJpaDao<Cotizacion> {
 	}
 	
 	public Specification<Cotizacion> consultarCotizacionesParaEditar(final Cotizacion cotizacionF, final Integer idRequerimiento, 
-			final List<String> estatus){
+			final List<EEstatusCotizacion> estatus){
 		return new Specification<Cotizacion>(){
 			public Predicate toPredicate(Root<Cotizacion> entity, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
 				// 1. Inicializar Variables

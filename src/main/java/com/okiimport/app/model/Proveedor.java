@@ -19,7 +19,6 @@ import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.okiimport.app.modelo.enumerados.EEstatusPersona;
-import com.okiimport.app.modelo.enumerados.EEstatusRequerimiento;
 
 
 /**
@@ -192,6 +191,6 @@ public class Proveedor extends Persona implements Serializable {
 	
 	@Transient
 	public boolean isSolicitante(){
-		return this.estatus.equals(EEstatusPersona.SOLICITANTE);
+		return this.estatus.equals(EEstatusPersona.ACTIVO);//Solicitante
 	}
 }

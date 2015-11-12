@@ -16,11 +16,12 @@ import javax.persistence.criteria.Selection;
 import org.springframework.data.jpa.domain.Specification;
 
 import com.okiimport.app.model.Oferta;
+import com.okiimport.app.modelo.enumerados.EEstatusOferta;
 import com.okiimport.app.resource.dao.AbstractJpaDao;
 
 public class OfertaDAO extends AbstractJpaDao<Oferta> {
 	
-	public Specification<Oferta> consultarOfertasPorRequerimiento(final Integer idRequerimiento, final List<String> estatus){
+	public Specification<Oferta> consultarOfertasPorRequerimiento(final Integer idRequerimiento, final List<EEstatusOferta> estatus){
 		return new Specification<Oferta>(){
 			public Predicate toPredicate(Root<Oferta> entity, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
 				// 1. Inicializar Variables

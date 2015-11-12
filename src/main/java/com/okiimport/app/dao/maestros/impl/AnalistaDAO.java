@@ -19,6 +19,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import com.okiimport.app.model.Analista;
 import com.okiimport.app.model.Persona;
+import com.okiimport.app.modelo.enumerados.EEstatusRequerimiento;
 
 public class AnalistaDAO extends PersonaDAO<Analista> {
 	
@@ -34,7 +35,7 @@ public class AnalistaDAO extends PersonaDAO<Analista> {
 		return consultarPersonaSinUsuarios(analista);
 	}
 
-	public Specification<Analista> consultarCantRequerimientos(final List<String> estatus) {
+	public Specification<Analista> consultarCantRequerimientos(final List<EEstatusRequerimiento> estatus) {
 		return new Specification<Analista>(){
 			public Predicate toPredicate(Root<Analista> entity, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
 				// 1. Inicializar Variables

@@ -34,6 +34,12 @@ import com.okiimport.app.model.DetalleRequerimiento;
 import com.okiimport.app.model.Oferta;
 import com.okiimport.app.model.Proveedor;
 import com.okiimport.app.model.Requerimiento;
+import com.okiimport.app.modelo.enumerados.EEstatusCompra;
+import com.okiimport.app.modelo.enumerados.EEstatusCotizacion;
+import com.okiimport.app.modelo.enumerados.EEstatusDetalleOferta;
+import com.okiimport.app.modelo.enumerados.EEstatusDetalleRequerimiento;
+import com.okiimport.app.modelo.enumerados.EEstatusOferta;
+import com.okiimport.app.modelo.enumerados.EEstatusRequerimiento;
 import com.okiimport.app.resource.service.AbstractServiceImpl;
 
 public class STransaccionImpl extends AbstractServiceImpl implements STransaccion {
@@ -86,15 +92,15 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	}
 
 	public Requerimiento registrarRequerimiento(Requerimiento requerimiento, boolean asignarAnalista, SMaestros sMaestros) {
-		/*Date fechaCreacion = calendar.getTime();
+		Date fechaCreacion = calendar.getTime();
 		Date fechaVencimiento = sumarORestarFDia(fechaCreacion, 15);
 		if(asignarAnalista)
 			asignarRequerimiento(requerimiento, sMaestros);
 		requerimiento.setFechaCreacion(new Timestamp(fechaCreacion.getTime()));
 		requerimiento.setFechaVencimiento(fechaVencimiento);
-		requerimiento.setEstatus("CR");
+		requerimiento.setEstatus(EEstatusRequerimiento.EMITIDO);
 		for(DetalleRequerimiento detalle:requerimiento.getDetalleRequerimientos())
-			detalle.setEstatus("activo");*/
+			detalle.setEstatus(EEstatusDetalleRequerimiento.SOLICITADO);
 		return requerimiento = actualizarRequerimiento(requerimiento);
 		
 	}
@@ -112,19 +118,13 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 			DetalleOferta detalleOferta = new DetalleOferta();
 			detalleOferta.setDetalleCotizacion(detalleCotizacion);
 			detalleOferta.setOferta(oferta);
-			//detalleOferta.setEstatus("seleccion");
+			detalleOferta.setEstatus(EEstatusDetalleOferta.SELECCION);
 			this.detalleOfertaRepository.save(detalleOferta);
 		}
 	}
 	
 	public void asignarRequerimiento(Requerimiento requerimiento, SMaestros sMaestros) {
-		List<String> estatus=new ArrayList<String>();
-		estatus.addAll(ESTATUS_EMITIDOS);
-//		estatus.add("CR");
-//		estatus.add("E");
-//		estatus.add("EP");
-		estatus.add("CT");
-		estatus.add("O");
+		List<EEstatusRequerimiento> estatus = EEstatusRequerimiento.getEstatusGeneral();
 		List<Analista> analistas = sMaestros.consultarCantRequerimientos(estatus, 0, 1);
 		if(analistas.size()>0)
 			requerimiento.setAnalista(analistas.get(0));
@@ -161,7 +161,7 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		Sort sortRequerimiento 
 			= new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idRequerimiento"));
 		Specification<Requerimiento> specfRequerimiento = (new RequerimientoDAO())
-				.consultarRequerimientoUsuario(regFiltro, idusuario, ESTATUS_EMITIDOS);
+				.consultarRequerimientoUsuario(regFiltro, idusuario, EEstatusRequerimiento.getEstatusEmitidos());
 		if(limit>0){
 			Page<Requerimiento> pageRequerimiento = this.requerimientoRepository
 					.findAll(specfRequerimiento, new PageRequest(page, limit, sortRequerimiento));
@@ -185,7 +185,7 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		Sort sortRequerimiento 
 			= new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idRequerimiento"));
 		Specification<Requerimiento> specfRequerimiento = (new RequerimientoDAO())
-				.consultarRequerimientoUsuario(regFiltro, idusuario, ESTATUS_PROCESADOS);
+				.consultarRequerimientoUsuario(regFiltro, idusuario, EEstatusRequerimiento.getEstatusProcesados());
 		if(limit>0){
 			Page<Requerimiento> pageRequerimiento = this.requerimientoRepository
 					.findAll(specfRequerimiento, new PageRequest(page, limit, sortRequerimiento));
@@ -209,7 +209,7 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		Sort sortRequerimiento 
 			= new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idRequerimiento"));
 		Specification<Requerimiento> specfRequerimiento = (new RequerimientoDAO())
-				.consultarRequerimientoUsuario(regFiltro, idusuario, ESTATUS_OFERTADOS);
+				.consultarRequerimientoUsuario(regFiltro, idusuario, EEstatusRequerimiento.getEstatusOfertados());
 		
 		if(limit>0){
 			Page<Requerimiento> pageRequerimiento = this.requerimientoRepository
@@ -285,8 +285,8 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	
 	public Map<String, Object> ConsultarCotizacionesRequerimiento(Cotizacion cotFiltro, String fieldSort, Boolean sortDirection, 
 			Integer idrequerimiento, int page, int limit) {
-		List<String> estatus=new ArrayList<String>();
-		estatus.add("C");
+		List<EEstatusCotizacion> estatus=new ArrayList<EEstatusCotizacion>();
+		estatus.add(EEstatusCotizacion.COMPLETADA);
 		
 		Map<String, Object> parametros= new HashMap<String, Object>();
 		Integer total = 0;
@@ -312,9 +312,9 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	
 	public Map<String, Object> ConsultarRequerimientosConSolicitudesCotizacion(Requerimiento regFiltro, String fieldSort, Boolean sortDirection, 
 			Integer idProveedor, int page, int limit) {
-		List<String> estatus=new ArrayList<String>();
-		estatus.add("O");
-		estatus.add("CC");
+		List<EEstatusRequerimiento> estatus=new ArrayList<EEstatusRequerimiento>();
+		estatus.add(EEstatusRequerimiento.OFERTADO);
+		estatus.add(EEstatusRequerimiento.CONCRETADO);
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		Integer total = 0;
 		List<Requerimiento> requerimientos = null;
@@ -350,7 +350,7 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		} while(!encontrado);
 		
 		if(encontrado) {
-			//requerimiento.setEstatus("CR");
+			requerimiento.setEstatus(EEstatusRequerimiento.EMITIDO);
 			this.registrarRequerimiento(requerimiento, false, sMaestros);
 		}
 		return requerimiento;
@@ -425,8 +425,8 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 
 	public Map<String, Object> consultarSolicitudCotizaciones(Cotizacion cotizacionF, String fieldSort, Boolean sortDirection,
 			Integer idRequerimiento, int idProveedor, int page, int limit){
-		List<String> estatus=new ArrayList<String>();
-		estatus.add("SC");
+		List<EEstatusCotizacion> estatus=new ArrayList<EEstatusCotizacion>();
+		estatus.add(EEstatusCotizacion.SOLICITUD_COTIZACION);
 		
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		Integer total = 0;
@@ -451,7 +451,7 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	}
 	
 	public Cotizacion registrarSolicitudCotizacion(Cotizacion cotizacion, List<DetalleCotizacion> detalleCotizacions) {
-		//cotizacion.setEstatus("SC");
+		cotizacion.setEstatus(EEstatusCotizacion.SOLICITUD_COTIZACION);
 		cotizacion.setFechaCreacion(calendar.getTime());
 		cotizacion = cotizacionRepository.save(cotizacion);
 		for(DetalleCotizacion detalleCotizacion : detalleCotizacions){
@@ -459,12 +459,12 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 			this.detalleCotizacionRepository.save(detalleCotizacion);
 			
 			DetalleRequerimiento detalleRequerimiento = detalleCotizacion.getDetalleRequerimiento();
-			//detalleRequerimiento.setEstatus("EP");
+			detalleRequerimiento.setEstatus(EEstatusDetalleRequerimiento.ENVIADO_PROVEEDOR);
 			this.detalleRequerimientoRepository.save(detalleRequerimiento);
 			
 			Requerimiento requerimiento = detalleRequerimiento.getRequerimiento();
 			if(requerimiento.getFechaSolicitud()==null){
-				//requerimiento.setEstatus("EP");
+				requerimiento.setEstatus(EEstatusRequerimiento.ENVIADO_PROVEEDOR);
 				requerimiento.setFechaSolicitud(new Timestamp(Calendar.getInstance().getTime().getTime()));
 				this.requerimientoRepository.save(requerimiento);
 			}
@@ -476,17 +476,15 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	
 	@SuppressWarnings("unchecked")
 	public Cotizacion registrarCotizacion(Cotizacion cotizacion, Requerimiento requerimiento) {
-		String estatusRequerimiento = "CT";
+		EEstatusRequerimiento estatusRequerimiento = EEstatusRequerimiento.CON_COTIZACIONES_A;
 		List<Cotizacion> cotizaciones = (List<Cotizacion>) consultarCotizacionesParaEditar(null, null, null, requerimiento.getIdRequerimiento(), 0, 1).get("cotizaciones");
 		if(cotizacion.getEstatus()==null)
-			//cotizacion.setEstatus("C");
+			cotizacion.setEstatus(EEstatusCotizacion.COMPLETADA);
 		
-			/*if(cotizacion.getEstatus().equalsIgnoreCase("EC")) //Incompleto
-			estatusRequerimiento = "EC";
-		else if(!cotizaciones.isEmpty()) //Completo
-			estatusRequerimiento = "EC";*/
+		if(cotizacion.getEstatus().equals(EEstatusCotizacion.COTIZACION_PARA_EDITAR) /*Incompleto*/ || !cotizaciones.isEmpty() /*Completo*/) 
+			estatusRequerimiento = EEstatusRequerimiento.CON_COTIZACIONES_I;
 		
-		//requerimiento.setEstatus(estatusRequerimiento);
+		requerimiento.setEstatus(estatusRequerimiento);
 		this.requerimientoRepository.save(requerimiento);
 		
 		List<DetalleCotizacion> detalles = cotizacion.getDetalleCotizacions();
@@ -495,7 +493,7 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 			this.detalleCotizacionRepository.save(detalle);
 			DetalleRequerimiento detalleRequerimiento = detalle.getDetalleRequerimiento();
 			
-		//	detalleRequerimiento.setEstatus("CT");
+			detalleRequerimiento.setEstatus(EEstatusDetalleRequerimiento.CON_COTIZACIONES_A);
 			this.detalleRequerimientoRepository.save(detalleRequerimiento);
 		}
 		return cotizacion;
@@ -503,8 +501,8 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	
 	public Map<String, Object> consultarCotizacionesParaEditar(Cotizacion cotizacionF, String fieldSort, Boolean sortDirection,
 			Integer idRequerimiento, int page, int limit){
-		List<String> estatus = new ArrayList<String>();
-		estatus.add("EC");
+		List<EEstatusCotizacion> estatus = new ArrayList<EEstatusCotizacion>();
+		estatus.add(EEstatusCotizacion.COTIZACION_PARA_EDITAR);
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		Integer total = 0;
 		List<Cotizacion> cotizaciones = null;
@@ -557,7 +555,7 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 			String fieldSort, Boolean sortDirection, int page, int limit){
 		boolean nuloCantidad = false;
 		if(detalleF!=null){
-			//detalleF.getCotizacion().setEstatus("C");
+			detalleF.getCotizacion().setEstatus(EEstatusCotizacion.COMPLETADA);
 			if(detalleF.getCantidad()==null){
 				nuloCantidad = true;
 				detalleF.setCantidad(new Long(0));
@@ -660,8 +658,8 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	}
 	
 	public Map<String, Object> consultarOfertasRecibidasPorRequerimiento(int idRequerimiento, int page, int limit){
-		List<String> estatus = new ArrayList<String>();
-		estatus.add("recibida");
+		List<EEstatusOferta> estatus = new ArrayList<EEstatusOferta>();
+		estatus.add(EEstatusOferta.RECIBIDA);
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		Integer total = 0;
 		List<Oferta> ofertas = null;
@@ -684,8 +682,8 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	
 	public Oferta consultarOfertaEnviadaPorRequerimiento(int idRequerimiento, List<DetalleRequerimiento> detallesRequerimiento) {
 		Oferta oferta = null;
-		List<String> estatus = new ArrayList<String>();
-		estatus.add("enviada");
+		List<EEstatusOferta> estatus = new ArrayList<EEstatusOferta>();
+		estatus.add(EEstatusOferta.ENVIADA);
 		Sort sortOferta = new Sort(Sort.Direction.ASC, "fechaCreacion");
 		Specification<Oferta> specfOferta = (new OfertaDAO()).consultarOfertasPorRequerimiento(idRequerimiento, estatus);
 		List<Oferta> ofertas = ofertaRepository.findAll(specfOferta, sortOferta);
@@ -703,15 +701,15 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	}
 	
 	public Integer consultarCantOfertasCreadasPorRequermiento(int idRequerimiento){
-		List<String> estatus = new ArrayList<String>();
-		estatus.add("solicitado");
+		List<EEstatusOferta> estatus = new ArrayList<EEstatusOferta>();
+		estatus.add(EEstatusOferta.SOLICITADO);
 		Specification<Oferta> specfOferta = (new OfertaDAO()).consultarOfertasPorRequerimiento(idRequerimiento, estatus);
 		return Long.valueOf(this.ofertaRepository.count(specfOferta)).intValue();		
 	}
 	
 	public Oferta actualizarOferta(Oferta oferta) {
-		//if(oferta.getIdOferta()==null)
-	    	//oferta.setEstatus("solicitado");
+		if(oferta.getIdOferta()==null)
+	    	oferta.setEstatus(EEstatusOferta.SOLICITADO);
 		return oferta = ofertaRepository.save(oferta);
 	}
 	
@@ -752,17 +750,18 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	}
 	
 	public Compra registrarSolicitudCompra(Compra compra) {
-	//	compra.setEstatus("solicitada");
+		compra.setEstatus(EEstatusCompra.SOLICITUD_PEDIDO);
 		return registrarOActualizarCompra(compra);
 	}
 	
 	public Compra registrarCompra(Compra compra, Requerimiento requerimiento,  boolean cambiarEstatus) {
 		if(cambiarEstatus)
-	//		requerimiento.setEstatus((compra.getTipoFlete()) ? "CC" : "CP"); 
+			requerimiento.setEstatus((compra.getTipoFlete()) 
+					? EEstatusRequerimiento.CONCRETADO : EEstatusRequerimiento.COMPRADO); 
 		actualizarRequerimiento(requerimiento);
 		List<DetalleOferta> detalleCompra = compra.getDetalleOfertas();
 		compra.setDetalleOfertas(null);
-	//	compra.setEstatus("enviada");
+		compra.setEstatus(EEstatusCompra.COMPRA_REALIZADA_ENVIADA);
 		compra = registrarOActualizarCompra(compra);
 		if(detalleCompra!=null && !detalleCompra.isEmpty()){
 			for(DetalleOferta detalle : detalleCompra){

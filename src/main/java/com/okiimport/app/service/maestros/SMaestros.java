@@ -14,6 +14,7 @@ import com.okiimport.app.model.Motor;
 import com.okiimport.app.model.Persona;
 import com.okiimport.app.model.Proveedor;
 import com.okiimport.app.model.Requerimiento;
+import com.okiimport.app.modelo.enumerados.EEstatusRequerimiento;
 
 @Service
 @Transactional
@@ -57,7 +58,7 @@ public interface SMaestros {
 			int page, int limit);
 	
 	@Transactional(readOnly=true)
-	List<Analista> consultarCantRequerimientos(List<String> estatus, int page, int limit);
+	List<Analista> consultarCantRequerimientos(List<EEstatusRequerimiento> estatus, int page, int limit);
 	
 	@Transactional(readOnly=true)
 	Map<String, Object> consultarAnalistas(Analista analista, int page, int limit);

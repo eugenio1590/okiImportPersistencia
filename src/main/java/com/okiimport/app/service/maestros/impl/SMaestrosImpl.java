@@ -38,6 +38,7 @@ import com.okiimport.app.model.Pais;
 import com.okiimport.app.model.Persona;
 import com.okiimport.app.model.Proveedor;
 import com.okiimport.app.model.Requerimiento;
+import com.okiimport.app.modelo.enumerados.EEstatusRequerimiento;
 import com.okiimport.app.resource.service.AbstractServiceImpl;
 import com.okiimport.app.service.maestros.SMaestros;
 
@@ -226,7 +227,7 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 		return parametros;
 	}
 	
-	public List<Analista> consultarCantRequerimientos(List<String> estatus, int page, int limit){
+	public List<Analista> consultarCantRequerimientos(List<EEstatusRequerimiento> estatus, int page, int limit){
 		Specification<Analista> specfAnalista = (new AnalistaDAO()).consultarCantRequerimientos(estatus);
 		List<Analista> analistas = null;
 		if(limit>0)

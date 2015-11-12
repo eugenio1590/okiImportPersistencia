@@ -18,6 +18,7 @@ import org.springframework.data.jpa.domain.Specification;
 import com.okiimport.app.model.Cliente;
 import com.okiimport.app.model.MarcaVehiculo;
 import com.okiimport.app.model.Requerimiento;
+import com.okiimport.app.modelo.enumerados.EEstatusRequerimiento;
 import com.okiimport.app.resource.dao.AbstractJpaDao;
 
 public class RequerimientoDAO extends AbstractJpaDao<Requerimiento> {
@@ -48,7 +49,7 @@ public class RequerimientoDAO extends AbstractJpaDao<Requerimiento> {
 	};
 
 	public Specification<Requerimiento> consultarRequerimientoUsuario(final Requerimiento regFiltro, final Integer idusuario, 
-			final List<String> estatus) {
+			final List<EEstatusRequerimiento> estatus) {
 		return new Specification<Requerimiento>(){
 			public Predicate toPredicate(Root<Requerimiento> entity, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
 				// 1. Inicializar Variables
@@ -131,7 +132,7 @@ public class RequerimientoDAO extends AbstractJpaDao<Requerimiento> {
 	}
 	
 	public Specification<Requerimiento> consultarRequerimientosConSolicitudesCotizacion(final Requerimiento regFiltro, 
-			final Integer idProveedor, final List<String> estatus){
+			final Integer idProveedor, final List<EEstatusRequerimiento> estatus){
 		return new Specification<Requerimiento>(){
 			public Predicate toPredicate(Root<Requerimiento> entity, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
 				//1. Inicializar Variables
