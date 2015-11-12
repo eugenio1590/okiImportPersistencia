@@ -14,7 +14,7 @@ import com.okiimport.app.model.Motor;
 import com.okiimport.app.model.Persona;
 import com.okiimport.app.model.Proveedor;
 import com.okiimport.app.model.Requerimiento;
-import com.okiimport.app.modelo.enumerados.EEstatusRequerimiento;
+import com.okiimport.app.model.enumerados.EEstatusRequerimiento;
 
 @Service
 @Transactional

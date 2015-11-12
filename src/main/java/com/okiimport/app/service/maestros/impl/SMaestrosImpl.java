@@ -38,7 +38,7 @@ import com.okiimport.app.model.Pais;
 import com.okiimport.app.model.Persona;
 import com.okiimport.app.model.Proveedor;
 import com.okiimport.app.model.Requerimiento;
-import com.okiimport.app.modelo.enumerados.EEstatusRequerimiento;
+import com.okiimport.app.model.enumerados.EEstatusRequerimiento;
 import com.okiimport.app.resource.service.AbstractServiceImpl;
 import com.okiimport.app.service.maestros.SMaestros;
 

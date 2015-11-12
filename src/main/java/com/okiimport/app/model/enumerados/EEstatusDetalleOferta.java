@@ -1,14 +1,14 @@
-package com.okiimport.app.modelo.enumerados;
+package com.okiimport.app.model.enumerados;
 
-public enum EEstatusMoneda {
-
-	ACTIVO("AC","Activo"),
-	INACTIVA ("IN", "Inactiva");
-
+public enum EEstatusDetalleOferta {
+	//NO ESTAN DEFINIDAS
+	SELECCION("SE", "Seleccionada")
+	;
+	
 	private String value;
 	private String nombre;
-
-	EEstatusMoneda(String value, String nombre){
+	
+	EEstatusDetalleOferta(String value, String nombre){
 		this.value = value;
 		this.nombre = nombre;
 	}
@@ -28,4 +28,5 @@ public enum EEstatusMoneda {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
+
 }

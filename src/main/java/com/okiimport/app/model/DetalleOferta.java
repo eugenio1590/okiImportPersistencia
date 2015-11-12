@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
-import com.okiimport.app.modelo.enumerados.EEstatusDetalleOferta;
+import com.okiimport.app.model.enumerados.EEstatusDetalleOferta;
 import com.okiimport.app.resource.model.AbstractEntity;
 
 /**

@@ -16,7 +16,7 @@ import javax.persistence.criteria.Selection;
 import org.springframework.data.jpa.domain.Specification;
 
 import com.okiimport.app.model.Cotizacion;
-import com.okiimport.app.modelo.enumerados.EEstatusCotizacion;
+import com.okiimport.app.model.enumerados.EEstatusCotizacion;
 import com.okiimport.app.resource.dao.AbstractJpaDao;
 
 public class CotizacionDAO extends AbstractJpaDao<Cotizacion> {

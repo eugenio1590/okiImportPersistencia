@@ -1,16 +1,15 @@
-package com.okiimport.app.modelo.enumerados;
+package com.okiimport.app.model.enumerados;
 
-public enum EEstatusCotizacion {
-	
-	SOLICITUD_COTIZACION("SC", "Solicitud de Cotizacion"),
-	COTIZACION_PARA_EDITAR("EC", "Cotizacion Incompleta"),
-	COMPLETADA("C", "Cotizacion Completa");
-	//FALTAN ESTATUS
+public enum EEstatusCompra {
+
+	SOLICITUD_PEDIDO ("solicitada", "Solicitud de Pedido"),
+	COMPRA_REALIZADA_ENVIADA("enviada", "Compra Realizada y Enviada a Proveedores");
+	//Faltan estatus
 	
 	private String value;
 	private String nombre;
 	
-	EEstatusCotizacion(String value, String nombre){
+	EEstatusCompra(String value, String nombre){
 		this.value = value;
 		this.nombre = nombre;
 	}
@@ -30,5 +29,4 @@ public enum EEstatusCotizacion {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
-
 }

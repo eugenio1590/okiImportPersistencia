@@ -18,7 +18,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.okiimport.app.modelo.enumerados.EEstatusPersona;
+import com.okiimport.app.model.enumerados.EEstatusPersona;
 
 
 /**

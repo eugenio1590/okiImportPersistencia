@@ -6,7 +6,7 @@ import java.util.List;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.okiimport.app.modelo.enumerados.EEstatusBanco;
+import com.okiimport.app.model.enumerados.EEstatusGeneral;
 import com.okiimport.app.resource.model.AbstractEntity;
 
 /**
@@ -28,7 +28,7 @@ public class Banco extends AbstractEntity implements Serializable{
 	
 	private String nombre;
 	
-	private EEstatusBanco estatus;
+	private EEstatusGeneral estatus;
 	
 	//bi-directional one-to-many association to PagoCompra
 	@OneToMany(mappedBy="banco", fetch=FetchType.LAZY)
@@ -55,11 +55,11 @@ public class Banco extends AbstractEntity implements Serializable{
 
 	
 
-	public EEstatusBanco getEstatus() {
+	public EEstatusGeneral getEstatus() {
 		return estatus;
 	}
 
-	public void setEstatus(EEstatusBanco estatus) {
+	public void setEstatus(EEstatusGeneral estatus) {
 		this.estatus = estatus;
 	}
 

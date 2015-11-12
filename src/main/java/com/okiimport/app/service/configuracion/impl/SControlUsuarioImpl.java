@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 
 
+
 import com.okiimport.app.dao.configuracion.MenuRepository;
 import com.okiimport.app.dao.configuracion.UsuarioRepository;
 import com.okiimport.app.dao.configuracion.impl.MenuDAO;
@@ -33,7 +34,7 @@ import com.okiimport.app.dao.configuracion.impl.UsuarioDAO;
 import com.okiimport.app.model.Menu;
 import com.okiimport.app.model.Persona;
 import com.okiimport.app.model.Usuario;
-import com.okiimport.app.modelo.enumerados.EEstatusPersona;
+import com.okiimport.app.model.enumerados.EEstatusPersona;
 import com.okiimport.app.resource.service.PasswordGenerator;
 import com.okiimport.app.resource.service.AbstractServiceImpl;
 import com.okiimport.app.service.configuracion.SControlUsuario;

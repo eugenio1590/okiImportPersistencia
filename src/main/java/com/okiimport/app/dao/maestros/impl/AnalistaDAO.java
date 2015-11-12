@@ -19,7 +19,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import com.okiimport.app.model.Analista;
 import com.okiimport.app.model.Persona;
-import com.okiimport.app.modelo.enumerados.EEstatusRequerimiento;
+import com.okiimport.app.model.enumerados.EEstatusRequerimiento;
 
 public class AnalistaDAO extends PersonaDAO<Analista> {
 	

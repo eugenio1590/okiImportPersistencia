@@ -25,7 +25,7 @@ import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.okiimport.app.modelo.enumerados.EEstatusRequerimiento;
+import com.okiimport.app.model.enumerados.EEstatusRequerimiento;
 import com.okiimport.app.resource.model.AbstractEntity;
 import com.okiimport.app.resource.model.JsonDateSerializer;
 

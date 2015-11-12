@@ -16,7 +16,7 @@ import javax.persistence.criteria.Selection;
 import org.springframework.data.jpa.domain.Specification;
 
 import com.okiimport.app.model.Oferta;
-import com.okiimport.app.modelo.enumerados.EEstatusOferta;
+import com.okiimport.app.model.enumerados.EEstatusOferta;
 import com.okiimport.app.resource.dao.AbstractJpaDao;
 
 public class OfertaDAO extends AbstractJpaDao<Oferta> {

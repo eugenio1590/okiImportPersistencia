@@ -8,8 +8,8 @@ import java.util.List;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.okiimport.app.modelo.enumerados.EEstatusCompra;
-import com.okiimport.app.modelo.enumerados.EEstatusRequerimiento;
+import com.okiimport.app.model.enumerados.EEstatusCompra;
+import com.okiimport.app.model.enumerados.EEstatusRequerimiento;
 import com.okiimport.app.resource.model.AbstractEntity;
 
 /**

@@ -1,14 +1,16 @@
-package com.okiimport.app.modelo.enumerados;
+package com.okiimport.app.model.enumerados;
 
-public enum EEstatusBanco {
-
-	ACTIVO("AC","Activo"),
-	INACTIVO ("IN", "Inactivo");
-
+public enum EEstatusCotizacion {
+	
+	SOLICITUD_COTIZACION("SC", "Solicitud de Cotizacion"),
+	COTIZACION_PARA_EDITAR("EC", "Cotizacion Incompleta"),
+	COMPLETADA("C", "Cotizacion Completa");
+	//FALTAN ESTATUS
+	
 	private String value;
 	private String nombre;
-
-	EEstatusBanco(String value, String nombre){
+	
+	EEstatusCotizacion(String value, String nombre){
 		this.value = value;
 		this.nombre = nombre;
 	}

@@ -1,4 +1,4 @@
-package com.okiimport.app.modelo.enumerados;
+package com.okiimport.app.model.enumerados;
 
 public enum EEStatusDetalleCotizacion {
 	//NO ESTAN DEFINIDAS

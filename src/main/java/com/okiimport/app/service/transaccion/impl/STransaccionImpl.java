@@ -34,12 +34,12 @@ import com.okiimport.app.model.DetalleRequerimiento;
 import com.okiimport.app.model.Oferta;
 import com.okiimport.app.model.Proveedor;
 import com.okiimport.app.model.Requerimiento;
-import com.okiimport.app.modelo.enumerados.EEstatusCompra;
-import com.okiimport.app.modelo.enumerados.EEstatusCotizacion;
-import com.okiimport.app.modelo.enumerados.EEstatusDetalleOferta;
-import com.okiimport.app.modelo.enumerados.EEstatusDetalleRequerimiento;
-import com.okiimport.app.modelo.enumerados.EEstatusOferta;
-import com.okiimport.app.modelo.enumerados.EEstatusRequerimiento;
+import com.okiimport.app.model.enumerados.EEstatusCompra;
+import com.okiimport.app.model.enumerados.EEstatusCotizacion;
+import com.okiimport.app.model.enumerados.EEstatusDetalleOferta;
+import com.okiimport.app.model.enumerados.EEstatusDetalleRequerimiento;
+import com.okiimport.app.model.enumerados.EEstatusOferta;
+import com.okiimport.app.model.enumerados.EEstatusRequerimiento;
 import com.okiimport.app.resource.service.AbstractServiceImpl;
 
 public class STransaccionImpl extends AbstractServiceImpl implements STransaccion {

@@ -18,7 +18,7 @@ import org.springframework.data.jpa.domain.Specification;
 import com.okiimport.app.model.Cliente;
 import com.okiimport.app.model.MarcaVehiculo;
 import com.okiimport.app.model.Requerimiento;
-import com.okiimport.app.modelo.enumerados.EEstatusRequerimiento;
+import com.okiimport.app.model.enumerados.EEstatusRequerimiento;
 import com.okiimport.app.resource.dao.AbstractJpaDao;
 
 public class RequerimientoDAO extends AbstractJpaDao<Requerimiento> {

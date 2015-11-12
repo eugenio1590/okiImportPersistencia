@@ -9,7 +9,7 @@ import java.util.List;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.okiimport.app.modelo.enumerados.EEstatusMoneda;
+import com.okiimport.app.model.enumerados.EEstatusGeneral;
 import com.okiimport.app.resource.model.AbstractEntity;
 
 /**
@@ -35,15 +35,15 @@ public class Moneda extends AbstractEntity implements Serializable {
 	
 	private String simbolo;
 	
-	private EEstatusMoneda estatus;
+	private EEstatusGeneral estatus;
 	
 	//bi-directional one-to-many association to HistoricoMoneda
 	@OneToMany(mappedBy="moneda", fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	private List<HistoricoMoneda> historicoMonedas;
 
 	public Moneda() {
-		super();
 	}   
+	
 	public Integer getIdMoneda() {
 		return this.idMoneda;
 	}
@@ -51,13 +51,15 @@ public class Moneda extends AbstractEntity implements Serializable {
 	public void setIdMoneda(Integer idMoneda) {
 		this.idMoneda = idMoneda;
 	}   
+	
 	public String getNombre() {
 		return this.nombre;
 	}
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
-	}   
+	}  
+	
 	public Boolean getPais() {
 		return this.pais;
 	}
@@ -73,13 +75,14 @@ public class Moneda extends AbstractEntity implements Serializable {
 		this.simbolo = simbolo;
 	}
 	
-	
-	public EEstatusMoneda getEstatus() {
+	public EEstatusGeneral getEstatus() {
 		return estatus;
 	}
-	public void setEstatus(EEstatusMoneda estatus) {
+	
+	public void setEstatus(EEstatusGeneral estatus) {
 		this.estatus = estatus;
 	}
+	
 	public List<HistoricoMoneda> getHistoricoMonedas() {
 		return historicoMonedas;
 	}
