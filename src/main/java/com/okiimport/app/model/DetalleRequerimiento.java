@@ -6,7 +6,7 @@ import java.util.List;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
+import com.okiimport.app.modelo.enumerados.EEstatusDetalleRequerimiento;
 import com.okiimport.app.resource.model.AbstractEntity;
 
 
@@ -32,7 +32,7 @@ public class DetalleRequerimiento extends AbstractEntity implements Serializable
 	@Column(name="codigo_oem")
 	private String codigoOem;
 
-	private String estatus;
+	private EEstatusDetalleRequerimiento estatus;
 
 	private byte[] foto;
 	
@@ -81,11 +81,13 @@ public class DetalleRequerimiento extends AbstractEntity implements Serializable
 		this.codigoOem = codigoOem;
 	}
 
-	public String getEstatus() {
-		return this.estatus;
+	
+
+	public EEstatusDetalleRequerimiento getEstatus() {
+		return estatus;
 	}
 
-	public void setEstatus(String estatus) {
+	public void setEstatus(EEstatusDetalleRequerimiento estatus) {
 		this.estatus = estatus;
 	}
 

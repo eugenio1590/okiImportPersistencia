@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.okiimport.app.modelo.enumerados.EEstatusPersona;
 import com.okiimport.app.resource.model.AbstractEntity;
 
 
@@ -46,7 +47,7 @@ public abstract class Persona extends AbstractEntity implements Serializable {
 	protected Integer tipoMenu;
 	
 	@Column(length=50)
-	private String estatus;
+	protected EEstatusPersona estatus;
 	
 	//bi-directional one-to-one association to Usuario (Relacion Poliformica)
 	@OneToOne(mappedBy="persona")
@@ -70,7 +71,7 @@ public abstract class Persona extends AbstractEntity implements Serializable {
 	}
 
 	public Persona(Integer id, String apellido, String cedula, String correo,
-			String direccion, String nombre, String telefono, Usuario usuario, String estatus) {
+			String direccion, String nombre, String telefono, Usuario usuario, EEstatusPersona estatus) {
 		super();
 		this.id = id;
 		this.apellido = apellido;
@@ -155,14 +156,16 @@ public abstract class Persona extends AbstractEntity implements Serializable {
 		this.ciudad = ciudad;
 	}
 
-	public String getEstatus() {
+	
+	
+	public EEstatusPersona getEstatus() {
 		return estatus;
 	}
 
-	public void setEstatus(String estatus) {
+	public void setEstatus(EEstatusPersona estatus) {
 		this.estatus = estatus;
 	}
-	
+
 	public List<PagoCompra> getPagoCompras() {
 		return pagoCompras;
 	}

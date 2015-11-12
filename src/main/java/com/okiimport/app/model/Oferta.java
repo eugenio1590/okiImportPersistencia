@@ -10,6 +10,8 @@ import java.util.List;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.okiimport.app.modelo.enumerados.EEstatusOferta;
+import com.okiimport.app.modelo.enumerados.EEstatusRequerimiento;
 import com.okiimport.app.resource.model.AbstractEntity;
 
 /**
@@ -38,7 +40,7 @@ public class Oferta extends AbstractEntity implements Serializable{
 	@Column(name="porct_ganancia", scale=2)
 	private Float porctGanancia = new Float(0);
 	
-	private String estatus;
+	private EEstatusOferta estatus;
 	
 	@Transient
 	private Float total;
@@ -50,7 +52,7 @@ public class Oferta extends AbstractEntity implements Serializable{
 		this.detalleOfertas = new ArrayList<DetalleOferta>();
 	}
 
-	public Oferta(Integer idOferta, Date fechaCreacion, String estatus) {
+	public Oferta(Integer idOferta, Date fechaCreacion, EEstatusOferta estatus) {
 		super();
 		this.idOferta = idOferta;
 		this.fechaCreacion = new Timestamp(fechaCreacion.getTime());
@@ -90,14 +92,15 @@ public class Oferta extends AbstractEntity implements Serializable{
 		this.porctGanancia = porctGanancia;
 	}
 
-	public String getEstatus() {
+	
+	public EEstatusOferta getEstatus() {
 		return estatus;
 	}
 
-	public void setEstatus(String estatus) {
+	public void setEstatus(EEstatusOferta estatus) {
 		this.estatus = estatus;
 	}
-	
+
 	public List<DetalleOferta> getDetalleOfertas() {
 		return detalleOfertas;
 	}
@@ -133,18 +136,15 @@ public class Oferta extends AbstractEntity implements Serializable{
 
 	/**METODOS PROPIOS DE LA CLASE*/
 	public String determinarEstatus(){
-		if(this.estatus.equalsIgnoreCase("solicitado"))
-			return "No Enviada";
-		else if(this.estatus.equalsIgnoreCase("enviada"))
-			return "Enviada";
-		else if(this.estatus.equalsIgnoreCase("recibida"))
-			return "Recibida";
-		else
+		
+		if(estatus!=null)
+			  return estatus.getValue();
+
 			return "";
 	}
 	
 	public boolean enviar(){
-		return this.estatus.equalsIgnoreCase("solicitado");
+		return this.estatus.equals(EEstatusOferta.SOLICITADO);
 	}
 	
 	public Float calcularTotal(){
