@@ -31,6 +31,7 @@ public class ClasificacionRepuesto extends AbstractEntity implements Serializabl
 
 	private String descripcion;
 	
+	@Enumerated(EnumType.STRING)
 	private EEstatusGeneral estatus;
 	
 	//bi-directional one-to-many association to DetalleRequerimiento

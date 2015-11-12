@@ -35,6 +35,7 @@ public class Moneda extends AbstractEntity implements Serializable {
 	
 	private String simbolo;
 	
+	@Enumerated(EnumType.STRING)
 	private EEstatusGeneral estatus;
 	
 	//bi-directional one-to-many association to HistoricoMoneda

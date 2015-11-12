@@ -23,6 +23,7 @@ public class DetalleOferta extends AbstractEntity implements Serializable{
 	@Column(name="id_detalle_oferta")
 	private Integer idDetalleOferta;
 	
+	@Enumerated(EnumType.STRING)
 	private EEstatusDetalleOferta estatus;
 	
 	@Transient

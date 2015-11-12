@@ -43,6 +43,7 @@ public class Compra extends AbstractEntity implements Serializable {
 	
 	private String observacion;
 	
+	@Enumerated(EnumType.STRING)
 	private EEstatusCompra estatus;
 	
 	//bi-directional one-to-one association to FormaPago

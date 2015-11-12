@@ -36,6 +36,7 @@ public class Cotizacion extends AbstractEntity implements Serializable{
 	
 	private String condiciones;
 	
+	@Enumerated(EnumType.STRING)
 	private EEstatusCotizacion estatus;
 	
 	private String mensaje;

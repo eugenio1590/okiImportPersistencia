@@ -32,6 +32,7 @@ public class MarcaVehiculo extends AbstractEntity implements Serializable {
 
 	private String nombre;
 	
+	@Enumerated(EnumType.STRING)
 	private EEstatusGeneral estatus;
 	
 	//bi-directional one-to-many association to Requerimiento

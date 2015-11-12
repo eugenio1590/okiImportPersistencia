@@ -39,6 +39,7 @@ public class DetalleCotizacion extends AbstractEntity implements Serializable {
 	
 	private Long cantidad = new Long(0);
 	
+	@Enumerated(EnumType.STRING)
 	private EEStatusDetalleCotizacion estatus;
 	
 	//bi-directional many-to-one association to Cotizacion

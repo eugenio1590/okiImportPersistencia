@@ -40,6 +40,7 @@ public class Oferta extends AbstractEntity implements Serializable{
 	@Column(name="porct_ganancia", scale=2)
 	private Float porctGanancia = new Float(0);
 	
+	@Enumerated(EnumType.STRING)
 	private EEstatusOferta estatus;
 	
 	@Transient

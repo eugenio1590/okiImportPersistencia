@@ -11,6 +11,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -50,6 +52,7 @@ public class Requerimiento extends AbstractEntity implements Serializable {
 	@Column(name="anno_v")
 	private Integer annoV;
 
+	@Enumerated(EnumType.STRING)
 	private EEstatusRequerimiento estatus; // 
 
 	@Column(name="fecha_cierre", columnDefinition="date")

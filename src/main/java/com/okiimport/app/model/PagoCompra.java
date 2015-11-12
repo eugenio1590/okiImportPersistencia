@@ -34,6 +34,7 @@ public class PagoCompra extends AbstractEntity implements Serializable{
 	@Column(name="nro_deposito")
 	private String nroDeposito;
 	
+	@Enumerated(EnumType.STRING)
 	private String estatus;
 	
 	//bi-directional one-to-one association to Compra
