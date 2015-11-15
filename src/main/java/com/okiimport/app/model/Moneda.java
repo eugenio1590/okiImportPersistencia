@@ -31,7 +31,10 @@ public class Moneda extends AbstractEntity implements Serializable {
 	
 	private String nombre;
 	
-	private Boolean pais;
+	
+	@ManyToOne
+	@JoinColumn(name="id_pais")
+	private Pais pais;
 	
 	private String simbolo;
 	
@@ -61,13 +64,15 @@ public class Moneda extends AbstractEntity implements Serializable {
 		this.nombre = nombre;
 	}  
 	
-	public Boolean getPais() {
-		return this.pais;
+	  
+	public Pais getPais() {
+		return pais;
 	}
 
-	public void setPais(Boolean pais) {
+	public void setPais(Pais pais) {
 		this.pais = pais;
-	}   
+	}
+
 	public String getSimbolo() {
 		return this.simbolo;
 	}
