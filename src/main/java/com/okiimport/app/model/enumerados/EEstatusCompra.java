@@ -2,8 +2,14 @@ package com.okiimport.app.model.enumerados;
 
 public enum EEstatusCompra {
 
-	SOLICITUD_PEDIDO ("solicitada", "Solicitud de Pedido"),
-	COMPRA_REALIZADA_ENVIADA("enviada", "Compra Realizada y Enviada a Proveedores");
+	SOLICITADA ("SO", "Solicitud de Pedido"),
+	ENVIADA("EN", "Compra Realizada y Enviada a Proveedores"),
+	PAGADA ("PA", "Pagada"),
+	RECHAZADA("RE", "Rechazada"),
+	EN_ESPERA("ES", "En Espera"),
+	CANCELADA("CA", "Cancelada");
+	
+	
 	//Faltan estatus
 	
 	private String value;
