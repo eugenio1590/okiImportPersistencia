@@ -178,15 +178,15 @@ public class Compra extends AbstractEntity implements Serializable {
 
 	/**METODOS PROPIOS DE LA CLASE*/
 	public String determinarEstatus(){
-		if(this.estatus.equals(EEstatusCompra.SOLICITUD_PEDIDO))
+		if(this.estatus.equals(EEstatusCompra.SOLICITADA))
 			return "Solicitud de Pedido";
-		else if(this.estatus.equals(EEstatusCompra.COMPRA_REALIZADA_ENVIADA))
+		else if(this.estatus.equals(EEstatusCompra.ENVIADA))
 			return "Compra Realizada y Enviada a Proveedores";
 		return null;
 	}
 	
 	public boolean registrar(){
-		return (this.estatus.equals(EEstatusCompra.COMPRA_REALIZADA_ENVIADA) && this.requerimiento.getEstatus().equals(EEstatusRequerimiento.CONCRETADO));
+		return (this.estatus.equals(EEstatusCompra.ENVIADA) && this.requerimiento.getEstatus().equals(EEstatusRequerimiento.CONCRETADO));
 	}
 	
 	public Float calcularTotal(){

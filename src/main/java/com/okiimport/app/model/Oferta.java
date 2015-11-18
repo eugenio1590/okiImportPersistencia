@@ -145,7 +145,7 @@ public class Oferta extends AbstractEntity implements Serializable{
 	}
 	
 	public boolean enviar(){
-		return this.estatus.equals(EEstatusOferta.SOLICITADO);
+		return this.estatus.equals(EEstatusOferta.SELECCION);
 	}
 	
 	public Float calcularTotal(){

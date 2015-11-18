@@ -36,7 +36,6 @@ import com.okiimport.app.model.Proveedor;
 import com.okiimport.app.model.Requerimiento;
 import com.okiimport.app.model.enumerados.EEstatusCompra;
 import com.okiimport.app.model.enumerados.EEstatusCotizacion;
-import com.okiimport.app.model.enumerados.EEstatusDetalleOferta;
 import com.okiimport.app.model.enumerados.EEstatusDetalleRequerimiento;
 import com.okiimport.app.model.enumerados.EEstatusOferta;
 import com.okiimport.app.model.enumerados.EEstatusRequerimiento;
@@ -118,7 +117,7 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 			DetalleOferta detalleOferta = new DetalleOferta();
 			detalleOferta.setDetalleCotizacion(detalleCotizacion);
 			detalleOferta.setOferta(oferta);
-			detalleOferta.setEstatus(EEstatusDetalleOferta.SELECCION);
+			//detalleOferta.setEstatus(EEstatusDetalleOferta.SELECCION);
 			this.detalleOfertaRepository.save(detalleOferta);
 		}
 	}
@@ -286,7 +285,7 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	public Map<String, Object> ConsultarCotizacionesRequerimiento(Cotizacion cotFiltro, String fieldSort, Boolean sortDirection, 
 			Integer idrequerimiento, int page, int limit) {
 		List<EEstatusCotizacion> estatus=new ArrayList<EEstatusCotizacion>();
-		estatus.add(EEstatusCotizacion.COMPLETADA);
+		estatus.add(EEstatusCotizacion.CONCRETADA);
 		
 		Map<String, Object> parametros= new HashMap<String, Object>();
 		Integer total = 0;
@@ -426,7 +425,7 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	public Map<String, Object> consultarSolicitudCotizaciones(Cotizacion cotizacionF, String fieldSort, Boolean sortDirection,
 			Integer idRequerimiento, int idProveedor, int page, int limit){
 		List<EEstatusCotizacion> estatus=new ArrayList<EEstatusCotizacion>();
-		estatus.add(EEstatusCotizacion.SOLICITUD_COTIZACION);
+		estatus.add(EEstatusCotizacion.SOLICITADA);
 		
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		Integer total = 0;
@@ -451,7 +450,7 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	}
 	
 	public Cotizacion registrarSolicitudCotizacion(Cotizacion cotizacion, List<DetalleCotizacion> detalleCotizacions) {
-		cotizacion.setEstatus(EEstatusCotizacion.SOLICITUD_COTIZACION);
+		cotizacion.setEstatus(EEstatusCotizacion.SOLICITADA);
 		cotizacion.setFechaCreacion(calendar.getTime());
 		cotizacion = cotizacionRepository.save(cotizacion);
 		for(DetalleCotizacion detalleCotizacion : detalleCotizacions){
@@ -479,9 +478,9 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		EEstatusRequerimiento estatusRequerimiento = EEstatusRequerimiento.CON_COTIZACIONES_A;
 		List<Cotizacion> cotizaciones = (List<Cotizacion>) consultarCotizacionesParaEditar(null, null, null, requerimiento.getIdRequerimiento(), 0, 1).get("cotizaciones");
 		if(cotizacion.getEstatus()==null)
-			cotizacion.setEstatus(EEstatusCotizacion.COMPLETADA);
+			cotizacion.setEstatus(EEstatusCotizacion.CONCRETADA);
 		
-		if(cotizacion.getEstatus().equals(EEstatusCotizacion.COTIZACION_PARA_EDITAR) /*Incompleto*/ || !cotizaciones.isEmpty() /*Completo*/) 
+		if(cotizacion.getEstatus().equals(EEstatusCotizacion.INCOMPLETA) /*Incompleto*/ || !cotizaciones.isEmpty() /*Completo*/) 
 			estatusRequerimiento = EEstatusRequerimiento.CON_COTIZACIONES_I;
 		
 		requerimiento.setEstatus(estatusRequerimiento);
@@ -502,7 +501,7 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	public Map<String, Object> consultarCotizacionesParaEditar(Cotizacion cotizacionF, String fieldSort, Boolean sortDirection,
 			Integer idRequerimiento, int page, int limit){
 		List<EEstatusCotizacion> estatus = new ArrayList<EEstatusCotizacion>();
-		estatus.add(EEstatusCotizacion.COTIZACION_PARA_EDITAR);
+		estatus.add(EEstatusCotizacion.INCOMPLETA);
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		Integer total = 0;
 		List<Cotizacion> cotizaciones = null;
@@ -555,7 +554,7 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 			String fieldSort, Boolean sortDirection, int page, int limit){
 		boolean nuloCantidad = false;
 		if(detalleF!=null){
-			detalleF.getCotizacion().setEstatus(EEstatusCotizacion.COMPLETADA);
+			detalleF.getCotizacion().setEstatus(EEstatusCotizacion.CONCRETADA);
 			if(detalleF.getCantidad()==null){
 				nuloCantidad = true;
 				detalleF.setCantidad(new Long(0));
@@ -702,14 +701,14 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	
 	public Integer consultarCantOfertasCreadasPorRequermiento(int idRequerimiento){
 		List<EEstatusOferta> estatus = new ArrayList<EEstatusOferta>();
-		estatus.add(EEstatusOferta.SOLICITADO);
+		estatus.add(EEstatusOferta.SELECCION);
 		Specification<Oferta> specfOferta = (new OfertaDAO()).consultarOfertasPorRequerimiento(idRequerimiento, estatus);
 		return Long.valueOf(this.ofertaRepository.count(specfOferta)).intValue();		
 	}
 	
 	public Oferta actualizarOferta(Oferta oferta) {
 		if(oferta.getIdOferta()==null)
-	    	oferta.setEstatus(EEstatusOferta.SOLICITADO);
+	    	oferta.setEstatus(EEstatusOferta.SELECCION);
 		return oferta = ofertaRepository.save(oferta);
 	}
 	
@@ -750,7 +749,7 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	}
 	
 	public Compra registrarSolicitudCompra(Compra compra) {
-		compra.setEstatus(EEstatusCompra.SOLICITUD_PEDIDO);
+		compra.setEstatus(EEstatusCompra.SOLICITADA);
 		return registrarOActualizarCompra(compra);
 	}
 	
@@ -761,7 +760,7 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		actualizarRequerimiento(requerimiento);
 		List<DetalleOferta> detalleCompra = compra.getDetalleOfertas();
 		compra.setDetalleOfertas(null);
-		compra.setEstatus(EEstatusCompra.COMPRA_REALIZADA_ENVIADA);
+		compra.setEstatus(EEstatusCompra.ENVIADA);
 		compra = registrarOActualizarCompra(compra);
 		if(detalleCompra!=null && !detalleCompra.isEmpty()){
 			for(DetalleOferta detalle : detalleCompra){

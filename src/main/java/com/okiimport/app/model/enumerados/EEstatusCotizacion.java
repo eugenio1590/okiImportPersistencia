@@ -2,9 +2,10 @@ package com.okiimport.app.model.enumerados;
 
 public enum EEstatusCotizacion {
 	
-	SOLICITUD_COTIZACION("SC", "Solicitud de Cotizacion"),
-	COTIZACION_PARA_EDITAR("EC", "Cotizacion Incompleta"),
-	COMPLETADA("C", "Cotizacion Completa");
+	SOLICITADA("SC", "Solicitud de Cotizacion"),
+	EMITIDA("E", "Cotizacion Emitida"),
+	INCOMPLETA("I", "Cotizacion Incompleta"), //Cotizacion para Editar //Este estatus tambien aplica para el caso en que no se ha enviado la cotizacion al proveedor
+	CONCRETADA("C", "Cotizacion Completa");
 	//FALTAN ESTATUS
 	
 	private String value;

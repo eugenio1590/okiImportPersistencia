@@ -1,8 +1,10 @@
 package com.okiimport.app.model.enumerados;
 
 public enum EEStatusDetalleCotizacion {
-	//NO ESTAN DEFINIDAS
-	;
+	
+	SOLICITADO("SO", "Solicitado"),
+	ENCONTRADO("EN", "Encontrado"),
+	COMPRADO("CO","Comprado");
 	
 	private String value;
 	private String nombre;
