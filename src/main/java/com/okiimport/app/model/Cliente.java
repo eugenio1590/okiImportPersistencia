@@ -19,8 +19,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class Cliente extends Persona implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	private Boolean juridico;
-	
 	//bi-directional one-to-many association to Proveedor
 	@OneToMany(mappedBy="cliente", fetch=FetchType.LAZY)
 	private List<Requerimiento> requerimientos;
@@ -34,14 +32,6 @@ public class Cliente extends Persona implements Serializable {
 	
 	public Cliente(String cedula){
 		super.cedula = cedula;
-	}
-	
-	public Boolean getJuridico() {
-		return juridico;
-	}
-
-	public void setJuridico(Boolean juridico) {
-		this.juridico = juridico;
 	}
 
 	public List<Requerimiento> getRequerimientos() {
@@ -70,6 +60,12 @@ public class Cliente extends Persona implements Serializable {
 	@Override
 	public Integer getTipoMenu() {
 		return null;
+	}
+	
+	@Override
+	public void postLoad(String estatus) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

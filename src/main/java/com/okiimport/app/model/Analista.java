@@ -90,4 +90,10 @@ public class Analista extends Persona implements Serializable {
 		return this.tipoMenu;
 	}
 	
+	@Override
+	public void postLoad(String estatus) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 }

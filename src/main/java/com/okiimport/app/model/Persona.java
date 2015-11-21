@@ -4,11 +4,28 @@ import java.io.Serializable;
 import java.util.Comparator;
 import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.PostLoad;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.okiimport.app.model.enumerados.EEstatusGeneral;
-import com.okiimport.app.model.enumerados.EEstatusPersona;
+import com.okiimport.app.model.factory.persona.EstatusPersonaFactory;
+import com.okiimport.app.model.factory.persona.EstatusPersonaFactory.IEstatusPersona;
 import com.okiimport.app.resource.model.AbstractEntity;
 
 
@@ -48,8 +65,13 @@ public abstract class Persona extends AbstractEntity implements Serializable {
 	protected Integer tipoMenu;
 	
 	@Column(length=50)
-	@Enumerated(EnumType.STRING)
-	protected EEstatusPersona estatus;
+	protected String estatus;
+	
+	@Transient
+	protected IEstatusPersona iEstatus;
+	
+	@Transient
+	protected EstatusPersonaFactory factoryEstatus;
 	
 	//bi-directional one-to-one association to Usuario (Relacion Poliformica)
 	@OneToOne(mappedBy="persona")
@@ -73,7 +95,7 @@ public abstract class Persona extends AbstractEntity implements Serializable {
 	}
 
 	public Persona(Integer id, String apellido, String cedula, String correo,
-			String direccion, String nombre, String telefono, Usuario usuario, EEstatusPersona estatus) {
+			String direccion, String nombre, String telefono, Usuario usuario, String estatus) {
 		super();
 		this.id = id;
 		this.apellido = apellido;
@@ -157,15 +179,22 @@ public abstract class Persona extends AbstractEntity implements Serializable {
 	public void setCiudad(Ciudad ciudad) {
 		this.ciudad = ciudad;
 	}
-
 	
-	
-	public EEstatusPersona getEstatus() {
+	public String getEstatus() {
 		return estatus;
 	}
 
-	public void setEstatus(EEstatusPersona estatus) {
+	public void setEstatus(String estatus) {
 		this.estatus = estatus;
+	}
+
+	public IEstatusPersona getiEstatus() {
+		return iEstatus;
+	}
+
+	public void setiEstatus(IEstatusPersona iEstatus) {
+		this.iEstatus = iEstatus;
+		this.estatus = iEstatus.getValue();
 	}
 
 	public List<PagoCompra> getPagoCompras() {
@@ -191,14 +220,19 @@ public abstract class Persona extends AbstractEntity implements Serializable {
 	}
 
 	/**METODOS PROPIOS DE LA CLASE*/
+	/**METODOS ESTATICOS DE LA CLASE*/
 	public static Persona getNewInstance(){
 		return new Persona() {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public Integer getTipoMenu() {
-				// TODO Auto-generated method stub
 				return null;
+			}
+
+			@Override
+			public void postLoad(String estatus) {
+				
 			}
 		};
 	}
@@ -211,5 +245,13 @@ public abstract class Persona extends AbstractEntity implements Serializable {
 		};
 	}
 	
+	/**METODOS ABSTRACTOS DE LA CLASE*/
 	public abstract Integer getTipoMenu();
+	public abstract void postLoad(String estatus);
+	
+	/**EVENTOS*/
+	@PostLoad
+	public void postLoad(){
+		postLoad(estatus);
+	}
 }

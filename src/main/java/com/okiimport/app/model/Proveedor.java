@@ -18,7 +18,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.okiimport.app.model.enumerados.EEstatusPersona;
+import com.okiimport.app.model.factory.persona.EstatusPersonaFactory.IEstatusPersona;
+import com.okiimport.app.model.factory.persona.EstatusProveedorFactory;
 
 
 /**
@@ -93,7 +94,7 @@ public class Proveedor extends Persona implements Serializable {
 	}
 	
 	public Proveedor(Integer id,String cedula, String correo, String direccion, 
-			String nombre, String telefono, EEstatusPersona estatus, Boolean tipoProveedor) {
+			String nombre, String telefono, String estatus, Boolean tipoProveedor) {
 		super(id, null, cedula, correo, direccion, nombre, telefono, null, estatus);
 		this.tipoProveedor = tipoProveedor;
 	}
@@ -168,6 +169,11 @@ public class Proveedor extends Persona implements Serializable {
 		return this.tipoMenu=3;
 	}
 	
+	@Override
+	public void postLoad(String estatus) {
+		factoryEstatus = new EstatusProveedorFactory();
+	}
+	
 	/**METODOS PROPIOS DE LA CLASE*/
 	public String ubicacion(String separador){
 		String ubicacion = this.pais.getNombre();
@@ -190,7 +196,9 @@ public class Proveedor extends Persona implements Serializable {
 	}
 	
 	@Transient
+	@SuppressWarnings("static-access")
 	public boolean isSolicitante(){
-		return this.estatus.equals(EEstatusPersona.ACTIVO);//Solicitante
+		IEstatusPersona solicitante = ((EstatusProveedorFactory) factoryEstatus).getEstatusSolicitante();
+		return this.estatus.equals(solicitante.getValue());
 	}
 }
