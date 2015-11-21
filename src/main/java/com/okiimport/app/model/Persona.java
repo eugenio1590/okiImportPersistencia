@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.okiimport.app.model.enumerados.EEstatusGeneral;
 import com.okiimport.app.model.enumerados.EEstatusPersona;
 import com.okiimport.app.resource.model.AbstractEntity;
 
