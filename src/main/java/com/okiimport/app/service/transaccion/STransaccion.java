@@ -58,7 +58,7 @@ public interface STransaccion {
 			int pagina, int limit);
 
 	@Transactional(readOnly=true)
-	Map <String, Object> ConsultarRequerimientosConSolicitudesCotizacion(Requerimiento regFiltro, String fieldSort, 
+	Map <String, Object> consultarRequerimientosConSolicitudesCotizacion(Requerimiento regFiltro, String fieldSort, 
 			Boolean sortDirection, Integer idProveedor, int pagina, int limit);
 	
 	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
