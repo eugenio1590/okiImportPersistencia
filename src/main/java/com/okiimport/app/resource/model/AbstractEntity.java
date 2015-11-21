@@ -10,17 +10,18 @@ import javax.xml.bind.DatatypeConverter;
 import com.okiimport.app.resource.model.patron.Prototipo;
 
 @MappedSuperclass
+@SuppressWarnings("restriction")
 public abstract class AbstractEntity implements Prototipo{
 	
 	public static String decodificarImagen(byte[] imagen){
-		if(imagen!=null){
+		if(imagen!=null && imagen.length>0){
 			return "data:image/jpeg;base64,"+DatatypeConverter.printBase64Binary(imagen);
 		}
 		return null;
 	}
 	
 	public static String decodificarDocumento(byte[] documento){
-		if(documento!=null){
+		if(documento!=null && documento.length>0){
 			return "data:application/pdf;base64,"+DatatypeConverter.printBase64Binary(documento);
 		}
 		return null;

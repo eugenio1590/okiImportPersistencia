@@ -454,6 +454,7 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		cotizacion.setFechaCreacion(calendar.getTime());
 		cotizacion = cotizacionRepository.save(cotizacion);
 		for(DetalleCotizacion detalleCotizacion : detalleCotizacions){
+			
 			detalleCotizacion.setCotizacion(cotizacion); 
 			this.detalleCotizacionRepository.save(detalleCotizacion);
 			
@@ -715,6 +716,26 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	//Detalles Oferta
 	public List<DetalleOferta> consultarDetallesOferta(Integer idOferta){
 		return detalleOfertaRepository.findByOferta_IdOferta(idOferta);
+	}
+	
+	public Map<String, Object> consultarSolicitudesCompraProveedor(Requerimiento requerimiento, Proveedor proveedor, int page, int limit){
+		Map<String, Object> parametros = new HashMap<String, Object>();
+		Integer total = 0;
+		List<DetalleOferta> detallesOferta = null;
+		
+		if(limit>0){
+			Page<DetalleOferta> pageDetalle = detalleOfertaRepository.findByCompraRequerimientoAndDetalleCotizacion_Cotizacion_Proveedor(requerimiento, proveedor, new PageRequest(0, 1));
+			total = Long.valueOf(pageDetalle.getTotalElements()).intValue();
+			detallesOferta = pageDetalle.getContent();
+		}
+		else {
+			detallesOferta = detalleOfertaRepository.findByCompraRequerimientoAndDetalleCotizacion_Cotizacion_Proveedor(requerimiento, proveedor);
+			total = detallesOferta.size();
+		}
+		
+		parametros.put("total", total);
+		parametros.put("detallesOferta", detallesOferta);
+		return parametros;
 	}
 
 	//Compras

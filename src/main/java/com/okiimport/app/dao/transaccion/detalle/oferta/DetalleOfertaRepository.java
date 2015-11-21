@@ -8,6 +8,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import com.okiimport.app.model.DetalleOferta;
+import com.okiimport.app.model.Proveedor;
+import com.okiimport.app.model.Requerimiento;
 import com.okiimport.app.resource.dao.IGenericJPARepository;
 
 @Repository
@@ -18,4 +20,6 @@ public interface DetalleOfertaRepository extends IGenericJPARepository<DetalleOf
 	List<DetalleOferta> findByCompra_IdCompra(Integer idCompra);
 	List<DetalleOferta> findByCompra_IdCompra(Integer idCompra, Sort sort);
 	Page<DetalleOferta> findByCompra_IdCompra(Integer idCompra, Pageable pageable);
+	List<DetalleOferta> findByCompraRequerimientoAndDetalleCotizacion_Cotizacion_Proveedor(Requerimiento requerimiento, Proveedor proveedor);
+	Page<DetalleOferta> findByCompraRequerimientoAndDetalleCotizacion_Cotizacion_Proveedor(Requerimiento requerimiento, Proveedor proveedor, Pageable pageable);
 }

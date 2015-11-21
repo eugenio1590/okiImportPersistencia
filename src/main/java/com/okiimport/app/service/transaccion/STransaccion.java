@@ -16,6 +16,7 @@ import com.okiimport.app.model.DetalleCotizacionInternacional;
 import com.okiimport.app.model.DetalleOferta;
 import com.okiimport.app.model.DetalleRequerimiento;
 import com.okiimport.app.model.Oferta;
+import com.okiimport.app.model.Proveedor;
 import com.okiimport.app.model.Requerimiento;
 
 @Service
@@ -135,6 +136,9 @@ public interface STransaccion {
 	//Detalle Oferta
 	@Transactional(readOnly=true)
 	List<DetalleOferta> consultarDetallesOferta(Integer idOferta);
+	
+	@Transactional(readOnly=true)
+	Map<String, Object> consultarSolicitudesCompraProveedor(Requerimiento requerimiento, Proveedor proveedor, int page, int limit);
 	
 	//Compras
 	@Transactional(readOnly=true)
