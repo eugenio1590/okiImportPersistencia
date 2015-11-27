@@ -9,7 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.okiimport.app.dao.maestros.AnalistaRepository;
 import com.okiimport.app.dao.maestros.BancoRepository;
@@ -38,6 +37,7 @@ import com.okiimport.app.model.Pais;
 import com.okiimport.app.model.Persona;
 import com.okiimport.app.model.Proveedor;
 import com.okiimport.app.model.Requerimiento;
+import com.okiimport.app.model.enumerados.EEstatusGeneral;
 import com.okiimport.app.model.enumerados.EEstatusRequerimiento;
 import com.okiimport.app.resource.service.AbstractServiceImpl;
 import com.okiimport.app.service.maestros.SMaestros;
@@ -80,12 +80,12 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 		Integer total = 0;
 		List<MarcaVehiculo> marcasVehiculo = null;
 		if(limit>0){
-			Page<MarcaVehiculo> pageMarcaVehiculo = this.marcaVehiculoRepository.findByEstatusIgnoreCase("activo", new PageRequest(page, limit));
+			Page<MarcaVehiculo> pageMarcaVehiculo = this.marcaVehiculoRepository.findByEstatus(EEstatusGeneral.ACTIVO, new PageRequest(page, limit));
 			total = Long.valueOf(pageMarcaVehiculo.getTotalElements()).intValue();
 			marcasVehiculo = pageMarcaVehiculo.getContent();
 		}
 		else {
-			marcasVehiculo = this.marcaVehiculoRepository.findByEstatusIgnoreCase("activo");
+			marcasVehiculo = this.marcaVehiculoRepository.findByEstatus(EEstatusGeneral.ACTIVO);
 			total = marcasVehiculo.size();
 		}
 		Parametros.put("total", total);

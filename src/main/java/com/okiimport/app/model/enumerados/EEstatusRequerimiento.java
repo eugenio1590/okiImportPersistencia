@@ -72,4 +72,11 @@ public enum EEstatusRequerimiento {
 		estatusOfertados.add(CERRADO);
 		return estatusOfertados;
 	}
+	
+	public static EEstatusRequerimiento findEEstatusRequerimiento(String valor){
+		for(EEstatusRequerimiento estatus : EEstatusRequerimiento.values())
+			if(estatus.getValue().equalsIgnoreCase(valor))
+				return estatus;
+		return null;
+	}
 }
