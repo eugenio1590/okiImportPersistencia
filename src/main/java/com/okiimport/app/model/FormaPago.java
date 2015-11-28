@@ -6,7 +6,8 @@ import java.util.List;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
+import com.okiimport.app.model.enumerados.EEstatusCompra;
+import com.okiimport.app.model.enumerados.EEstatusFormaPago;
 import com.okiimport.app.resource.model.AbstractEntity;
 
 /**
@@ -31,6 +32,10 @@ public class FormaPago extends AbstractEntity implements Serializable {
 	//bi-directional one-to-many association to PagoCompra
 	@OneToMany(mappedBy="formaPago", fetch=FetchType.LAZY)
 	private List<PagoCompra> pagoCompras;
+	
+	
+	@Enumerated(EnumType.STRING)
+	private EEstatusFormaPago estatus;
 
 	public FormaPago() {
 	}
@@ -59,6 +64,16 @@ public class FormaPago extends AbstractEntity implements Serializable {
 		this.pagoCompras = pagoCompras;
 	}
 	
+	
+	
+	public EEstatusFormaPago getEstatus() {
+		return estatus;
+	}
+
+	public void setEstatus(EEstatusFormaPago estatus) {
+		this.estatus = estatus;
+	}
+
 	public PagoCompra addPagoCompra(PagoCompra pagoCompra){
 		getPagoCompras().add(pagoCompra);
 		pagoCompra.setFormaPago(this);
