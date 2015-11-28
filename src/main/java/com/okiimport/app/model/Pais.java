@@ -24,6 +24,11 @@ public class Pais {
 	
 	private String nombre;
 	
+	//bi-directional many-to-one association to Moneda
+	@ManyToOne
+	@JoinColumn(name="id_moneda")
+	private Moneda moneda;
+	
 	//bi-directional one-to-many association to PagoCompra
 	@OneToMany(mappedBy="pais", fetch=FetchType.LAZY)
 	private List<Proveedor> proveedors;
@@ -45,6 +50,14 @@ public class Pais {
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
+	}
+
+	public Moneda getMoneda() {
+		return moneda;
+	}
+
+	public void setMoneda(Moneda moneda) {
+		this.moneda = moneda;
 	}
 
 	public List<Proveedor> getProveedors() {

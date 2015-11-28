@@ -67,6 +67,7 @@ public class AbstractJpaConfiguration {
 		Map<String, Object> props = new HashMap<String, Object>();
 		props.put("hibernate.dialect", PostgreSQLDialect.class.getName());
 		props.put("hibernate.cache.provider_class", HashtableCacheProvider.class.getName());
+		props.put("hibernate.hbm2ddl.auto", "update");
 		return props;
 	}
 
