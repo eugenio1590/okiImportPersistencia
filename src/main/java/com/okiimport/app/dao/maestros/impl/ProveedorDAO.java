@@ -20,6 +20,7 @@ import com.okiimport.app.model.Cotizacion;
 import com.okiimport.app.model.Persona;
 import com.okiimport.app.model.Proveedor;
 import com.okiimport.app.model.Requerimiento;
+import com.okiimport.app.model.enumerados.EEstatusCotizacion;
 
 public class ProveedorDAO extends PersonaDAO<Proveedor> {
 	
@@ -123,7 +124,7 @@ public class ProveedorDAO extends PersonaDAO<Proveedor> {
 				//4. Creamos las Restricciones de la busqueda
 				List<Predicate> restricciones = new ArrayList<Predicate>();
 				restricciones.add(criteriaBuilder.isNotEmpty(entity.<List<?>>get("cotizacions")));
-				restricciones.add(criteriaBuilder.equal(joins.get("cotizacions").get("estatus"), "SC"));
+				restricciones.add(criteriaBuilder.equal(joins.get("cotizacions").get("estatus"), EEstatusCotizacion.SOLICITADA));
 				restricciones.add(criteriaBuilder.equal(
 						joins.get("cotizacions").join("detalleCotizacions").join("detalleRequerimiento")
 						.join("requerimiento").get("idRequerimiento"),
