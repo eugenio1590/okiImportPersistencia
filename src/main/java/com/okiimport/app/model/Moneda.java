@@ -1,7 +1,6 @@
 package com.okiimport.app.model;
 
 import java.io.Serializable;
-import java.lang.Boolean;
 import java.lang.Integer;
 import java.lang.String;
 import java.util.List;

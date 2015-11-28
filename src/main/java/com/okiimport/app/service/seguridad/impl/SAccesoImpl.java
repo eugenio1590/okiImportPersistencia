@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -39,7 +39,7 @@ public class SAccesoImpl extends AbstractServiceImpl implements SAcceso {
 			if(usuario.getActivo()){
 				//Depurar las Autoridades
 				List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-				authorities.add(new GrantedAuthorityImpl("ROLE_USER"));
+				authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 				/*if(usuario.getGroupMembers()!=null)
 					for(GroupMember grupoMiembro : usuario.getGroupMembers()){
 						Group grupo = grupoMiembro.getGroup();
