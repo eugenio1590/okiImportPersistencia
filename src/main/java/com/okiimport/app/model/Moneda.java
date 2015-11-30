@@ -1,7 +1,6 @@
 package com.okiimport.app.model;
 
 import java.io.Serializable;
-import java.lang.Boolean;
 import java.lang.Integer;
 import java.lang.String;
 import java.util.List;
@@ -31,10 +30,7 @@ public class Moneda extends AbstractEntity implements Serializable {
 	
 	private String nombre;
 	
-	
-	@ManyToOne
-	@JoinColumn(name="id_pais")
-	private Pais pais;
+	private Boolean pais;
 	
 	private String simbolo;
 	
@@ -44,6 +40,10 @@ public class Moneda extends AbstractEntity implements Serializable {
 	//bi-directional one-to-many association to HistoricoMoneda
 	@OneToMany(mappedBy="moneda", fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	private List<HistoricoMoneda> historicoMonedas;
+	
+	//bi-directional one-to-many association to Pais
+	@OneToMany(mappedBy="moneda", fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	private List<Pais> paises;
 
 	public Moneda() {
 	}   
@@ -64,15 +64,13 @@ public class Moneda extends AbstractEntity implements Serializable {
 		this.nombre = nombre;
 	}  
 	
-	  
-	public Pais getPais() {
-		return pais;
+	public Boolean getPais() {
+		return this.pais;
 	}
 
-	public void setPais(Pais pais) {
+	public void setPais(Boolean pais) {
 		this.pais = pais;
-	}
-
+	}   
 	public String getSimbolo() {
 		return this.simbolo;
 	}
@@ -95,6 +93,14 @@ public class Moneda extends AbstractEntity implements Serializable {
 	
 	public void setHistoricoMonedas(List<HistoricoMoneda> historicoMonedas) {
 		this.historicoMonedas = historicoMonedas;
+	}
+
+	public List<Pais> getPaises() {
+		return paises;
+	}
+
+	public void setPaises(List<Pais> paises) {
+		this.paises = paises;
 	}
 	
 }

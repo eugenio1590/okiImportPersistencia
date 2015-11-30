@@ -375,11 +375,7 @@ public class Requerimiento extends AbstractEntity implements Serializable {
 	}
 	
 	public String determinarEstatus(){
-		
-		if(estatus!=null)
-			  return estatus.getValue();
-
-			return "";
+		return (estatus!=null) ? estatus.getNombre() : "";
 	}
 
 	public void especificarInformacionVehiculo(){

@@ -10,7 +10,6 @@ import javax.xml.bind.DatatypeConverter;
 import com.okiimport.app.resource.model.patron.Prototipo;
 
 @MappedSuperclass
-@SuppressWarnings("restriction")
 public abstract class AbstractEntity implements Prototipo{
 	
 	public static String decodificarImagen(byte[] imagen){
