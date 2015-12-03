@@ -42,6 +42,19 @@ public class SControlConfiguacionImpl extends AbstractServiceImpl implements SCo
 		Page<Configuracion> configuraciones = configuracionRepository.findAll(new PageRequest(0, 1));
 		return configuraciones.getContent().get(0);
 	}
+	
+	public void guardarConfiguracion(Configuracion configuracion, Moneda monedaBase){
+		configuracionRepository.save(configuracion);
+		
+		Moneda monedaBaseAnt = monedaRepository.findByPaisTrue();
+		if(monedaBaseAnt!=null){
+			monedaBaseAnt.setPais(false);
+			monedaRepository.save(monedaBaseAnt);
+		}
+		
+		monedaBase.setPais(true);
+		monedaRepository.save(monedaBase);
+	}
 
 	//Historico de Moneda
 	public Map<String, Object> consultarMonedasConHistorico(int page, int limite) {

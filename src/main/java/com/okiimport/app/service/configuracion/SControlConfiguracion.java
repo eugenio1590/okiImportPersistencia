@@ -3,6 +3,7 @@ package com.okiimport.app.service.configuracion;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.okiimport.app.model.Configuracion;
@@ -16,8 +17,12 @@ public interface SControlConfiguracion {
 	@Transactional(readOnly=true)
 	Configuracion consultarConfiguracionActual();
 	
+	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
+	void guardarConfiguracion(Configuracion configuracion, Moneda monedaBase);
+	
 	//Historico de Moneda
 	@Transactional(readOnly=true)
 	Map<String, Object> consultarMonedasConHistorico(int page, int limite);
+	@Transactional(readOnly=true)
 	HistoricoMoneda consultarActualConversion(Moneda moneda);
 }

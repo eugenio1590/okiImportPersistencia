@@ -7,5 +7,5 @@ import com.okiimport.app.resource.dao.IGenericJPARepository;
 
 @Repository
 public interface MonedaRepository extends IGenericJPARepository<Moneda, Integer> {
-	
+	Moneda findByPaisTrue();
 }
