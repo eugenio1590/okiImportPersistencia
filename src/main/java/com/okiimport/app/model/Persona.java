@@ -50,7 +50,7 @@ public abstract class Persona extends AbstractEntity implements Serializable {
 
 	protected String apellido;
 
-	@Column(name="cedula", unique=true, nullable=false)
+	@Column(name="cedula", nullable=false)
 	protected String cedula;
 
 	protected String correo;

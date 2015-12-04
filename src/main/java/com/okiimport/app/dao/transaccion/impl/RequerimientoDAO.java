@@ -18,6 +18,7 @@ import org.springframework.data.jpa.domain.Specification;
 import com.okiimport.app.model.Cliente;
 import com.okiimport.app.model.MarcaVehiculo;
 import com.okiimport.app.model.Requerimiento;
+import com.okiimport.app.model.enumerados.EEstatusCotizacion;
 import com.okiimport.app.model.enumerados.EEstatusRequerimiento;
 import com.okiimport.app.resource.dao.AbstractJpaDao;
 
@@ -123,7 +124,7 @@ public class RequerimientoDAO extends AbstractJpaDao<Requerimiento> {
 				
 				restricciones.add(criteriaBuilder.equal(
 						joins.get("analista").get("id"), idusuario));
-				restricciones.add(criteriaBuilder.equal(entity.get("estatus"), "CT"));
+				restricciones.add(criteriaBuilder.equal(entity.get("estatus"), EEstatusRequerimiento.CON_COTIZACIONES_A));
 
 				// 4. Ejecutamos				
 				return crearPredicate(restricciones);
@@ -173,7 +174,7 @@ public class RequerimientoDAO extends AbstractJpaDao<Requerimiento> {
 							joinCotizacion.join("proveedor").get("id"), 
 							idProveedor));
 				
-				restricciones.add(criteriaBuilder.equal(joinCotizacion.get("estatus"), "SC"));
+				restricciones.add(criteriaBuilder.equal(joinCotizacion.get("estatus"), EEstatusCotizacion.SOLICITADA));
 				restricciones.add(criteriaBuilder.not(entity.get("estatus").in(estatus)));
 				
 				//4. Ejecutamos

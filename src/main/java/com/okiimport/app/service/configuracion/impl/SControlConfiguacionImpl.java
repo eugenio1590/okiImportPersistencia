@@ -46,7 +46,7 @@ public class SControlConfiguacionImpl extends AbstractServiceImpl implements SCo
 	public void guardarConfiguracion(Configuracion configuracion, Moneda monedaBase){
 		configuracionRepository.save(configuracion);
 		
-		Moneda monedaBaseAnt = monedaRepository.findByPaisTrue();
+		Moneda monedaBaseAnt = consultarMonedaBase();
 		if(monedaBaseAnt!=null){
 			monedaBaseAnt.setPais(false);
 			monedaRepository.save(monedaBaseAnt);
@@ -56,7 +56,7 @@ public class SControlConfiguacionImpl extends AbstractServiceImpl implements SCo
 		monedaRepository.save(monedaBase);
 	}
 
-	//Historico de Moneda
+	//Moneda
 	public Map<String, Object> consultarMonedasConHistorico(int page, int limite) {
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		Integer total = 0;
@@ -77,6 +77,11 @@ public class SControlConfiguacionImpl extends AbstractServiceImpl implements SCo
 		return parametros;
 	}
 	
+	public Moneda consultarMonedaBase(){
+		return monedaRepository.findByPaisTrue();
+	}
+	
+	//Historico de Moneda
 	public HistoricoMoneda consultarActualConversion(Moneda moneda) {
 		Integer idMoneda = moneda.getIdMoneda();
 		Sort sortHistoricoMoneda = new Sort(getDirection(false, null), "fechaCreacion")

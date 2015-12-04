@@ -20,9 +20,14 @@ public interface SControlConfiguracion {
 	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
 	void guardarConfiguracion(Configuracion configuracion, Moneda monedaBase);
 	
-	//Historico de Moneda
+	//Moneda
 	@Transactional(readOnly=true)
 	Map<String, Object> consultarMonedasConHistorico(int page, int limite);
+	
+	@Transactional(readOnly=true)
+	Moneda consultarMonedaBase();
+	
+	//Historico de Moneda
 	@Transactional(readOnly=true)
 	HistoricoMoneda consultarActualConversion(Moneda moneda);
 }
