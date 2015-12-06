@@ -9,8 +9,8 @@ import java.util.List;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import com.okiimport.app.resource.model.AbstractEntity;
+import com.okiimport.app.resource.model.ICoverterMoneda;
 
 /**
  * Entity implementation class for Entity: HistoricoMoneda
@@ -20,7 +20,7 @@ import com.okiimport.app.resource.model.AbstractEntity;
 @Table(name="historico_moneda")
 @NamedQuery(name="HistoricoMoneda.findAll", query="SELECT h FROM HistoricoMoneda h")
 @JsonIgnoreProperties({"cotizacions", "compras"})
-public class HistoricoMoneda extends AbstractEntity implements Serializable {
+public class HistoricoMoneda extends AbstractEntity implements Serializable, ICoverterMoneda {
 	private static final long serialVersionUID = 1L;
 	   
 	@Id
@@ -122,5 +122,19 @@ public class HistoricoMoneda extends AbstractEntity implements Serializable {
 		compra.setHistoricoMoneda(null);
 		
 		return compra;
+	}
+	
+	/**METODOS OVERRIDE*/
+	//1. ICoverterMoneda
+	@Override
+	@Transient
+	public Number getMontoPorUnidadBase() {
+		return getMontoConversion();
+	}
+	
+	@Override
+	@Transient
+	public String getSimboloMoneda() {
+		return getMoneda().getSimbolo();
 	}
 }
