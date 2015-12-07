@@ -175,18 +175,16 @@ public class DetalleCotizacion extends AbstractEntity implements Serializable {
 	}
 	
 	public Float calcularTotal(){
+		Number total = 0;
 		if(this.precioFlete!=null)
-			return calcularCosto()+calcularFlete();
+			total = calcularCosto()+getPrecioFlete();
 		else
-			return calcularCosto();
+			total = calcularCosto()+cotizacion.getPrecioFlete();
+		return total.floatValue();
 	}
 	
 	public Float calcularCosto(){
 		return this.precioVenta*this.cantidad;
-	}
-	
-	public Float calcularFlete(){
-		return this.getPrecioFlete();
 	}
 	
 	public void eliminarPrecios(){

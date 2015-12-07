@@ -176,13 +176,13 @@ public class Proveedor extends Persona implements Serializable {
 	
 	/**METODOS PROPIOS DE LA CLASE*/
 	public String ubicacion(String separador){
-		String ubicacion = this.pais.getNombre();
-		if(ciudad!=null){
+		StringBuilder ubicacion = new StringBuilder(this.pais.getNombre());
+		if(ciudad!=null && isNacional()){
 			Estado estado = ciudad.getEstado();
-			ubicacion += separador+estado.getNombre();
-			ubicacion+= separador+ciudad.getNombre();
+			ubicacion.append(separador+estado.getNombre());
+			ubicacion.append(separador).append(ciudad.getNombre());
 		}
-		return ubicacion;
+		return ubicacion.toString();
 	}
 	
 	@Transient

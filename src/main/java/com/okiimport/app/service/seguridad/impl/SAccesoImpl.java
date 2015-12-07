@@ -34,7 +34,7 @@ public class SAccesoImpl extends AbstractServiceImpl implements SAcceso {
 	}
 	
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Usuario usuario = sControlUsuario.consultarUsuario(username, null);
+		Usuario usuario = sControlUsuario.consultarUsuario(username, null, null);
 		if(usuario!=null){
 			if(usuario.getActivo()){
 				//Depurar las Autoridades

@@ -73,6 +73,9 @@ public abstract class Persona extends AbstractEntity implements Serializable {
 	@Transient
 	protected EstatusPersonaFactory factoryEstatus;
 	
+	@Transient
+	protected HistoricoMoneda historicoMoneda;
+	
 	//bi-directional one-to-one association to Usuario (Relacion Poliformica)
 	@OneToOne(mappedBy="persona")
 	protected Usuario usuario;
@@ -195,6 +198,14 @@ public abstract class Persona extends AbstractEntity implements Serializable {
 	public void setiEstatus(IEstatusPersona iEstatus) {
 		this.iEstatus = iEstatus;
 		this.estatus = iEstatus.getValue();
+	}
+
+	public HistoricoMoneda getHistoricoMoneda() {
+		return historicoMoneda;
+	}
+
+	public void setHistoricoMoneda(HistoricoMoneda historicoMoneda) {
+		this.historicoMoneda = historicoMoneda;
 	}
 
 	public List<PagoCompra> getPagoCompras() {

@@ -20,9 +20,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+
 import com.okiimport.app.dao.configuracion.MenuRepository;
 import com.okiimport.app.dao.configuracion.UsuarioRepository;
-import com.okiimport.app.dao.configuracion.impl.MenuDAO;
 import com.okiimport.app.dao.configuracion.impl.UsuarioDAO;
 import com.okiimport.app.model.Menu;
 import com.okiimport.app.model.Persona;
@@ -30,6 +30,7 @@ import com.okiimport.app.model.Usuario;
 import com.okiimport.app.model.factory.persona.EstatusAnalistaFactory;
 import com.okiimport.app.resource.service.AbstractServiceImpl;
 import com.okiimport.app.resource.service.PasswordGenerator;
+import com.okiimport.app.service.configuracion.SControlConfiguracion;
 import com.okiimport.app.service.configuracion.SControlUsuario;
 import com.okiimport.app.service.maestros.SMaestros;
 
@@ -50,12 +51,16 @@ public class SControlUsuarioImpl extends AbstractServiceImpl implements SControl
 		return this.usuarioRepository.findOne(id);
 	}
 	
-	public Usuario consultarUsuario(String username, String clave) {
+	public Usuario consultarUsuario(String username, String clave, SControlConfiguracion sControlConfiguracion) {
 		Usuario usuario = null;
 		if(clave != null)
 			usuario = this.usuarioRepository.findByUsernameIgnoreCaseAndPaswordIgnoreCase(username, clave);
 		else
 			usuario = this.usuarioRepository.findByUsernameIgnoreCase(username);
+		
+		if(usuario!=null && sControlConfiguracion!=null)
+			sControlConfiguracion.consultarActualConversion(usuario.getPersona());
+		
 		return usuario;
 	}
 	
@@ -134,7 +139,7 @@ public class SControlUsuarioImpl extends AbstractServiceImpl implements SControl
 	}
 	
 	public boolean verificarUsername(String username){
-		Usuario usuario = consultarUsuario(username, null);
+		Usuario usuario = consultarUsuario(username, null, null);
 		return (usuario!=null);
 	}
 	
@@ -145,14 +150,11 @@ public class SControlUsuarioImpl extends AbstractServiceImpl implements SControl
 	//2. Menus
 	public List<Menu> consultarPadresMenuUsuario(Integer tipo) {
 		Sort sortMenu = new Sort(Sort.Direction.ASC, "idMenu");
-		Specification<Menu> specfMenu = (new MenuDAO()).consultarPadresMenuUsuario(tipo);
-		return this.menuRepository.findAll(specfMenu, sortMenu);
+		return this.menuRepository.findByPadreNullAndTipo(tipo, sortMenu);
 	}
 
 	public List<Menu> consultarHijosMenuUsuario(Integer tipo) {
 		Sort sortMenu = new Sort(Sort.Direction.ASC, "idMenu");
 		return this.menuRepository.findByHijosNullAndTipo(tipo, sortMenu);
-//		Specification<Menu> specfMenu = (new MenuDAO()).consultarHijosTipoMenu(tipo);
-//		return this.menuRepository.findAll(specfMenu, sortMenu);
 	}
 }

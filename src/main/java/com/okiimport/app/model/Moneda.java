@@ -103,4 +103,8 @@ public class Moneda extends AbstractEntity implements Serializable {
 		this.paises = paises;
 	}
 	
+	/**METODOS PROPIOS DE LA CLASE*/
+	public String withSimbolo(Object val){
+		return new StringBuilder(String.valueOf(val)).append(" ").append(this.getSimbolo()).toString();
+	}
 }

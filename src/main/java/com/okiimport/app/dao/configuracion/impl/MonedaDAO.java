@@ -11,11 +11,12 @@ import javax.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
 
 import com.okiimport.app.model.Moneda;
+import com.okiimport.app.model.enumerados.EEstatusGeneral;
 import com.okiimport.app.resource.dao.AbstractJpaDao;
 
 public class MonedaDAO extends AbstractJpaDao<Moneda> {
 	
-	public Specification<Moneda> consultarMonedasConHistorico(final String estatus){
+	public Specification<Moneda> consultarMonedasConHistorico(final EEstatusGeneral estatus){
 		return new Specification<Moneda>(){
 
 			public Predicate toPredicate(Root<Moneda> entity, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
@@ -29,9 +30,7 @@ public class MonedaDAO extends AbstractJpaDao<Moneda> {
 
 				restricciones.add(criteriaBuilder.isNotEmpty(entity.get("historicoMonedas").as(List.class)));
 				
-				restricciones.add(criteriaBuilder.like(
-						criteriaBuilder.lower(entity.get("estatus").as(String.class)), 
-						"%"+estatus+"%"));
+				restricciones.add(criteriaBuilder.equal(entity.get("estatus"), estatus));
 				
 				// 4. Ejecutamos				
 				return crearPredicate(restricciones);

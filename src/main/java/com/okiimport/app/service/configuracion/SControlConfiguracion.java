@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.okiimport.app.model.Configuracion;
 import com.okiimport.app.model.HistoricoMoneda;
 import com.okiimport.app.model.Moneda;
+import com.okiimport.app.model.Persona;
 
 @Service
 @Transactional
@@ -30,4 +31,10 @@ public interface SControlConfiguracion {
 	//Historico de Moneda
 	@Transactional(readOnly=true)
 	HistoricoMoneda consultarActualConversion(Moneda moneda);
+	
+	@Transactional(readOnly=true)
+	HistoricoMoneda consultarActualConversion(final Persona persona);
+	
+	@Transactional(readOnly=true)
+	HistoricoMoneda consultarActualConversionMonedaBase();
 }
