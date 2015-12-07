@@ -114,12 +114,12 @@ public class DetalleCotizacionInternacional extends DetalleCotizacion implements
 	/**METODOS OVERRIDE*/
 	@Override
 	public Float calcularTotal(){
-		return this.calcularCosto()+calcularFlete();
+		return this.calcularCosto()+getPrecioFlete();
 	}
 	
 	@Override
-	public Float calcularFlete(){
-		return this.calcularFlete(true);
+	public Float getPrecioFlete(){
+		return this.calcularFlete(false);
 	}
 	
 	/**METODOS PROPIOS DE LA CLASE*/
@@ -158,7 +158,7 @@ public class DetalleCotizacionInternacional extends DetalleCotizacion implements
 		
 		HistoricoMoneda hMoneda = null;
 		if(cotizacion!=null && (hMoneda=cotizacion.getHistoricoMoneda())!=null && precioTotal!=null && conversion)
-			precioTotal = precioTotal*hMoneda.getMontoConversion();
+			precioTotal = hMoneda.convert(precioTotal).floatValue();
 		else if(conversion)
 			precioTotal = new Float(0);
 			

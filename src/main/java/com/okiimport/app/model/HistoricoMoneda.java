@@ -9,6 +9,7 @@ import java.util.List;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.okiimport.app.model.enumerados.EEstatusGeneral;
 import com.okiimport.app.resource.model.AbstractEntity;
 import com.okiimport.app.resource.model.ICoverterMoneda;
 
@@ -34,6 +35,9 @@ public class HistoricoMoneda extends AbstractEntity implements Serializable, ICo
 	
 	@Column(name="fecha_creacion")
 	private Date fechaCreacion;
+	
+	@Enumerated(EnumType.STRING)
+	private EEstatusGeneral estatus;
 	
 	//bi-directional many-to-one association to Moneda
 	@ManyToOne
@@ -78,6 +82,14 @@ public class HistoricoMoneda extends AbstractEntity implements Serializable, ICo
 
 	public void setFechaCreacion(Date fechaCreacion) {
 		this.fechaCreacion = fechaCreacion;
+	}
+		
+	public EEstatusGeneral getEstatus() {
+		return estatus;
+	}
+	
+	public void setEstatus(EEstatusGeneral estatus) {
+		this.estatus = estatus;
 	}
 	
 	public List<Cotizacion> getCotizacions() {
@@ -134,7 +146,28 @@ public class HistoricoMoneda extends AbstractEntity implements Serializable, ICo
 	
 	@Override
 	@Transient
-	public String getSimboloMoneda() {
+	public String getSimboloMoneda(){
 		return getMoneda().getSimbolo();
+	}
+	
+	@Override
+	@Transient
+	public String withSimbolo(Object val) {
+		return getMoneda().withSimbolo(val);
+	}
+	
+	@Override
+	public Number convert(Number val){
+		final Number montoPorUnidadBase = getMontoPorUnidadBase();
+		if(!montoPorUnidadBase.toString().equalsIgnoreCase("0")){
+			return ((Number) val).floatValue()/montoPorUnidadBase.floatValue();
+		}
+		return 0;
+	}
+	
+	@Override
+	public Number deconvert(Number val){
+		final Number montoPorUnidadBase = getMontoPorUnidadBase();
+		return ((Number) val).floatValue()*montoPorUnidadBase.floatValue();
 	}
 }

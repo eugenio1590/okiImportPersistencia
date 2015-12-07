@@ -14,31 +14,6 @@ import com.okiimport.app.model.Menu;
 import com.okiimport.app.resource.dao.AbstractJpaDao;
 
 public class MenuDAO extends AbstractJpaDao<Menu> {
-
-	public Specification<Menu> consultarPadresMenuUsuario(final Integer tipo) {
-		return new Specification<Menu>() {
-			public Predicate toPredicate(Root<Menu> entity, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-				// 1. Inicializar Variables
-				inicializar(entity, criteriaQuery, criteriaBuilder);
-				
-				// 2. Generamos los Joins
-				
-				// 3. Creamos las Restricciones de la busqueda
-				List<Predicate> restricciones = new ArrayList<Predicate>();
-
-				restricciones.add(
-						criteriaBuilder.isNull(entity.get("padre"))
-				);
-				
-				restricciones.add(
-						criteriaBuilder.equal(entity.get("tipo"), tipo)
-				);
-				
-				// 4. Ejecutamos				
-				return crearPredicate(restricciones);
-			}
-		};
-	}
 	
 	public Specification<Menu> consultarHijosTipoMenu(final int tipo){
 		return new Specification<Menu>() {
