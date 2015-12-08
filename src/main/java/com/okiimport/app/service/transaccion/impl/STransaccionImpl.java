@@ -555,7 +555,6 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 			String fieldSort, Boolean sortDirection, int page, int limit){
 		boolean nuloCantidad = false;
 		if(detalleF!=null){
-			detalleF.getCotizacion().setEstatus(EEstatusCotizacion.CONCRETADA);
 			if(detalleF.getCantidad()==null){
 				nuloCantidad = true;
 				detalleF.setCantidad(new Long(0));
@@ -566,7 +565,7 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		Sort sortDetalleCotizacion 
 			= new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idDetalleCotizacion"));
 		Specification<DetalleCotizacion> specfDetalleCotizacion = (new DetalleCotizacionDAO())
-				.consultarDetallesCotizacion(detalleF, null, idRequerimiento, true, false);
+				.consultarDetallesCotizacion(detalleF, null, idRequerimiento, true, false, EEstatusCotizacion.EMITIDA);
 		if(limit>0){
 			Page<DetalleCotizacion> pageDetalleCotizacion = this.detalleCotizacionRepository
 					.findAll(specfDetalleCotizacion, new PageRequest(page, limit, sortDetalleCotizacion));
