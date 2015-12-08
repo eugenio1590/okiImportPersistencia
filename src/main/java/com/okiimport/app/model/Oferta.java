@@ -112,6 +112,12 @@ public class Oferta extends AbstractEntity implements Serializable{
 				this.addDetalleOferta(iterator.next());
 	}
 	
+	public List<DetalleOferta> removeAll(List<DetalleOferta> remove){
+		if(remove!=null && !remove.isEmpty())
+			this.getDetalleOfertas().removeAll(remove);
+		return this.getDetalleOfertas();
+	}
+	
 	public Float getTotal() {
 		return total;
 	}

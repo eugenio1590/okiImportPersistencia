@@ -125,7 +125,7 @@ public interface STransaccion {
 	Map<String, Object> consultarOfertasRecibidasPorRequerimiento(int idRequerimiento, int pagina, int limit);
 	
 	@Transactional(readOnly=true)
-	Oferta consultarOfertaEnviadaPorRequerimiento(int idRequerimiento, List<DetalleRequerimiento> detallesRequerimiento);
+	List<Oferta> consultarOfertasEnviadaPorRequerimiento(int idRequerimiento);
 	
 	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
 	Oferta actualizarOferta(Oferta oferta);
@@ -135,7 +135,7 @@ public interface STransaccion {
 	
 	//Detalle Oferta
 	@Transactional(readOnly=true)
-	List<DetalleOferta> consultarDetallesOferta(Integer idOferta);
+	List<DetalleOferta> consultarDetallesOferta(Oferta oferta);
 	
 	@Transactional(readOnly=true)
 	Map<String, Object> consultarSolicitudesCompraProveedor(Requerimiento requerimiento, Proveedor proveedor, int page, int limit);

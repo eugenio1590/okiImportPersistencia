@@ -14,16 +14,20 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
-import com.okiimport.app.service.configuracion.SControlUsuario;
-import com.okiimport.app.service.maestros.SMaestros;
-import com.okiimport.app.service.transaccion.STransaccion;
-import com.okiimport.app.dao.transaccion.*;
-import com.okiimport.app.dao.transaccion.detalle.cotizacion.*;
+import com.okiimport.app.dao.transaccion.CompraRepository;
+import com.okiimport.app.dao.transaccion.CotizacionRepository;
+import com.okiimport.app.dao.transaccion.OfertaRepository;
+import com.okiimport.app.dao.transaccion.RequerimientoRepository;
+import com.okiimport.app.dao.transaccion.detalle.cotizacion.DetalleCotizacionInternacionalRepository;
+import com.okiimport.app.dao.transaccion.detalle.cotizacion.DetalleCotizacionRepository;
 import com.okiimport.app.dao.transaccion.detalle.oferta.DetalleOfertaRepository;
 import com.okiimport.app.dao.transaccion.detalle.requerimiento.DetalleRequerimientoRepository;
-import com.okiimport.app.dao.transaccion.impl.*;
-import com.okiimport.app.dao.transaccion.impl.detalle.cotizacion.*;
-import com.okiimport.app.dao.transaccion.impl.detalle.oferta.DetalleOfertaDAO;
+import com.okiimport.app.dao.transaccion.impl.CompraDAO;
+import com.okiimport.app.dao.transaccion.impl.CotizacionDAO;
+import com.okiimport.app.dao.transaccion.impl.OfertaDAO;
+import com.okiimport.app.dao.transaccion.impl.RequerimientoDAO;
+import com.okiimport.app.dao.transaccion.impl.detalle.cotizacion.DetalleCotizacionDAO;
+import com.okiimport.app.dao.transaccion.impl.detalle.cotizacion.DetalleCotizacionInternacionalDAO;
 import com.okiimport.app.model.Analista;
 import com.okiimport.app.model.Compra;
 import com.okiimport.app.model.Cotizacion;
@@ -40,6 +44,9 @@ import com.okiimport.app.model.enumerados.EEstatusDetalleRequerimiento;
 import com.okiimport.app.model.enumerados.EEstatusOferta;
 import com.okiimport.app.model.enumerados.EEstatusRequerimiento;
 import com.okiimport.app.resource.service.AbstractServiceImpl;
+import com.okiimport.app.service.configuracion.SControlUsuario;
+import com.okiimport.app.service.maestros.SMaestros;
+import com.okiimport.app.service.transaccion.STransaccion;
 
 public class STransaccionImpl extends AbstractServiceImpl implements STransaccion {
 	
@@ -555,7 +562,6 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 			String fieldSort, Boolean sortDirection, int page, int limit){
 		boolean nuloCantidad = false;
 		if(detalleF!=null){
-			detalleF.getCotizacion().setEstatus(EEstatusCotizacion.CONCRETADA);
 			if(detalleF.getCantidad()==null){
 				nuloCantidad = true;
 				detalleF.setCantidad(new Long(0));
@@ -566,7 +572,7 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		Sort sortDetalleCotizacion 
 			= new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idDetalleCotizacion"));
 		Specification<DetalleCotizacion> specfDetalleCotizacion = (new DetalleCotizacionDAO())
-				.consultarDetallesCotizacion(detalleF, null, idRequerimiento, true, false);
+				.consultarDetallesCotizacion(detalleF, null, idRequerimiento, true, false, EEstatusCotizacion.EMITIDA);
 		if(limit>0){
 			Page<DetalleCotizacion> pageDetalleCotizacion = this.detalleCotizacionRepository
 					.findAll(specfDetalleCotizacion, new PageRequest(page, limit, sortDetalleCotizacion));
@@ -680,24 +686,18 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		return parametros;
 	}
 	
-	public Oferta consultarOfertaEnviadaPorRequerimiento(int idRequerimiento, List<DetalleRequerimiento> detallesRequerimiento) {
-		Oferta oferta = null;
+	public List<Oferta> consultarOfertasEnviadaPorRequerimiento(int idRequerimiento) {
 		List<EEstatusOferta> estatus = new ArrayList<EEstatusOferta>();
 		estatus.add(EEstatusOferta.ENVIADA);
 		Sort sortOferta = new Sort(Sort.Direction.ASC, "fechaCreacion");
 		Specification<Oferta> specfOferta = (new OfertaDAO()).consultarOfertasPorRequerimiento(idRequerimiento, estatus);
 		List<Oferta> ofertas = ofertaRepository.findAll(specfOferta, sortOferta);
 		if(ofertas!=null && !ofertas.isEmpty()){
-			oferta = ofertas.get(0);
-			if(detallesRequerimiento == null || detallesRequerimiento.isEmpty())
-				oferta.setDetalleOfertas(consultarDetallesOferta(oferta.getIdOferta()));
-			else
-			{
-				Specification<DetalleOferta> specfDetalleOferta = (new DetalleOfertaDAO()).consultarDetallesOferta(oferta.getIdOferta(), detallesRequerimiento);
-				oferta.setDetalleOfertas(detalleOfertaRepository.findAll(specfDetalleOferta));
+			for(Oferta oferta : ofertas){
+				oferta.setDetalleOfertas(consultarDetallesOferta(oferta));
 			}
 		}
-		return oferta;
+		return ofertas;
 	}
 	
 	public Integer consultarCantOfertasCreadasPorRequermiento(int idRequerimiento){
@@ -714,8 +714,8 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	}
 	
 	//Detalles Oferta
-	public List<DetalleOferta> consultarDetallesOferta(Integer idOferta){
-		return detalleOfertaRepository.findByOferta_IdOferta(idOferta);
+	public List<DetalleOferta> consultarDetallesOferta(Oferta oferta){
+		return detalleOfertaRepository.findByOferta(oferta);
 	}
 	
 	public Map<String, Object> consultarSolicitudesCompraProveedor(Requerimiento requerimiento, Proveedor proveedor, int page, int limit){

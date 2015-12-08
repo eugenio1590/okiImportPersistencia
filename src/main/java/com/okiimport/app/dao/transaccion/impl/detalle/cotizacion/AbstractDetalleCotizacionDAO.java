@@ -1,6 +1,7 @@
 package com.okiimport.app.dao.transaccion.impl.detalle.cotizacion;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,12 +20,14 @@ import com.okiimport.app.model.Cotizacion;
 import com.okiimport.app.model.DetalleCotizacion;
 import com.okiimport.app.model.DetalleRequerimiento;
 import com.okiimport.app.model.Proveedor;
+import com.okiimport.app.model.enumerados.EEstatusCotizacion;
 import com.okiimport.app.resource.dao.AbstractJpaDao;
 
 public abstract class AbstractDetalleCotizacionDAO<T extends DetalleCotizacion> extends AbstractJpaDao<T> {
 
 	public Specification<T> consultarDetallesCotizacion(final DetalleCotizacion detalleF, 
-			final Integer idCotizacion, final Integer idRequerimiento, final boolean distinct,  final boolean cantExacta){
+			final Integer idCotizacion, final Integer idRequerimiento, final boolean distinct, final boolean cantExacta, 
+			final EEstatusCotizacion... estatus){
 		return new Specification<T>(){
 			public Predicate toPredicate(Root<T> entity, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
 				// 1. Inicializar Variables
@@ -44,6 +47,7 @@ public abstract class AbstractDetalleCotizacionDAO<T extends DetalleCotizacion> 
 							entity.get("precioVenta"),
 							entity.get("precioFlete"),
 							entity.get("cantidad"),
+							entity.get("estatus"),
 							joins.get("cotizacion"),
 							joins.get("detalleRequerimiento"),
 					});
@@ -64,6 +68,9 @@ public abstract class AbstractDetalleCotizacionDAO<T extends DetalleCotizacion> 
 					restricciones.add(criteriaBuilder.equal(
 							joins.get("detalleRequerimiento").join("requerimiento").get("idRequerimiento"), 
 							idRequerimiento));
+				
+				if(estatus!=null)
+					restricciones.add(joins.get("cotizacion").get("estatus").in(Arrays.asList(estatus)));
 				
 				// 5. Ejecutamos
 				return crearPredicate(restricciones);

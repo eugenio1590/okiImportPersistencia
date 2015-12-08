@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
-
 import com.okiimport.app.resource.model.AbstractEntity;
 
 /**
@@ -54,9 +53,7 @@ public class DetalleOferta extends AbstractEntity implements Serializable{
 	public void setIdDetalleOferta(Integer idDetalleOferta) {
 		this.idDetalleOferta = idDetalleOferta;
 	}
-
 	
-
 	public String getEstatus() {
 		return estatus;
 	}
@@ -72,7 +69,6 @@ public class DetalleOferta extends AbstractEntity implements Serializable{
 	public void setAprobado(Boolean aprobado) {
 		this.aprobado = aprobado;
 	}
-
 	
 	public Oferta getOferta() {
 		return oferta;
@@ -98,6 +94,19 @@ public class DetalleOferta extends AbstractEntity implements Serializable{
 		this.detalleCotizacion = detalleCotizacion;
 	}
 	
+	/**METODOS OVERRIDE*/
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof DetalleOferta)
+			return (
+					getIdDetalleOferta().equals(((DetalleOferta) obj).getIdDetalleOferta())
+					|| getDetalleCotizacion().getDetalleRequerimiento().getIdDetalleRequerimiento()
+						.equals(((DetalleOferta) obj).getDetalleCotizacion().getDetalleRequerimiento().getIdDetalleRequerimiento())
+			);
+		else
+			return super.equals(obj);
+	}
+
 	/**METODOS PROPIOS DE LA CLASE*/
 	public Float calcularPrecioVenta(){
 		Float costo = this.detalleCotizacion.calcularTotal();

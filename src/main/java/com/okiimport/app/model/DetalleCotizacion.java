@@ -7,7 +7,7 @@ import java.util.List;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.okiimport.app.model.enumerados.EEStatusDetalleCotizacion;
+import com.okiimport.app.model.enumerados.EEstatusDetalleCotizacion;
 import com.okiimport.app.resource.model.AbstractEntity;
 
 /**
@@ -40,7 +40,7 @@ public class DetalleCotizacion extends AbstractEntity implements Serializable {
 	private Long cantidad = new Long(0);
 	
 	@Enumerated(EnumType.STRING)
-	private EEStatusDetalleCotizacion estatus;
+	private EEstatusDetalleCotizacion estatus;
 	
 	//bi-directional many-to-one association to Cotizacion
 	@ManyToOne
@@ -60,7 +60,7 @@ public class DetalleCotizacion extends AbstractEntity implements Serializable {
 	}
 	
 	public DetalleCotizacion(Integer idDetalleCotizacion, String marcaRepuesto,
-			Float precioVenta, Float precioFlete, Long cantidad,
+			Float precioVenta, Float precioFlete, Long cantidad, EEstatusDetalleCotizacion estatus,
 			Cotizacion cotizacion, DetalleRequerimiento detalleRequerimiento) {
 		super();
 		this.idDetalleCotizacion = idDetalleCotizacion;
@@ -68,6 +68,7 @@ public class DetalleCotizacion extends AbstractEntity implements Serializable {
 		this.precioVenta = precioVenta;
 		this.precioFlete = precioFlete;
 		this.cantidad = cantidad;
+		this.estatus = estatus;
 		this.cotizacion = cotizacion;
 		this.detalleRequerimiento = detalleRequerimiento;
 	}
@@ -118,11 +119,11 @@ public class DetalleCotizacion extends AbstractEntity implements Serializable {
 	}
 	
 
-	public EEStatusDetalleCotizacion getEstatus() {
+	public EEstatusDetalleCotizacion getEstatus() {
 		return estatus;
 	}
 
-	public void setEstatus(EEStatusDetalleCotizacion estatus) {
+	public void setEstatus(EEstatusDetalleCotizacion estatus) {
 		this.estatus = estatus;
 	}
 
