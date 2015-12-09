@@ -63,6 +63,7 @@ public class Usuario extends AbstractEntity implements Serializable {
 					@MetaValue(targetEntity=Proveedor.class, value="P")
 			}
 	)
+	
 	@OneToOne
 	@JoinColumn(name="persona_id")
 	private Persona persona;
