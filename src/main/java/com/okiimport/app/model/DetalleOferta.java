@@ -93,19 +93,6 @@ public class DetalleOferta extends AbstractEntity implements Serializable{
 	public void setDetalleCotizacion(DetalleCotizacion detalleCotizacion) {
 		this.detalleCotizacion = detalleCotizacion;
 	}
-	
-	/**METODOS OVERRIDE*/
-	@Override
-	public boolean equals(Object obj) {
-		if(obj instanceof DetalleOferta)
-			return (
-					getIdDetalleOferta().equals(((DetalleOferta) obj).getIdDetalleOferta())
-					|| getDetalleCotizacion().getDetalleRequerimiento().getIdDetalleRequerimiento()
-						.equals(((DetalleOferta) obj).getDetalleCotizacion().getDetalleRequerimiento().getIdDetalleRequerimiento())
-			);
-		else
-			return super.equals(obj);
-	}
 
 	/**METODOS PROPIOS DE LA CLASE*/
 	public Float calcularPrecioVenta(){

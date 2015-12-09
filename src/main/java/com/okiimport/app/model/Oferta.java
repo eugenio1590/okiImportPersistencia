@@ -47,6 +47,9 @@ public class Oferta extends AbstractEntity implements Serializable{
 	
 	@OneToMany(mappedBy="oferta", fetch=FetchType.LAZY)
 	private List<DetalleOferta> detalleOfertas;
+	
+	@Transient
+	private List<DetalleOferta> detalleOfertasAux;
 
 	public Oferta() {
 		this.detalleOfertas = new ArrayList<DetalleOferta>();
@@ -142,15 +145,22 @@ public class Oferta extends AbstractEntity implements Serializable{
 
 	/**METODOS PROPIOS DE LA CLASE*/
 	public String determinarEstatus(){
-		
-		if(estatus!=null)
-			  return estatus.getValue();
-
-			return "";
+		return (estatus!=null) ? estatus.getValue() : "";
 	}
 	
 	public boolean enviar(){
 		return this.estatus.equals(EEstatusOferta.SELECCION);
+	}
+	
+	public void copyDetallesOfertas(){
+		detalleOfertasAux = new ArrayList<DetalleOferta>(detalleOfertas);
+	}
+	
+	public void recoveryCopyDetallesOfertas(){
+		if(detalleOfertasAux!=null && !detalleOfertasAux.isEmpty()){
+			detalleOfertas = new ArrayList<DetalleOferta>(detalleOfertasAux);
+			detalleOfertasAux.clear();
+		}
 	}
 	
 	public Float calcularTotal(){
