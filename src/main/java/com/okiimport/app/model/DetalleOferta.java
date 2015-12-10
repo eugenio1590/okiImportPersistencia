@@ -2,7 +2,19 @@ package com.okiimport.app.model;
 
 import java.io.Serializable;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.okiimport.app.resource.model.AbstractEntity;
 
@@ -102,5 +114,13 @@ public class DetalleOferta extends AbstractEntity implements Serializable{
 //				? this.detalleCotizacion.calcularTotal() : 
 //					((DetalleCotizacionInternacional) this.detalleCotizacion).calcularTotal();
 		return (porctGanancia!=0) ? (costo*(1+this.oferta.getPorctIva()))/porctGanancia : new Float(0);
+	}
+	
+	public Float calcularPrecioVentaConverter(){
+		return this.detalleCotizacion.getCotizacion().getHistoricoMoneda().convert(calcularPrecioVenta()).floatValue();
+	}
+	
+	public Float calcularPrecioVentaUnit(){
+		return calcularPrecioVenta() / getDetalleCotizacion().getCantidad();
 	}
 }

@@ -50,7 +50,7 @@ public class Oferta extends AbstractEntity implements Serializable{
 	
 	@Transient
 	private List<DetalleOferta> detalleOfertasAux;
-
+	
 	public Oferta() {
 		this.detalleOfertas = new ArrayList<DetalleOferta>();
 	}
@@ -147,7 +147,7 @@ public class Oferta extends AbstractEntity implements Serializable{
 	public String determinarEstatus(){
 		return (estatus!=null) ? estatus.getValue() : "";
 	}
-	
+
 	public boolean enviar(){
 		return this.estatus.equals(EEstatusOferta.SELECCION);
 	}
@@ -167,7 +167,7 @@ public class Oferta extends AbstractEntity implements Serializable{
 		float total = 0;
 		if ( detalleOfertas != null && !detalleOfertas.isEmpty()){
 			for(DetalleOferta detalleOferta : detalleOfertas ){
-				total = total + detalleOferta.calcularPrecioVenta();
+				total += detalleOferta.calcularPrecioVentaConverter();
 			}
 		}
 		return total;
