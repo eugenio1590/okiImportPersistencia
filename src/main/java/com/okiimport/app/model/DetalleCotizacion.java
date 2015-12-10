@@ -178,7 +178,7 @@ public class DetalleCotizacion extends AbstractEntity implements Serializable {
 		Number total = 0;
 		if(this.precioFlete!=null)
 			total = calcularCosto()+getPrecioFlete();
-		else
+		else if(cotizacion.getPrecioFlete()!=null)
 			total = calcularCosto()+cotizacion.getPrecioFlete();
 		return total.floatValue();
 	}
