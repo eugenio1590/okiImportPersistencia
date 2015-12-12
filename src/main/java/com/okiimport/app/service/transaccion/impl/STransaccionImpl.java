@@ -3,6 +3,8 @@ package com.okiimport.app.service.transaccion.impl;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -558,22 +560,29 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		return parametros;
 	}
 	
-	public Map<String, Object> consultarDetallesCotizacion(DetalleCotizacion detalleF, Integer idRequerimiento,
-			String fieldSort, Boolean sortDirection, int page, int limit){
-		boolean nuloCantidad = false;
+	public Map<String, Object> consultarDetallesCotizacion(final DetalleCotizacion detalleF, Integer idRequerimiento,
+			String fieldSort, final Boolean sortDirection, int page, int limit){
+		boolean nuloCantidad = false, nuloTotal = false;
 		if(detalleF!=null){
 			if(detalleF.getCantidad()==null){
 				nuloCantidad = true;
 				detalleF.setCantidad(new Long(0));
 			}
+			
+			if(detalleF.getTotal() == 0)
+				nuloTotal = true;
 		}
+		
 		Integer total = 0;
 		List<DetalleCotizacion> detallesCotizacion = null;
-		Sort sortDetalleCotizacion 
-			= new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idDetalleCotizacion"));
+		Sort sortDetalleCotizacion = (fieldSort!=null && fieldSort.equalsIgnoreCase("total"))
+				? new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idDetalleCotizacion"))
+					: new Sort(getDirection(sortDirection, Sort.Direction.ASC), "idDetalleCotizacion");
+	
 		Specification<DetalleCotizacion> specfDetalleCotizacion = (new DetalleCotizacionDAO())
-				.consultarDetallesCotizacion(detalleF, null, idRequerimiento, true, false, EEstatusCotizacion.EMITIDA);
-		if(limit>0){
+			.consultarDetallesCotizacion(detalleF, null, idRequerimiento, true, false, EEstatusCotizacion.EMITIDA);
+		
+		if(limit>0 && nuloTotal){
 			Page<DetalleCotizacion> pageDetalleCotizacion = this.detalleCotizacionRepository
 					.findAll(specfDetalleCotizacion, new PageRequest(page, limit, sortDetalleCotizacion));
 			total = Long.valueOf(pageDetalleCotizacion.getTotalElements()).intValue();
@@ -584,7 +593,33 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 			total = detallesCotizacion.size();
 		}
 		
+		if(fieldSort!=null && fieldSort.equalsIgnoreCase("total")){
+			Collections.sort(detallesCotizacion, new Comparator<DetalleCotizacion>(){
+
+				@Override
+				public int compare(DetalleCotizacion o1, DetalleCotizacion o2) {
+					if(sortDirection)
+						return o1.calcularTotal().compareTo(o2.calcularTotal());
+					else
+						return o2.calcularTotal().compareTo(o2.calcularCosto());
+				}
+				
+			});
+		}
+		
 		List<DetalleCotizacion> detallesEliminar = new ArrayList<DetalleCotizacion>();
+		
+		if(!nuloTotal){
+			for(DetalleCotizacion detalle : detallesCotizacion){
+				if(!detalle.compararTotal(detalleF.totalParaLike()))
+					detallesEliminar.add(detalle);
+			}
+			
+			detallesCotizacion.removeAll(detallesEliminar);		
+			total = detallesCotizacion.size();
+		}
+		
+		detallesEliminar.clear();
 		Map<Integer, DetalleCotizacion> detallesIncluir = new HashMap<Integer, DetalleCotizacion>();
 		for(int i=0; i<detallesCotizacion.size(); i++){
 			DetalleCotizacion detalle = detallesCotizacion.get(i);

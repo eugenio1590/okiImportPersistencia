@@ -42,6 +42,9 @@ public class DetalleCotizacion extends AbstractEntity implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private EEstatusDetalleCotizacion estatus;
 	
+	@Transient
+	private Float total = new Float(0);
+	
 	//bi-directional many-to-one association to Cotizacion
 	@ManyToOne
 	@JoinColumn(name="id_cotizacion")
@@ -127,6 +130,14 @@ public class DetalleCotizacion extends AbstractEntity implements Serializable {
 		this.estatus = estatus;
 	}
 
+	public Float getTotal() {
+		return total;
+	}
+
+	public void setTotal(Float total) {
+		this.total = total;
+	}
+
 	public Cotizacion getCotizacion() {
 		return cotizacion;
 	}
@@ -171,8 +182,11 @@ public class DetalleCotizacion extends AbstractEntity implements Serializable {
 			public int compare(DetalleCotizacion detalle1, DetalleCotizacion detalle2) {
 				return detalle1.getIdDetalleCotizacion().compareTo(detalle2.getIdDetalleCotizacion());
 			}
-			
 		};
+	}
+	
+	public String totalParaLike(){
+		return String.valueOf(getTotal()).replaceAll(".?0*$", "");
 	}
 	
 	public Float calcularTotal(){
@@ -182,6 +196,10 @@ public class DetalleCotizacion extends AbstractEntity implements Serializable {
 		else if(cotizacion.getPrecioFlete()!=null)
 			total = calcularCosto()+cotizacion.getPrecioFlete();
 		return total.floatValue();
+	}
+	
+	public boolean compararTotal(String total){
+		return String.valueOf(calcularTotal()).contains(total);
 	}
 	
 	public Float calcularCosto(){
