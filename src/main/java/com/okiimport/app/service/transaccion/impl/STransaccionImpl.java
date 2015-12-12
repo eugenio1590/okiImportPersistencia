@@ -571,6 +571,8 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 			
 			if(detalleF.getTotal() == 0)
 				nuloTotal = true;
+			else
+				fieldSort = "total";
 		}
 		
 		Integer total = 0;
