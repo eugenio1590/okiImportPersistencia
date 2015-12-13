@@ -202,4 +202,11 @@ public class Proveedor extends Persona implements Serializable {
 		IEstatusPersona solicitante = ((EstatusProveedorFactory) factoryEstatus).getEstatusSolicitante();
 		return this.estatus.equals(solicitante.getValue());
 	}
+	
+	@Transient
+	@SuppressWarnings("static-access")
+	public boolean isEliminar(){
+		IEstatusPersona eliminado = ((EstatusProveedorFactory) factoryEstatus).getEstatusEliminado();
+		return this.estatus.equals(eliminado.getValue());
+	}
 }

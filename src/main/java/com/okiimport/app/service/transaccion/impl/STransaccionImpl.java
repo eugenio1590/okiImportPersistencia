@@ -321,7 +321,6 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	public Map<String, Object> consultarRequerimientosConSolicitudesCotizacion(Requerimiento regFiltro, String fieldSort, Boolean sortDirection, 
 			Integer idProveedor, int page, int limit) {
 		List<EEstatusRequerimiento> estatus=new ArrayList<EEstatusRequerimiento>();
-		estatus.add(EEstatusRequerimiento.OFERTADO);
 		estatus.add(EEstatusRequerimiento.CONCRETADO);
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		Integer total = 0;
@@ -532,6 +531,15 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		parametros.put("total", total);
 		parametros.put("cotizaciones", cotizaciones);
 		return parametros;
+	}
+	
+	@Override
+	public Boolean validarProveedorEnCotizaciones(Proveedor proveedor) {
+		List<EEstatusCotizacion> estatus =  new ArrayList<EEstatusCotizacion>();
+		estatus.add(EEstatusCotizacion.EMITIDA);
+		estatus.add(EEstatusCotizacion.INCOMPLETA);
+		estatus.add(EEstatusCotizacion.CONCRETADA);
+		return this.cotizacionRepository.findByProveedorAndEstatusIn(proveedor, estatus).size()==0;
 	}
 	
 	//Detalles Cotizacion
@@ -852,4 +860,6 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		parametros.put("detallesCompra", detallesCompra);
 		return parametros;
 	}
+
+	
 }

@@ -174,7 +174,9 @@ public class RequerimientoDAO extends AbstractJpaDao<Requerimiento> {
 							joinCotizacion.join("proveedor").get("id"), 
 							idProveedor));
 				
-				restricciones.add(criteriaBuilder.equal(joinCotizacion.get("estatus"), EEstatusCotizacion.SOLICITADA));
+				restricciones.add(criteriaBuilder.or( 
+						criteriaBuilder.equal(joinCotizacion.get("estatus"), EEstatusCotizacion.SOLICITADA),
+						criteriaBuilder.equal(joinCotizacion.get("estatus"), EEstatusCotizacion.EMITIDA)));
 				restricciones.add(criteriaBuilder.not(entity.get("estatus").in(estatus)));
 				
 				//4. Ejecutamos

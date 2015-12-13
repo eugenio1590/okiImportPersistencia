@@ -96,6 +96,9 @@ public interface STransaccion {
 	Map<String, Object> consultarCotizacionesParaEditar(Cotizacion cotizacionF, String fieldSort, Boolean sortDirection,
 			Integer idRequerimiento, int pagina, int limit);
 	
+	@Transactional(readOnly=true)
+	Boolean validarProveedorEnCotizaciones(Proveedor proveedor);
+	
 	//Detalle de Cotizaciones
 	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
 	void guardarSeleccionRequerimiento(List<DetalleCotizacion> detalleCotizaciones);
