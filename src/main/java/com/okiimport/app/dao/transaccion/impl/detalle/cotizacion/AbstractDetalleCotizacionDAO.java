@@ -69,7 +69,7 @@ public abstract class AbstractDetalleCotizacionDAO<T extends DetalleCotizacion> 
 							joins.get("detalleRequerimiento").join("requerimiento").get("idRequerimiento"), 
 							idRequerimiento));
 				
-				if(estatus!=null)
+				if(estatus!=null && estatus.length!=0)
 					restricciones.add(joins.get("cotizacion").get("estatus").in(Arrays.asList(estatus)));
 				
 				// 5. Ejecutamos

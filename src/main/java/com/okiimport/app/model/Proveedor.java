@@ -176,19 +176,20 @@ public class Proveedor extends Persona implements Serializable {
 	
 	/**METODOS PROPIOS DE LA CLASE*/
 	public String ubicacion(String separador){
-		StringBuilder ubicacion = new StringBuilder(this.pais.getNombre());
+		StringBuilder ubicacion = new StringBuilder("");
 		if(ciudad!=null && isNacional()){
-			Estado estado = ciudad.getEstado();
-			ubicacion.append(separador+estado.getNombre());
+			ubicacion.append(ciudad.getEstado().getNombre());
 			ubicacion.append(separador).append(ciudad.getNombre());
 		}
+		else
+			ubicacion.append(this.pais.getNombre());
 		return ubicacion.toString();
 	}
 	
 	@Transient
 	public boolean isNacional(){
 		if(this.tipoProveedor!=null)
-			return (this.tipoProveedor == true);
+			return this.tipoProveedor;
 		else if(this.getPais()!=null)
 			return this.getPais().getNombre().equalsIgnoreCase("Venezuela");
 		else
@@ -200,5 +201,12 @@ public class Proveedor extends Persona implements Serializable {
 	public boolean isSolicitante(){
 		IEstatusPersona solicitante = ((EstatusProveedorFactory) factoryEstatus).getEstatusSolicitante();
 		return this.estatus.equals(solicitante.getValue());
+	}
+	
+	@Transient
+	@SuppressWarnings("static-access")
+	public boolean isEliminar(){
+		IEstatusPersona eliminado = ((EstatusProveedorFactory) factoryEstatus).getEstatusEliminado();
+		return this.estatus.equals(eliminado.getValue());
 	}
 }

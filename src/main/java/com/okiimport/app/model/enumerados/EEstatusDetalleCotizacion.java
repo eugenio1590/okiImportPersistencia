@@ -1,6 +1,6 @@
 package com.okiimport.app.model.enumerados;
 
-public enum EEStatusDetalleCotizacion {
+public enum EEstatusDetalleCotizacion {
 	
 	SOLICITADO("SO", "Solicitado"),
 	ENCONTRADO("EN", "Encontrado"),
@@ -9,7 +9,7 @@ public enum EEStatusDetalleCotizacion {
 	private String value;
 	private String nombre;
 	
-	EEStatusDetalleCotizacion(String value, String nombre){
+	EEstatusDetalleCotizacion(String value, String nombre){
 		this.value = value;
 		this.nombre = nombre;
 	}
