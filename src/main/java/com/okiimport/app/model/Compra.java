@@ -30,7 +30,7 @@ public class Compra extends AbstractEntity implements Serializable {
 	private Integer idCompra;
 	
 	@Column(name="fecha_creacion")
-	private Timestamp fechaCreacion;
+	private Date fechaCreacion;
 	
 	@Column(name="precio_venta")
 	private Float precioVenta;
@@ -80,11 +80,11 @@ public class Compra extends AbstractEntity implements Serializable {
 		this.idCompra = idCompra;
 	}
 
-	public Timestamp getFechaCreacion() {
+	public Date getFechaCreacion() {
 		return fechaCreacion;
 	}
 
-	public void setFechaCreacion(Timestamp fechaCreacion) {
+	public void setFechaCreacion(Date fechaCreacion) {
 		this.fechaCreacion = fechaCreacion;
 	}
 
@@ -174,6 +174,13 @@ public class Compra extends AbstractEntity implements Serializable {
 		detalleOferta.setCompra(null);
 		
 		return detalleOferta;
+	}
+	
+	/**EVENTOS*/
+	@PostLoad
+	public void postLoad(){
+		if(this.precioFlete==null)
+			this.precioFlete = new Float(0);
 	}
 
 	/**METODOS PROPIOS DE LA CLASE*/
