@@ -403,14 +403,21 @@ public class Requerimiento extends AbstractEntity implements Serializable {
 	}
 	
 	public boolean verOfertas(){
-		
 		return (  estatus.equals(EEstatusRequerimiento.OFERTADO)  );
 	}
 	
 	public boolean seleccionarCotizacion(){
-		if(this.nroOfertas!=null && this.nroOfertas<3)
+		if(ofertar(true) && this.nroOfertas<3)
 			return true;
 		return false;
+	}
+	
+	public boolean ofertar(){
+		return ofertar(false);
+	}
+	
+	private boolean ofertar(boolean validarCero){
+		return (this.nroOfertas!=null && ((validarCero) ? this.nroOfertas>=0 : this.nroOfertas>0 ));
 	}
 	
 	public void cerrarSolicitud(){

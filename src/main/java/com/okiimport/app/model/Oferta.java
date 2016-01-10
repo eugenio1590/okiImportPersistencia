@@ -145,7 +145,7 @@ public class Oferta extends AbstractEntity implements Serializable{
 
 	/**METODOS PROPIOS DE LA CLASE*/
 	public String determinarEstatus(){
-		return (estatus!=null) ? estatus.getValue() : "";
+		return (estatus!=null) ? estatus.getNombre() : "";
 	}
 
 	public boolean enviar(){

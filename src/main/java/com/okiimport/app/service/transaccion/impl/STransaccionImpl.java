@@ -204,6 +204,10 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 			requerimientos = this.requerimientoRepository.findAll(specfRequerimiento, sortRequerimiento);
 			total = requerimientos.size();
 		}
+		
+		if(!requerimientos.isEmpty())
+			llenarNroOfertas(requerimientos);
+		
 		parametros.put("total", total);
 		parametros.put("requerimientos", requerimientos);
 		return parametros;
@@ -212,7 +216,7 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	public Map <String, Object> consultarMisRequerimientosOfertados(Requerimiento regFiltro, String fieldSort, Boolean sortDirection, 
 			Integer idusuario, int page, int limit){
 		Map<String, Object> parametros= new HashMap<String, Object>();
-		Integer total = 0, nroOfertas = 0;
+		Integer total = 0;
 		List<Requerimiento> requerimientos = null;
 		Sort sortRequerimiento 
 			= new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idRequerimiento"));
@@ -230,10 +234,8 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 			total = requerimientos.size();
 		}
 		
-		for(Requerimiento requerimiento : requerimientos){
-			nroOfertas = (Integer) consultarOfertasPorRequerimiento(requerimiento.getIdRequerimiento(), null, null, 0, 1).get("total");
-			requerimiento.setNroOfertas(nroOfertas);
-		}
+		if(!requerimientos.isEmpty())
+			llenarNroOfertas(requerimientos);
 		
 		parametros.put("total", total);
 		parametros.put("requerimientos", requerimientos);
@@ -861,5 +863,12 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		return parametros;
 	}
 
-	
+	/**METODOS PROPIOS DE LA CLASE*/
+	private void llenarNroOfertas(List<Requerimiento> requerimientos){
+		Integer nroOfertas = 0;
+		for(Requerimiento requerimiento : requerimientos){
+			nroOfertas = (Integer) consultarOfertasPorRequerimiento(requerimiento.getIdRequerimiento(), null, null, 0, 1).get("total");
+			requerimiento.setNroOfertas(nroOfertas);
+		}
+	}
 }
