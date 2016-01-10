@@ -193,7 +193,7 @@ public class Compra extends AbstractEntity implements Serializable {
 		float total = 0;
 		if ( detalleOfertas != null && !detalleOfertas.isEmpty()){
 			for(DetalleOferta detalleOferta : detalleOfertas){
-				total = total + detalleOferta.calcularPrecioVenta();
+				total = total + detalleOferta.calcularPrecioVentaConverter();
 			}
 		}
 		return total;
