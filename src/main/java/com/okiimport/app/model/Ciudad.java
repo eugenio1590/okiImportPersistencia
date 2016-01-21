@@ -92,4 +92,13 @@ public class Ciudad extends AbstractEntity implements Serializable {
 
 		return persona;
 	}
+	
+	/**METODOS PROPIOS DE LA CLASE*/
+	@Transient
+	public String ubicacion(String separador){
+		StringBuilder ubicacion = new StringBuilder(getNombre());
+		if(separador!=null)
+			ubicacion.append(separador).append(getEstado().getNombre());
+		return ubicacion.toString();
+	}
 }
