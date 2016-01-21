@@ -14,14 +14,13 @@ import com.okiimport.app.service.web.SLocalizacion;
 
 public class SLocalizacionImpl implements SLocalizacion {
 	
-	private static final Float RadioTierraKm = new Float(6378.0);
+	private static final double RadioTierraKm = 6378;//.137;
 	
 	private GeoApiContext context = new GeoApiContext().setApiKey("AIzaSyDK6oh7fuTOOWIMh9OSJSxDSvJkw7jdrmQ");
 
 	@Override
-	public long calcularDistancia(Ciudad ciudadOrigen, Ciudad ciudadDestino) {
-		// TODO Auto-generated method stub
-		long distancia = 0;
+	public double calcularDistancia(Ciudad ciudadOrigen, Ciudad ciudadDestino) {
+		double distancia = 0;
 		if(!ciudadOrigen.equals(ciudadDestino)){
 			try {
 				DistanceMatrix result = DistanceMatrixApi.getDistanceMatrix(context, 
@@ -30,7 +29,6 @@ public class SLocalizacionImpl implements SLocalizacion {
 				if(element.status == DistanceMatrixElementStatus.OK)
 					distancia = result.rows[0].elements[0].distance.inMeters;
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -38,23 +36,39 @@ public class SLocalizacionImpl implements SLocalizacion {
 	}
 	
 	@Override
-	public long calcularDistancia(Pais paisOrigen, Pais paisDestino) {
-		// TODO Auto-generated method stub
-		long result = 0;
-		try {
-			GeocodingResult[] resultsOrigen =  GeocodingApi.geocode(context, paisOrigen.getNombre()).await();
-			GeocodingResult[] resultsDestino =  GeocodingApi.geocode(context, paisDestino.getNombre()).await();
-			result = formulaHaversine(resultsOrigen[0].geometry.location, resultsDestino[0].geometry.location);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	public double calcularDistancia(Pais paisOrigen, Pais paisDestino) {
+		double result = 0;
+		if(!paisOrigen.equals(paisDestino)){
+			try {
+				GeocodingResult[] resultsOrigen =  GeocodingApi.geocode(context, paisOrigen.getNombre()).await();
+				GeocodingResult[] resultsDestino =  GeocodingApi.geocode(context, paisDestino.getNombre()).await();
+				if(resultsOrigen.length > 0 && resultsDestino.length > 0)
+					result = formulaHaversine(resultsOrigen[0].geometry.location, resultsDestino[0].geometry.location);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return result;
 	}
 	
 	/**METODOS PROPIOS DE LA CLASE*/
-	private long formulaHaversine(LatLng locationOrigen, LatLng locationDestino) {
-		// TODO Auto-generated method stub
-		return 0;
+	/**
+	 * Descripcion: permitira calcular la diferencia entre dos coordenadas usando la formula de Haversine,
+	 * esta distancia tomara en cuenta el radio de la tierra en km, dando la respuesta en las mismas unidades.
+	 * Parametros: 
+	 * @param locationOrigen: coordenadas del punto de origen
+	 * @param locationDestino: coordenadas del punto de destino
+	 * Retorno: @return valor double: distancia en km entre las coordenadas
+	 * Nota: Ninguna
+	 * */
+	private double formulaHaversine(LatLng locationOrigen, LatLng locationDestino) {
+		double difLatitud = Math.toRadians(locationDestino.lat - locationOrigen.lat);
+		double difLongitud = Math.toRadians(locationDestino.lng - locationOrigen.lng);
+		double latOrigen = Math.toRadians(locationOrigen.lat);
+		double latDestino = Math.toRadians(locationDestino.lat);
+		double a = Math.pow(Math.sin(difLatitud/2), 2)
+				+ Math.pow(Math.sin(difLongitud/2), 2) * Math.cos(latOrigen) * Math.cos(latDestino);
+		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+		return RadioTierraKm * c;
 	}
 }
