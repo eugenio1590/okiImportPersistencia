@@ -29,9 +29,6 @@ public class Compra extends AbstractEntity implements Serializable {
 	@Column(name="id_compra")
 	private Integer idCompra;
 	
-	@Column(name="fecha_creacion")
-	private Date fechaCreacion;
-	
 	@Column(name="precio_venta")
 	private Float precioVenta;
 	
@@ -78,14 +75,6 @@ public class Compra extends AbstractEntity implements Serializable {
 
 	public void setIdCompra(Integer idCompra) {
 		this.idCompra = idCompra;
-	}
-
-	public Date getFechaCreacion() {
-		return fechaCreacion;
-	}
-
-	public void setFechaCreacion(Date fechaCreacion) {
-		this.fechaCreacion = fechaCreacion;
 	}
 
 	public Float getPrecioVenta() {

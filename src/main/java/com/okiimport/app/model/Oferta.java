@@ -30,9 +30,6 @@ public class Oferta extends AbstractEntity implements Serializable{
 	@Column(name="id_oferta")
 	private Integer idOferta;
 	
-	@Column(name="fecha_creacion")
-	private Timestamp fechaCreacion;
-	
 	@Column(name="porct_iva", scale=2)
 	private Float porctIva = new Float(0);
 
@@ -69,14 +66,6 @@ public class Oferta extends AbstractEntity implements Serializable{
 
 	public void setIdOferta(Integer idOferta) {
 		this.idOferta = idOferta;
-	}
-
-	public Timestamp getFechaCreacion() {
-		return fechaCreacion;
-	}
-
-	public void setFechaCreacion(Timestamp fechaCreacion) {
-		this.fechaCreacion = fechaCreacion;
 	}
 	
 	public Float getPorctIva() {

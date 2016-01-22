@@ -23,9 +23,6 @@ public class PagoCompra extends AbstractEntity implements Serializable{
 	@Column(name="id_pago_compra")
 	private Integer idPagoCompra;
 	
-	@Column(name="fecha_creacion")
-	private Timestamp fechaCreacion;
-	
 	@Column(name="fecha_pago")
 	private Timestamp fechaPago;
 	
@@ -66,14 +63,6 @@ public class PagoCompra extends AbstractEntity implements Serializable{
 
 	public void setIdPagoCompra(Integer idPagoCompra) {
 		this.idPagoCompra = idPagoCompra;
-	}
-
-	public Timestamp getFechaCreacion() {
-		return fechaCreacion;
-	}
-
-	public void setFechaCreacion(Timestamp fechaCreacion) {
-		this.fechaCreacion = fechaCreacion;
 	}
 
 	public Timestamp getFechaPago() {

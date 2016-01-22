@@ -1,12 +1,22 @@
 package com.okiimport.app.model;
 
 import java.io.Serializable;
-import java.lang.Float;
-import java.lang.Integer;
-import java.util.Date;
 import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.okiimport.app.model.enumerados.EEstatusGeneral;
@@ -32,9 +42,6 @@ public class HistoricoMoneda extends AbstractEntity implements Serializable, ICo
 	
 	@Column(name="monto_conversion")
 	private Float montoConversion;
-	
-	@Column(name="fecha_creacion")
-	private Date fechaCreacion;
 	
 	@Enumerated(EnumType.STRING)
 	private EEstatusGeneral estatus;
@@ -75,13 +82,6 @@ public class HistoricoMoneda extends AbstractEntity implements Serializable, ICo
 
 	public void setMontoConversion(Float montoConversion) {
 		this.montoConversion = montoConversion;
-	}   
-	public Date getFechaCreacion() {
-		return this.fechaCreacion;
-	}
-
-	public void setFechaCreacion(Date fechaCreacion) {
-		this.fechaCreacion = fechaCreacion;
 	}
 		
 	public EEstatusGeneral getEstatus() {

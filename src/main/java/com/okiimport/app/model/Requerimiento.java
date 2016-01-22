@@ -21,6 +21,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -53,18 +54,15 @@ public class Requerimiento extends AbstractEntity implements Serializable {
 	private Integer annoV;
 
 	@Enumerated(EnumType.STRING)
-	private EEstatusRequerimiento estatus; // 
+	private EEstatusRequerimiento estatus;
 
-	@Column(name="fecha_cierre", columnDefinition="date")
+	@Column(name="fecha_cierre")
 	private Date fechaCierre;
-
-	@Column(name="fecha_creacion", columnDefinition="date")
-	private Timestamp fechaCreacion;
 	
 	@Column(name="fecha_solicitud")
 	private Timestamp fechaSolicitud;
 
-	@Column(name="fecha_vencimiento", columnDefinition="date")
+	@Column(name="fecha_vencimiento")
 	private Date fechaVencimiento;
 
 	@Column(name="modelo_v")
@@ -181,15 +179,6 @@ public class Requerimiento extends AbstractEntity implements Serializable {
 
 	public void setFechaCierre(Date fechaCierre) {
 		this.fechaCierre = fechaCierre;
-	}
-
-	@JsonSerialize(using=JsonDateSerializer.class)
-	public Timestamp getFechaCreacion() {
-		return this.fechaCreacion;
-	}
-
-	public void setFechaCreacion(Timestamp fechaCreacion) {
-		this.fechaCreacion = fechaCreacion;
 	}
 
 	@JsonSerialize(using=JsonDateSerializer.class)
@@ -339,6 +328,12 @@ public class Requerimiento extends AbstractEntity implements Serializable {
 
 	public void setNroOfertas(Integer nroOfertas) {
 		this.nroOfertas = nroOfertas;
+	}
+	
+	/**EVENTOS*/
+	@PrePersist
+	public void prePersist(){
+		
 	}
 
 	/**METODOS PROPIOS DE LA CLASE*/

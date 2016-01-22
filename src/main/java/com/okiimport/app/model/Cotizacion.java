@@ -28,9 +28,6 @@ public class Cotizacion extends AbstractEntity implements Serializable{
 	@Column(name="id_cotizacion")
 	private Integer idCotizacion;
 	
-	@Column(name="fecha_creacion")
-	private Date fechaCreacion;
-	
 	@Column(name="fecha_vencimiento")
 	private Date fechaVencimiento;
 	
@@ -116,14 +113,6 @@ public class Cotizacion extends AbstractEntity implements Serializable{
 		this.idCotizacion = idCotizacion;
 	}
 
-	public Date getFechaCreacion() {
-		return fechaCreacion;
-	}
-
-	public void setFechaCreacion(Date fechaCreacion) {
-		this.fechaCreacion = fechaCreacion;
-	}
-
 	public Date getFechaVencimiento() {
 		return fechaVencimiento;
 	}
@@ -139,8 +128,6 @@ public class Cotizacion extends AbstractEntity implements Serializable{
 	public void setCondiciones(String condiciones) {
 		this.condiciones = condiciones;
 	}
-
-	
 
 	public EEstatusCotizacion getEstatus() {
 		return estatus;

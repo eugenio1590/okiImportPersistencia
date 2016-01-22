@@ -118,9 +118,7 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	}
 	
 	public void guardarSeleccionRequerimiento(List<DetalleCotizacion> detalleCotizaciones) {
-		Date fechaCreacion = calendar.getTime();
 		Oferta oferta = new Oferta();
-		oferta.setFechaCreacion(new Timestamp(fechaCreacion.getTime()));
 		oferta = actualizarOferta(oferta);
 		for (DetalleCotizacion detalleCotizacion: detalleCotizaciones){
 			DetalleOferta detalleOferta = new DetalleOferta();
@@ -461,7 +459,6 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	
 	public Cotizacion registrarSolicitudCotizacion(Cotizacion cotizacion, List<DetalleCotizacion> detalleCotizacions) {
 		cotizacion.setEstatus(EEstatusCotizacion.SOLICITADA);
-		cotizacion.setFechaCreacion(calendar.getTime());
 		cotizacion = cotizacionRepository.save(cotizacion);
 		for(DetalleCotizacion detalleCotizacion : detalleCotizacions){
 			
@@ -809,10 +806,7 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		return parametros;
 	}
 	
-	public Compra registrarOActualizarCompra(Compra compra){
-		if(compra.getIdCompra()==null)
-			compra.setFechaCreacion(new Timestamp(this.calendar.getTime().getTime()));
-			
+	public Compra registrarOActualizarCompra(Compra compra){			
 		return compra=this.compraRepository.save(compra);
 	}
 	
