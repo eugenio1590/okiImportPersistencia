@@ -198,6 +198,10 @@ public class DetalleCotizacion extends AbstractEntity implements Serializable {
 		return total.floatValue();
 	}
 	
+	public Float calcularTotalConvert(){
+		return this.cotizacion.getHistoricoMoneda().convert(this.calcularTotal()).floatValue();
+	}
+	
 	public boolean compararTotal(String total){
 		return String.valueOf(calcularTotal()).contains(total);
 	}
