@@ -165,6 +165,18 @@ public class Proveedor extends Persona implements Serializable {
 
 	/**METODOS OVERRIDE*/
 	@Override
+	public boolean equals(Object obj) {
+		if(obj!=null && obj instanceof Proveedor && this.getCedula()!=null){
+			boolean equals = this.getCedula().equalsIgnoreCase(((Proveedor) obj).getCedula());
+			if(this.getId()!=null && ((Proveedor) obj).getId()!=null)
+				equals &= (this.getId().equals(((Proveedor) obj).getId()));
+			return equals;
+		}
+		else
+			return super.equals(obj);
+	}
+	
+	@Override
 	public Integer getTipoMenu() {
 		return this.tipoMenu=3;
 	}
