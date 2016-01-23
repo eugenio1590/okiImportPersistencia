@@ -39,6 +39,9 @@ public class DetalleCotizacion extends AbstractEntity implements Serializable {
 	
 	private Long cantidad = new Long(0);
 	
+	@Column(name="tipo_repuesto")
+	private Boolean tipoRepuesto;
+	
 	@Enumerated(EnumType.STRING)
 	private EEstatusDetalleCotizacion estatus;
 	
@@ -120,7 +123,14 @@ public class DetalleCotizacion extends AbstractEntity implements Serializable {
 	public void setCantidad(Long cantidad) {
 		this.cantidad = cantidad;
 	}
-	
+
+	public Boolean getTipoRepuesto() {
+		return tipoRepuesto;
+	}
+
+	public void setTipoRepuesto(Boolean tipoRepuesto) {
+		this.tipoRepuesto = tipoRepuesto;
+	}
 
 	public EEstatusDetalleCotizacion getEstatus() {
 		return estatus;
