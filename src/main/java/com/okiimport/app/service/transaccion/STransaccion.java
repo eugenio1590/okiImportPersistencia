@@ -108,8 +108,7 @@ public interface STransaccion {
 			String fieldSort, Boolean sortDirection, int pagina, int limit);
 	
 	@Transactional(readOnly=true)
-	Map<String, Object> consultarDetallesCotizacion(DetalleCotizacion detalleF, Integer idRequerimiento,
-			String fieldSort, Boolean sortDirection, int pagina, int limit);
+	Map<DetalleRequerimiento, List<DetalleCotizacion>> consultarDetallesCotizacion(Integer idRequerimiento);
 	
 	@Transactional(readOnly=true)
 	Map <String, Object> ConsultarDetalleCotizacion(Integer idcotizacion,int pagina, int limit);

@@ -30,6 +30,11 @@ public abstract class AbstractEntity implements Prototipo{
 	@Column(name="fecha_ultima_modificacion")
 	protected Date fechaUltimaModificacion;
 	
+	public AbstractEntity(){
+		prePersist();
+	}
+	
+	/**METODOS ESTATICOS DE LA CLASE*/
 	public static String decodificarImagen(byte[] imagen){
 		if(imagen!=null && imagen.length>0){
 			return "data:image/jpeg;base64,"+DatatypeConverter.printBase64Binary(imagen);

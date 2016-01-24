@@ -57,6 +57,10 @@ public class DetalleOferta extends AbstractEntity implements Serializable{
 
 	public DetalleOferta() {
 	}
+	
+	public DetalleOferta(DetalleCotizacion detalleCotizacion){
+		this.detalleCotizacion = detalleCotizacion;
+	}
 
 	public Integer getIdDetalleOferta() {
 		return idDetalleOferta;
