@@ -46,14 +46,22 @@ public class Oferta extends AbstractEntity implements Serializable{
 	private List<DetalleOferta> detalleOfertas;
 	
 	@Transient
+	private Integer nroOferta;
+	
+	@Transient
 	private List<DetalleOferta> detalleOfertasAux;
 	
 	public Oferta() {
 		this.detalleOfertas = new ArrayList<DetalleOferta>();
 	}
+	
+	public Oferta(Integer nroOferta){
+		this();
+		this.nroOferta = nroOferta;
+	}
 
 	public Oferta(Integer idOferta, Date fechaCreacion, EEstatusOferta estatus) {
-		super();
+		this();
 		this.idOferta = idOferta;
 		this.fechaCreacion = new Timestamp(fechaCreacion.getTime());
 		this.estatus = estatus;
@@ -131,6 +139,15 @@ public class Oferta extends AbstractEntity implements Serializable{
 		
 		return detalleOferta;
 	}
+	
+	//Transient
+	public Integer getNroOferta() {
+		return nroOferta;
+	}
+
+	public void setNroOferta(Integer nroOferta) {
+		this.nroOferta = nroOferta;
+	}
 
 	/**METODOS PROPIOS DE LA CLASE*/
 	public String determinarEstatus(){
@@ -160,5 +177,10 @@ public class Oferta extends AbstractEntity implements Serializable{
 			}
 		}
 		return total;
+	}
+	
+	@Transient
+	public boolean isNotEmpty(){
+		return !this.getDetalleOfertas().isEmpty();
 	}
 }
