@@ -50,7 +50,7 @@ public class HistoricoMoneda extends AbstractEntity implements Serializable, ICo
 	
 	//bi-directional one-to-many association to Cotizacion
 	@OneToMany(mappedBy="historicoMoneda")
-	private List<Compra> compras;
+	private List<Venta> compras;
 
 	public HistoricoMoneda() {
 		this.moneda = new Moneda();
@@ -114,22 +114,22 @@ public class HistoricoMoneda extends AbstractEntity implements Serializable, ICo
 		return cotizacion;
 	}
 	
-	public List<Compra> getCompras() {
+	public List<Venta> getCompras() {
 		return compras;
 	}
 
-	public void setCompras(List<Compra> compras) {
+	public void setCompras(List<Venta> compras) {
 		this.compras = compras;
 	}
 	
-	public Compra addCompra(Compra compra){
+	public Venta addCompra(Venta compra){
 		getCompras().add(compra);
 		compra.setHistoricoMoneda(this);
 		
 		return compra;
 	}
 	
-	public Compra removeCompra(Compra compra){
+	public Venta removeCompra(Venta compra){
 		getCompras().remove(compra);
 		compra.setHistoricoMoneda(null);
 		

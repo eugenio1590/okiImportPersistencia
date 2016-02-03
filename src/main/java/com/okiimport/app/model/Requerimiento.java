@@ -111,7 +111,7 @@ public class Requerimiento extends AbstractEntity implements Serializable {
 	
 	//bi-directional one-to-many association to Compra
 	@OneToMany(mappedBy="requerimiento", fetch=FetchType.LAZY, cascade=CascadeType.ALL)
-	private List<Compra> compras;
+	private List<Venta> compras;
 
 	public Requerimiento() {
 		detalleRequerimientos = new ArrayList<DetalleRequerimiento>();
@@ -311,22 +311,22 @@ public class Requerimiento extends AbstractEntity implements Serializable {
 		detalleRequerimientos.clear();
 	}
 	
-	public List<Compra> getCompras() {
+	public List<Venta> getCompras() {
 		return compras;
 	}
 
-	public void setCompras(List<Compra> compras) {
+	public void setCompras(List<Venta> compras) {
 		this.compras = compras;
 	}
 	
-	public Compra addCompra(Compra compra){
+	public Venta addCompra(Venta compra){
 		getCompras().add(compra);
 		compra.setRequerimiento(this);
 		
 		return compra;
 	}
 	
-	public Compra removeCompra(Compra compra){
+	public Venta removeCompra(Venta compra){
 		getCompras().remove(compra);
 		compra.setRequerimiento(null);
 		

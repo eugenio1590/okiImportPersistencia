@@ -34,11 +34,11 @@ public class DetalleOferta extends AbstractEntity implements Serializable{
 	@Column(name="id_detalle_oferta")
 	private Integer idDetalleOferta;
 	
-	@Enumerated(EnumType.STRING)
-	private String estatus;
-	
 	@Transient
 	private Boolean aprobado = false;
+	
+	@Enumerated(EnumType.STRING)
+	private String estatus;
 		
 	//bi-directional many-to-one association to Oferta
 	@ManyToOne
@@ -47,8 +47,8 @@ public class DetalleOferta extends AbstractEntity implements Serializable{
 	
 	//bi-directional many-to-one association to Compra
 	@ManyToOne
-	@JoinColumn(name="id_compra")
-	private Compra compra;
+	@JoinColumn(name="id_venta")
+	private Venta venta;
 	
 	//bi-directional many-to-one association to DetalleCotizacion
 	@ManyToOne
@@ -90,12 +90,12 @@ public class DetalleOferta extends AbstractEntity implements Serializable{
 		this.oferta = oferta;
 	}
 	
-	public Compra getCompra() {
-		return compra;
+	public Venta getVenta() {
+		return venta;
 	}
 
-	public void setCompra(Compra compra) {
-		this.compra = compra;
+	public void setVenta(Venta venta) {
+		this.venta = venta;
 	}
 
 	public DetalleCotizacion getDetalleCotizacion() {

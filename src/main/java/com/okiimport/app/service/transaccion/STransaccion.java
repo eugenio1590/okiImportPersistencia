@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.okiimport.app.service.configuracion.SControlUsuario;
 import com.okiimport.app.service.maestros.SMaestros;
-import com.okiimport.app.model.Compra;
+import com.okiimport.app.model.Venta;
 import com.okiimport.app.model.Cotizacion;
 import com.okiimport.app.model.DetalleCotizacion;
 import com.okiimport.app.model.DetalleCotizacionInternacional;
@@ -145,17 +145,17 @@ public interface STransaccion {
 	
 	//Compras
 	@Transactional(readOnly=true)
-	Map<String, Object> consultarComprasPorRequerimiento(Compra compraF, int idRequerimiento, String fieldSort, Boolean sortDirection,
+	Map<String, Object> consultarComprasPorRequerimiento(Venta compraF, int idRequerimiento, String fieldSort, Boolean sortDirection,
 			int pagina, int limite);
 	
 	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
-	Compra registrarOActualizarCompra(Compra compra);
+	Venta registrarOActualizarCompra(Venta compra);
 	
 	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
-	Compra registrarSolicitudCompra(Compra compra);
+	Venta registrarSolicitudCompra(Venta compra);
 	
 	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
-	Compra registrarCompra(Compra compra, Requerimiento requerimiento, boolean cambiarEstatus);
+	Venta registrarCompra(Venta compra, Requerimiento requerimiento, boolean cambiarEstatus);
 	
 	//DetalleCompra
 	@Transactional(readOnly=true)

@@ -14,14 +14,14 @@ import javax.persistence.criteria.Root;
 
 import org.springframework.data.jpa.domain.Specification;
 
-import com.okiimport.app.model.Compra;
+import com.okiimport.app.model.Venta;
 import com.okiimport.app.resource.dao.AbstractJpaDao;
 
-public class CompraDAO extends AbstractJpaDao<Compra> {
+public class CompraDAO extends AbstractJpaDao<Venta> {
 
-	public Specification<Compra> consultarComprasPorRequerimiento(final Compra compraF, final int idRequerimiento){
-		return new Specification<Compra>(){
-			public Predicate toPredicate(Root<Compra> entity, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+	public Specification<Venta> consultarComprasPorRequerimiento(final Venta compraF, final int idRequerimiento){
+		return new Specification<Venta>(){
+			public Predicate toPredicate(Root<Venta> entity, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
 				//1. Inicializar Variables
 				inicializar(entity, criteriaQuery, criteriaBuilder);
 				
@@ -47,7 +47,7 @@ public class CompraDAO extends AbstractJpaDao<Compra> {
 	}
 	
 	/**METODOS PRIVADOS DE LA CLASE*/
-	private void agregarFiltros(Compra compraF, List<Predicate> restricciones) {
+	private void agregarFiltros(Venta compraF, List<Predicate> restricciones) {
 		// TODO Auto-generated method stub
 		
 	}

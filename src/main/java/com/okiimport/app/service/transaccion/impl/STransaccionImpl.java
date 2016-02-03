@@ -31,7 +31,7 @@ import com.okiimport.app.dao.transaccion.impl.RequerimientoDAO;
 import com.okiimport.app.dao.transaccion.impl.detalle.cotizacion.DetalleCotizacionDAO;
 import com.okiimport.app.dao.transaccion.impl.detalle.cotizacion.DetalleCotizacionInternacionalDAO;
 import com.okiimport.app.model.Analista;
-import com.okiimport.app.model.Compra;
+import com.okiimport.app.model.Venta;
 import com.okiimport.app.model.Cotizacion;
 import com.okiimport.app.model.DetalleCotizacion;
 import com.okiimport.app.model.DetalleCotizacionInternacional;
@@ -786,16 +786,16 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	}
 
 	//Compras
-	public Map<String, Object> consultarComprasPorRequerimiento(Compra compraF, int idRequerimiento, String fieldSort, Boolean sortDirection,
+	public Map<String, Object> consultarComprasPorRequerimiento(Venta compraF, int idRequerimiento, String fieldSort, Boolean sortDirection,
 			int page, int limit) {
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		Integer total = 0;
-		List<Compra> compras = null;
+		List<Venta> compras = null;
 		Sort sortCompra = new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idCompra"));
-		Specification<Compra> specfCompra = (new CompraDAO()).consultarComprasPorRequerimiento(compraF, idRequerimiento);
+		Specification<Venta> specfCompra = (new CompraDAO()).consultarComprasPorRequerimiento(compraF, idRequerimiento);
 		
 		if(limit>0){
-			Page<Compra> pageCompra = this.compraRepository.findAll(specfCompra, new PageRequest(page, limit, sortCompra));
+			Page<Venta> pageCompra = this.compraRepository.findAll(specfCompra, new PageRequest(page, limit, sortCompra));
 			total = Long.valueOf(pageCompra.getTotalElements()).intValue();
 			compras = pageCompra.getContent();
 		}
@@ -809,19 +809,19 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		return parametros;
 	}
 	
-	public Compra registrarOActualizarCompra(Compra compra){
+	public Venta registrarOActualizarCompra(Venta compra){
 		if(compra.getIdCompra()==null)
 			compra.setFechaCreacion(new Timestamp(this.calendar.getTime().getTime()));
 			
 		return compra=this.compraRepository.save(compra);
 	}
 	
-	public Compra registrarSolicitudCompra(Compra compra) {
+	public Venta registrarSolicitudCompra(Venta compra) {
 		compra.setEstatus(EEstatusCompra.SOLICITADA);
 		return registrarOActualizarCompra(compra);
 	}
 	
-	public Compra registrarCompra(Compra compra, Requerimiento requerimiento,  boolean cambiarEstatus) {
+	public Venta registrarCompra(Venta compra, Requerimiento requerimiento,  boolean cambiarEstatus) {
 		if(cambiarEstatus)
 			requerimiento.setEstatus((compra.getTipoFlete()) 
 					? EEstatusRequerimiento.CONCRETADO : EEstatusRequerimiento.COMPRADO); 

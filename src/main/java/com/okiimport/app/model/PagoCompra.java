@@ -40,7 +40,7 @@ public class PagoCompra extends AbstractEntity implements Serializable{
 	//bi-directional one-to-one association to Compra
 	@OneToOne
 	@JoinColumn(name="id_compra")
-	private Compra compra;
+	private Venta compra;
 	
 	//bi-directional many-to-one association to Persona
 	@ManyToOne
@@ -108,11 +108,11 @@ public class PagoCompra extends AbstractEntity implements Serializable{
 		this.estatus = estatus;
 	}
 
-	public Compra getCompra() {
+	public Venta getCompra() {
 		return compra;
 	}
 
-	public void setCompra(Compra compra) {
+	public void setCompra(Venta compra) {
 		this.compra = compra;
 	}
 	

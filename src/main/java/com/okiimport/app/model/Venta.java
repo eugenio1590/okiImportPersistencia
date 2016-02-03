@@ -13,21 +13,21 @@ import com.okiimport.app.model.enumerados.EEstatusRequerimiento;
 import com.okiimport.app.resource.model.AbstractEntity;
 
 /**
- * The persistent class for the compra database table.
+ * The persistent class for the venta database table.
  * 
  */
 @Entity
-@Table(name="compra")
-@NamedQuery(name="Compra.findAll", query="SELECT c FROM Compra c")
+@Table(name="venta")
+@NamedQuery(name="Venta.findAll", query="SELECT v FROM Venta v")
 @JsonIgnoreProperties({"detalleOfertas"})
-public class Compra extends AbstractEntity implements Serializable {
+public class Venta extends AbstractEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="compra_id_seq")
-	@SequenceGenerator(name="compra_id_seq", sequenceName="compra_id_seq", initialValue=1, allocationSize=1)
-	@Column(name="id_compra")
-	private Integer idCompra;
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="venta_id_seq")
+	@SequenceGenerator(name="venta_id_seq", sequenceName="venta_id_seq", initialValue=1, allocationSize=1)
+	@Column(name="id_venta")
+	private Integer idventa;
 	
 	@Column(name="fecha_creacion")
 	private Date fechaCreacion;
@@ -47,8 +47,8 @@ public class Compra extends AbstractEntity implements Serializable {
 	private EEstatusCompra estatus;
 	
 	//bi-directional one-to-one association to FormaPago
-	@OneToOne(mappedBy="compra")
-	private PagoCompra pagoCompra;
+	@OneToOne(mappedBy="venta")
+	private Pago pago;
 	
 	//bi-directional many-to-one association to Requerimiento
 	@ManyToOne
@@ -61,23 +61,23 @@ public class Compra extends AbstractEntity implements Serializable {
 	private HistoricoMoneda historicoMoneda;
 	
 	//bi-directional one-to-many association to DetalleOferta
-	@OneToMany(mappedBy="compra", fetch=FetchType.LAZY)
+	@OneToMany(mappedBy="venta", fetch=FetchType.LAZY)
 	private List<DetalleOferta> detalleOfertas;
 
-	public Compra() {
+	public Venta() {
 	}
 	
-	public Compra(Requerimiento requerimiento, Date fechaCreacion){
+	public Venta(Requerimiento requerimiento, Date fechaCreacion){
 		this.requerimiento = requerimiento;
 		this.fechaCreacion = new Timestamp(fechaCreacion.getTime());
 	}
 
-	public Integer getIdCompra() {
-		return idCompra;
+	public Integer getIdVenta() {
+		return idVenta;
 	}
 
-	public void setIdCompra(Integer idCompra) {
-		this.idCompra = idCompra;
+	public void setIdVenta(Integer idVenta) {
+		this.idVenta = idVenta;
 	}
 
 	public Date getFechaCreacion() {
@@ -130,12 +130,12 @@ public class Compra extends AbstractEntity implements Serializable {
 		this.estatus = estatus;
 	}
 
-	public PagoCompra getPagoCompra() {
-		return pagoCompra;
+	public Pago getPago() {
+		return pago;
 	}
 
-	public void setPagoCompra(PagoCompra pagoCompra) {
-		this.pagoCompra = pagoCompra;
+	public void setPago(Pago pago) {
+		this.pago = pago;
 	}
 
 	public Requerimiento getRequerimiento() {
@@ -164,14 +164,14 @@ public class Compra extends AbstractEntity implements Serializable {
 	
 	public DetalleOferta addDetalleOferta(DetalleOferta detalleOferta){
 		getDetalleOfertas().add(detalleOferta);
-		detalleOferta.setCompra(this);
+		detalleOferta.setVenta(this);
 		
 		return detalleOferta;
 	}
 	
 	public DetalleOferta removeDetalleOferta(DetalleOferta detalleOferta){
 		getDetalleOfertas().remove(detalleOferta);
-		detalleOferta.setCompra(null);
+		detalleOferta.setVenta(null);
 		
 		return detalleOferta;
 	}
