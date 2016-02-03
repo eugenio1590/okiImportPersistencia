@@ -8,7 +8,7 @@ import java.util.List;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.okiimport.app.model.enumerados.EEstatusCompra;
+import com.okiimport.app.model.enumerados.EEstatusVenta;
 import com.okiimport.app.model.enumerados.EEstatusRequerimiento;
 import com.okiimport.app.resource.model.AbstractEntity;
 
@@ -27,7 +27,7 @@ public class Venta extends AbstractEntity implements Serializable {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="venta_id_seq")
 	@SequenceGenerator(name="venta_id_seq", sequenceName="venta_id_seq", initialValue=1, allocationSize=1)
 	@Column(name="id_venta")
-	private Integer idventa;
+	private Integer idVenta;
 	
 	@Column(name="fecha_creacion")
 	private Date fechaCreacion;
@@ -44,7 +44,7 @@ public class Venta extends AbstractEntity implements Serializable {
 	private String observacion;
 	
 	@Enumerated(EnumType.STRING)
-	private EEstatusCompra estatus;
+	private EEstatusVenta estatus;
 	
 	//bi-directional one-to-one association to FormaPago
 	@OneToOne(mappedBy="venta")
@@ -122,11 +122,11 @@ public class Venta extends AbstractEntity implements Serializable {
 
 	
 
-	public EEstatusCompra getEstatus() {
+	public EEstatusVenta getEstatus() {
 		return estatus;
 	}
 
-	public void setEstatus(EEstatusCompra estatus) {
+	public void setEstatus(EEstatusVenta estatus) {
 		this.estatus = estatus;
 	}
 
@@ -185,15 +185,15 @@ public class Venta extends AbstractEntity implements Serializable {
 
 	/**METODOS PROPIOS DE LA CLASE*/
 	public String determinarEstatus(){
-		if(this.estatus.equals(EEstatusCompra.SOLICITADA))
+		if(this.estatus.equals(EEstatusVenta.SOLICITADA))
 			return "Solicitud de Pedido";
-		else if(this.estatus.equals(EEstatusCompra.ENVIADA))
+		else if(this.estatus.equals(EEstatusVenta.ENVIADA))
 			return "Compra Realizada y Enviada a Proveedores";
 		return null;
 	}
 	
 	public boolean registrar(){
-		return (this.estatus.equals(EEstatusCompra.ENVIADA) && this.requerimiento.getEstatus().equals(EEstatusRequerimiento.CONCRETADO));
+		return (this.estatus.equals(EEstatusVenta.ENVIADA) && this.requerimiento.getEstatus().equals(EEstatusRequerimiento.CONCRETADO));
 	}
 	
 	public Float calcularTotal(){

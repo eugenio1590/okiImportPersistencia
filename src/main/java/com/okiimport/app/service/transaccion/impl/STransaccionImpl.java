@@ -16,7 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
-import com.okiimport.app.dao.transaccion.CompraRepository;
+import com.okiimport.app.dao.transaccion.VentaRepository;
 import com.okiimport.app.dao.transaccion.CotizacionRepository;
 import com.okiimport.app.dao.transaccion.OfertaRepository;
 import com.okiimport.app.dao.transaccion.RequerimientoRepository;
@@ -24,7 +24,7 @@ import com.okiimport.app.dao.transaccion.detalle.cotizacion.DetalleCotizacionInt
 import com.okiimport.app.dao.transaccion.detalle.cotizacion.DetalleCotizacionRepository;
 import com.okiimport.app.dao.transaccion.detalle.oferta.DetalleOfertaRepository;
 import com.okiimport.app.dao.transaccion.detalle.requerimiento.DetalleRequerimientoRepository;
-import com.okiimport.app.dao.transaccion.impl.CompraDAO;
+import com.okiimport.app.dao.transaccion.impl.VentaDAO;
 import com.okiimport.app.dao.transaccion.impl.CotizacionDAO;
 import com.okiimport.app.dao.transaccion.impl.OfertaDAO;
 import com.okiimport.app.dao.transaccion.impl.RequerimientoDAO;
@@ -40,7 +40,7 @@ import com.okiimport.app.model.DetalleRequerimiento;
 import com.okiimport.app.model.Oferta;
 import com.okiimport.app.model.Proveedor;
 import com.okiimport.app.model.Requerimiento;
-import com.okiimport.app.model.enumerados.EEstatusCompra;
+import com.okiimport.app.model.enumerados.EEstatusVenta;
 import com.okiimport.app.model.enumerados.EEstatusCotizacion;
 import com.okiimport.app.model.enumerados.EEstatusDetalleRequerimiento;
 import com.okiimport.app.model.enumerados.EEstatusOferta;
@@ -78,7 +78,7 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	private DetalleOfertaRepository detalleOfertaRepository;
 	
 	@Autowired
-	private CompraRepository compraRepository;
+	private VentaRepository ventaRepository;
 
 	public STransaccionImpl() {
 		super();
@@ -765,18 +765,18 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		return detalleOfertaRepository.findByOferta(oferta);
 	}
 	
-	public Map<String, Object> consultarSolicitudesCompraProveedor(Requerimiento requerimiento, Proveedor proveedor, int page, int limit){
+	public Map<String, Object> consultarSolicitudesVentaProveedor(Requerimiento requerimiento, Proveedor proveedor, int page, int limit){
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		Integer total = 0;
 		List<DetalleOferta> detallesOferta = null;
 		
 		if(limit>0){
-			Page<DetalleOferta> pageDetalle = detalleOfertaRepository.findByCompraRequerimientoAndDetalleCotizacion_Cotizacion_Proveedor(requerimiento, proveedor, new PageRequest(0, 1));
+			Page<DetalleOferta> pageDetalle = detalleOfertaRepository.findByVentaRequerimientoAndDetalleCotizacion_Cotizacion_Proveedor(requerimiento, proveedor, new PageRequest(0, 1));
 			total = Long.valueOf(pageDetalle.getTotalElements()).intValue();
 			detallesOferta = pageDetalle.getContent();
 		}
 		else {
-			detallesOferta = detalleOfertaRepository.findByCompraRequerimientoAndDetalleCotizacion_Cotizacion_Proveedor(requerimiento, proveedor);
+			detallesOferta = detalleOfertaRepository.findByVentaRequerimientoAndDetalleCotizacion_Cotizacion_Proveedor(requerimiento, proveedor);
 			total = detallesOferta.size();
 		}
 		
@@ -785,81 +785,81 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		return parametros;
 	}
 
-	//Compras
-	public Map<String, Object> consultarComprasPorRequerimiento(Venta compraF, int idRequerimiento, String fieldSort, Boolean sortDirection,
+	//Ventas
+	public Map<String, Object> consultarVentaPorRequerimiento(Venta ventaF, int idRequerimiento, String fieldSort, Boolean sortDirection,
 			int page, int limit) {
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		Integer total = 0;
-		List<Venta> compras = null;
-		Sort sortCompra = new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idCompra"));
-		Specification<Venta> specfCompra = (new CompraDAO()).consultarComprasPorRequerimiento(compraF, idRequerimiento);
+		List<Venta> ventas = null;
+		Sort sortVenta = new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idVenta"));
+		Specification<Venta> specfVenta = (new VentaDAO()).consultarVentaPorRequerimiento(ventaF, idRequerimiento);
 		
 		if(limit>0){
-			Page<Venta> pageCompra = this.compraRepository.findAll(specfCompra, new PageRequest(page, limit, sortCompra));
-			total = Long.valueOf(pageCompra.getTotalElements()).intValue();
-			compras = pageCompra.getContent();
+			Page<Venta> pageVenta = this.ventaRepository.findAll(specfVenta, new PageRequest(page, limit, sortVenta));
+			total = Long.valueOf(pageVenta.getTotalElements()).intValue();
+			ventas = pageVenta.getContent();
 		}
 		else {
-			compras = this.compraRepository.findAll(specfCompra, sortCompra);
-			total = compras.size();
+			ventas = this.ventaRepository.findAll(specfVenta, sortVenta);
+			total = ventas.size();
 		}
 		
 		parametros.put("total", total);
-		parametros.put("compras", compras);
+		parametros.put("ventas", ventas);
 		return parametros;
 	}
 	
-	public Venta registrarOActualizarCompra(Venta compra){
-		if(compra.getIdCompra()==null)
-			compra.setFechaCreacion(new Timestamp(this.calendar.getTime().getTime()));
+	public Venta registrarOActualizarVenta(Venta venta){
+		if(venta.getIdVenta()==null)
+			venta.setFechaCreacion(new Timestamp(this.calendar.getTime().getTime()));
 			
-		return compra=this.compraRepository.save(compra);
+		return venta=this.ventaRepository.save(venta);
 	}
 	
-	public Venta registrarSolicitudCompra(Venta compra) {
-		compra.setEstatus(EEstatusCompra.SOLICITADA);
-		return registrarOActualizarCompra(compra);
+	public Venta registrarSolicitudVenta(Venta venta) {
+		venta.setEstatus(EEstatusVenta.SOLICITADA);
+		return registrarOActualizarVenta(venta);
 	}
 	
-	public Venta registrarCompra(Venta compra, Requerimiento requerimiento,  boolean cambiarEstatus) {
+	public Venta registrarVenta(Venta venta, Requerimiento requerimiento,  boolean cambiarEstatus) {
 		if(cambiarEstatus)
-			requerimiento.setEstatus((compra.getTipoFlete()) 
+			requerimiento.setEstatus((venta.getTipoFlete()) 
 					? EEstatusRequerimiento.CONCRETADO : EEstatusRequerimiento.COMPRADO); 
 		actualizarRequerimiento(requerimiento);
-		List<DetalleOferta> detalleCompra = compra.getDetalleOfertas();
-		compra.setDetalleOfertas(null);
-		compra.setEstatus(EEstatusCompra.ENVIADA);
-		compra = registrarOActualizarCompra(compra);
-		if(detalleCompra!=null && !detalleCompra.isEmpty()){
-			for(DetalleOferta detalle : detalleCompra){
+		List<DetalleOferta> detalleVenta = venta.getDetalleOfertas();
+		venta.setDetalleOfertas(null);
+		venta.setEstatus(EEstatusVenta.ENVIADA);
+		venta = registrarOActualizarVenta(venta);
+		if(detalleVenta!=null && !detalleVenta.isEmpty()){
+			for(DetalleOferta detalle : detalleVenta){
 				detalle = detalleOfertaRepository.findOne(detalle.getIdDetalleOferta());
-				detalle.setCompra(compra);
+				detalle.setVenta(venta);
 				detalleOfertaRepository.save(detalle);
 			}
 		}
-		compra.setDetalleOfertas(detalleCompra);
-		return compra;
+		venta.setDetalleOfertas(detalleVenta);
+		return venta;
 	}
 
-	//DetalleCompra
-	public Map<String, Object> consultarDetallesCompra(int idCompra, String fieldSort, Boolean sortDirection, 
+	//DetalleVenta
+	public Map<String, Object> consultarDetallesVenta(int idVenta, String fieldSort, Boolean sortDirection, 
 			int page, int limit) {
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		Integer total = 0;
-		List<DetalleOferta> detallesCompra = null;
-		Sort sortCompra = new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idDetalleOferta"));	
+		List<DetalleOferta> detallesVenta = null;
+		Sort sortVenta = new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idDetalleOferta"));	
 		if(limit>0){
-			Page<DetalleOferta> pageDetallesCompra = this.detalleOfertaRepository
-					.findByCompra_IdCompra(idCompra, new PageRequest(page, limit, sortCompra));
-			total = Long.valueOf(pageDetallesCompra.getTotalElements()).intValue();
-			detallesCompra = pageDetallesCompra.getContent();
+			Page<DetalleOferta> pageDetallesVenta = this.detalleOfertaRepository
+					.findByVenta_IdVenta(idVenta, new PageRequest(page, limit, sortVenta));
+			total = Long.valueOf(pageDetallesVenta.getTotalElements()).intValue();
+			detallesVenta = pageDetallesVenta.getContent();
 		}
 		else {
-			detallesCompra = this.detalleOfertaRepository.findByCompra_IdCompra(idCompra, sortCompra);
-			total = detallesCompra.size();
+			detallesVenta = this.detalleOfertaRepository.findByVenta_IdVenta(idVenta, sortVenta);
+			total = detallesVenta.size();
 		}
 		parametros.put("total", total);
-		parametros.put("detallesCompra", detallesCompra);
+		parametros.put("detallesVenta", detallesVenta);
 		return parametros;
 	}
 

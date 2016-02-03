@@ -16,8 +16,8 @@ import com.okiimport.app.resource.dao.IGenericJPARepository;
 @Repository
 public interface DetalleOfertaRepository extends IGenericJPARepository<DetalleOferta, Integer> {
 	List<DetalleOferta> findByOferta(Oferta oferta);
-	List<DetalleOferta> findByCompra_IdCompra(Integer idCompra, Sort sort);
-	Page<DetalleOferta> findByCompra_IdCompra(Integer idCompra, Pageable pageable);
-	List<DetalleOferta> findByCompraRequerimientoAndDetalleCotizacion_Cotizacion_Proveedor(Requerimiento requerimiento, Proveedor proveedor);
-	Page<DetalleOferta> findByCompraRequerimientoAndDetalleCotizacion_Cotizacion_Proveedor(Requerimiento requerimiento, Proveedor proveedor, Pageable pageable);
+	List<DetalleOferta> findByVenta_IdVenta(Integer idVenta, Sort sort);
+	Page<DetalleOferta> findByVenta_IdVenta(Integer idVenta, Pageable pageable);
+	List<DetalleOferta> findByVentaRequerimientoAndDetalleCotizacion_Cotizacion_Proveedor(Requerimiento requerimiento, Proveedor proveedor);
+	Page<DetalleOferta> findByVentaRequerimientoAndDetalleCotizacion_Cotizacion_Proveedor(Requerimiento requerimiento, Proveedor proveedor, Pageable pageable);
 }

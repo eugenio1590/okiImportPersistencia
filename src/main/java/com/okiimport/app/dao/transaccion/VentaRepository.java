@@ -6,6 +6,6 @@ import com.okiimport.app.model.Venta;
 import com.okiimport.app.resource.dao.IGenericJPARepository;
 
 @Repository
-public interface CompraRepository extends IGenericJPARepository<Venta, Integer> {
+public interface VentaRepository extends IGenericJPARepository<Venta, Integer> {
 
 }

@@ -17,9 +17,9 @@ import org.springframework.data.jpa.domain.Specification;
 import com.okiimport.app.model.Venta;
 import com.okiimport.app.resource.dao.AbstractJpaDao;
 
-public class CompraDAO extends AbstractJpaDao<Venta> {
+public class VentaDAO extends AbstractJpaDao<Venta> {
 
-	public Specification<Venta> consultarComprasPorRequerimiento(final Venta compraF, final int idRequerimiento){
+	public Specification<Venta> consultarVentaPorRequerimiento(final Venta ventaF, final int idRequerimiento){
 		return new Specification<Venta>(){
 			public Predicate toPredicate(Root<Venta> entity, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
 				//1. Inicializar Variables
@@ -38,7 +38,7 @@ public class CompraDAO extends AbstractJpaDao<Venta> {
 								idRequerimiento)
 				);
 				
-				agregarFiltros(compraF, restricciones);
+				agregarFiltros(ventaF, restricciones);
 				
 				// 4. Ejecutamos				
 				return crearPredicate(restricciones);
@@ -47,7 +47,7 @@ public class CompraDAO extends AbstractJpaDao<Venta> {
 	}
 	
 	/**METODOS PRIVADOS DE LA CLASE*/
-	private void agregarFiltros(Venta compraF, List<Predicate> restricciones) {
+	private void agregarFiltros(Venta ventaF, List<Predicate> restricciones) {
 		// TODO Auto-generated method stub
 		
 	}

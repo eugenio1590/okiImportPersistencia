@@ -1,9 +1,9 @@
 package com.okiimport.app.model.enumerados;
 
-public enum EEstatusCompra {
+public enum EEstatusVenta {
 
 	SOLICITADA ("SO", "Solicitud de Pedido"),
-	ENVIADA("EN", "Compra Realizada y Enviada a Proveedores"),
+	ENVIADA("EN", "Venta Realizada y Enviada a Proveedores"),
 	PAGADA ("PA", "Pagada"),
 	RECHAZADA("RE", "Rechazada"),
 	EN_ESPERA("ES", "En Espera"),
@@ -15,7 +15,7 @@ public enum EEstatusCompra {
 	private String value;
 	private String nombre;
 	
-	EEstatusCompra(String value, String nombre){
+	EEstatusVenta(String value, String nombre){
 		this.value = value;
 		this.nombre = nombre;
 	}
