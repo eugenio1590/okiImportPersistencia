@@ -81,8 +81,6 @@ public class DetalleRequerimiento extends AbstractEntity implements Serializable
 		this.codigoOem = codigoOem;
 	}
 
-	
-
 	public EEstatusDetalleRequerimiento getEstatus() {
 		return estatus;
 	}
@@ -130,13 +128,29 @@ public class DetalleRequerimiento extends AbstractEntity implements Serializable
 	public void setDetalleCotizacions(List<DetalleCotizacion> detalleCotizacions) {
 		this.detalleCotizacions = detalleCotizacions;
 	}
+	
+	/**METODOS OVERRIDE*/
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof DetalleRequerimiento)
+			return this.getIdDetalleRequerimiento().equals(((DetalleRequerimiento) obj).getIdDetalleRequerimiento());
+		else
+			return super.equals(obj);
+	}
+
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		//return super.hashCode();
+		return this.getIdDetalleRequerimiento();
+	}
 
 	/**METODOS PROPIOS DE LA CLASE*/
 	@Transient
 	public boolean fotoVacia(){
 		return (foto==null);
 	}
-	
+
 	@Transient
 	public String getFoto64(){
 		return decodificarImagen(foto);
