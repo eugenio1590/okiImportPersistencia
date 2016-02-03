@@ -21,7 +21,7 @@ import com.okiimport.app.resource.model.AbstractEntity;
 @Table(name="oferta")
 @NamedQuery(name="Oferta.findAll", query="SELECT o FROM Oferta o")
 @JsonIgnoreProperties({"detalleOfertas"})
-public class Oferta extends AbstractEntity implements Serializable{
+public class Oferta extends AbstractEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id

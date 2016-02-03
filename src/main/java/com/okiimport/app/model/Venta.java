@@ -46,9 +46,10 @@ public class Venta extends AbstractEntity implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private EEstatusVenta estatus;
 	
-	//bi-directional one-to-one association to FormaPago
-	@OneToOne(mappedBy="venta")
-	private Pago pago;
+	//bi-directional one-to-one association to PagoCliente
+	@OneToOne
+	@JoinColumn(name="id_pago_cliente")
+	private PagoCliente pagoCliente;
 	
 	//bi-directional many-to-one association to Requerimiento
 	@ManyToOne
@@ -119,9 +120,7 @@ public class Venta extends AbstractEntity implements Serializable {
 	public void setObservacion(String observacion) {
 		this.observacion = observacion;
 	}
-
 	
-
 	public EEstatusVenta getEstatus() {
 		return estatus;
 	}
@@ -130,12 +129,12 @@ public class Venta extends AbstractEntity implements Serializable {
 		this.estatus = estatus;
 	}
 
-	public Pago getPago() {
-		return pago;
+	public PagoCliente getPagoCliente() {
+		return pagoCliente;
 	}
 
-	public void setPago(Pago pago) {
-		this.pago = pago;
+	public void setPagoCliente(PagoCliente pagoCliente) {
+		this.pagoCliente = pagoCliente;
 	}
 
 	public Requerimiento getRequerimiento() {

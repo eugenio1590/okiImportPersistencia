@@ -1,14 +1,26 @@
 package com.okiimport.app.model;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.okiimport.app.model.factory.persona.EstatusPersonaFactory;
-import com.okiimport.app.model.factory.persona.EstatusPersonaFactory.IEstatusPersona;
 import com.okiimport.app.resource.model.AbstractEntity;
 
 
@@ -16,88 +28,69 @@ import com.okiimport.app.resource.model.AbstractEntity;
  * The persistent class for the pago database table.
  * 
  */
-
 @Entity
 @Table(name="pago")
 @NamedQuery(name="Pago.findAll", query="SELECT p FROM Pago p")
 @Inheritance(strategy=InheritanceType.JOINED)
 @DiscriminatorColumn(name="pago_type")
-
-
-@JsonIgnoreProperties({"", "", ""}) //Duda
-
-
+@JsonIgnoreProperties({"depositos"})
 public abstract class Pago extends AbstractEntity implements Serializable {
-
+	private static final long serialVersionUID = 1L;
 	
-private static final long serialVersionUID = 1L;
-	
-//Secuencia
-    
+	@Id
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="persona_id_seq")
+	@SequenceGenerator(name="pago_id_seq", sequenceName="pago_id_seq", initialValue=1, allocationSize=1)
+	@Column(name="id", unique=true, nullable=false)
+	protected Integer id;
 
-protected Integer idPago;
+	protected Date fechaCreacion;
 
-protected Timestamp fechaCreacion;
+	protected Date fechaPago;
 
-protected Timestamp fechaPago;
+	private Float monto;
 
-private Float monto;
+	protected String Descripcion; 
 
-protected String Descripcion; 
+	protected String estatus;
 
-protected String estatus;
-
-	
- //duda con esta relacion bidireccional con Compra
-
-
-
-	//bi-directional one-to-one association to Compra
-	@OneToOne
-	@JoinColumn(name="id_compra")
-	protected Venta compra;
-	
-	
 	//bi-directional many-to-one association to FormaPago
 	@ManyToOne
 	@JoinColumn(name="id_forma_pago")
 	protected FormaPago formaPago;
-	
+
 	//bi-directional many-to-one association to Banco
 	@ManyToOne
 	@JoinColumn(name="id_banco")
 	protected Banco banco;
-	
-	//bi-directional many-to-one association to Deposito
-	@ManyToOne
-	@JoinColumn(name="id_deposito")
-	private Deposito deposito;
-	
+
+	//bi-directional one-to-many association to Deposito
+	@OneToMany(mappedBy="pago", fetch=FetchType.LAZY)
+	private List<Deposito> depositos;
 
 	public Pago() {
 	}
 
-	public Integer getIdPago() {
-		return idPago;
+	public Integer getId() {
+		return id;
 	}
-
-	public void setIdPago(Integer idPago) {
-		this.idPago = idPago;
+	
+	public void setId(Integer id) {
+		this.id = id;
 	}
-
-	public Timestamp getFechaCreacion() {
+	
+	public Date getFechaCreacion() {
 		return fechaCreacion;
 	}
 
-	public void setFechaCreacion(Timestamp fechaCreacion) {
+	public void setFechaCreacion(Date fechaCreacion) {
 		this.fechaCreacion = fechaCreacion;
 	}
 
-	public Timestamp getFechaPago() {
+	public Date getFechaPago() {
 		return fechaPago;
 	}
 
-	public void setFechaPago(Timestamp fechaPago) {
+	public void setFechaPago(Date fechaPago) {
 		this.fechaPago = fechaPago;
 	}
 
@@ -125,14 +118,6 @@ protected String estatus;
 		this.estatus = estatus;
 	}
 
-	public Venta getCompra() {
-		return compra;
-	}
-
-	public void setCompra(Venta compra) {
-		this.compra = compra;
-	}
-	
 	public FormaPago getFormaPago() {
 		return formaPago;
 	}
@@ -149,12 +134,25 @@ protected String estatus;
 		this.banco = banco;
 	}
 
-	public Deposito getDeposito() {
-		return deposito;
+	public List<Deposito> getDepositos() {
+		return depositos;
 	}
 
-	public void setDeposito(Deposito deposito) {
-		this.deposito = deposito;
+	public void setDepositos(List<Deposito> depositos) {
+		this.depositos = depositos;
+	}
+
+	public Deposito addDeposito(Deposito deposito){
+		getDepositos().add(deposito);
+		deposito.setPago(this);
+		
+		return deposito;
 	}
 	
+	public Deposito removeDeposito(Deposito deposito){
+		getDepositos().remove(deposito);
+		deposito.setPago(null);
+		
+		return deposito;
+	}
 }

@@ -28,10 +28,12 @@ public class FormaPago extends AbstractEntity implements Serializable {
 	
 	private String nombre;
 	
+	private String url;
+	
 	@Enumerated(EnumType.STRING)
 	private EEstatusFormaPago estatus;
 	
-	//bi-directional one-to-many association to PagoCompra
+	//bi-directional one-to-many association to Pago
 	@OneToMany(mappedBy="formaPago", fetch=FetchType.LAZY)
 	private List<Pago> pago;
 	
@@ -48,6 +50,14 @@ public class FormaPago extends AbstractEntity implements Serializable {
 
 	public String getNombre() {
 		return nombre;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 	public void setNombre(String nombre) {

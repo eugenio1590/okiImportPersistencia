@@ -1,13 +1,19 @@
 package com.okiimport.app.model;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
-import java.util.List;
+import java.util.Date;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.okiimport.app.model.enumerados.EEstatusGeneral;
 import com.okiimport.app.resource.model.AbstractEntity;
 
 /**
@@ -17,31 +23,30 @@ import com.okiimport.app.resource.model.AbstractEntity;
 @Entity
 @Table(name="deposito")
 @NamedQuery(name="Deposito.findAll", query="SELECT d FROM Deposito d")
-@JsonIgnoreProperties({""})
-
 public class Deposito extends AbstractEntity implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	//@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="deposito_id_seq")
-	//@SequenceGenerator(name="deposito_id_seq", sequenceName="deposito_id_seq", initialValue=1, allocationSize=1)
-	
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="deposito_id_seq")
+	@SequenceGenerator(name="deposito_id_seq", sequenceName="deposito_id_seq", initialValue=1, allocationSize=1)
 	@Column(name="id_deposito")
 	private Integer idDeposito;
 	
-	private String numDeposito;
+	private String numero;
 	
 	private String descripcion;
 	
 	private Float monto;
 	
-	private Timestamp fechaDeposito;
+	@Column(name="fecha_deposito")
+	private Date fechaDeposito;
 	
     private String estatus;
 	
-	//bi-directional one-to-many association to Deposito
-	@OneToMany(mappedBy="deposito", fetch=FetchType.LAZY)
-	private List<Pago> pago;
+	//bi-directional many-to-one association to Pago
+	@ManyToOne
+	@JoinColumn(name="id_pago")
+	private Pago pago;
 
 	public Deposito() {
 	}
@@ -54,12 +59,12 @@ public class Deposito extends AbstractEntity implements Serializable{
 		this.idDeposito = idDeposito;
 	}
 
-	public String getNumDeposito() {
-		return numDeposito;
+	public String getNumero() {
+		return numero;
 	}
 
-	public void setNumDeposito(String numDeposito) {
-		this.numDeposito = numDeposito;
+	public void setNumero(String numero) {
+		this.numero = numero;
 	}
 
 	public String getDescripcion() {
@@ -78,11 +83,11 @@ public class Deposito extends AbstractEntity implements Serializable{
 		this.monto = monto;
 	}
 
-	public Timestamp getFechaDeposito() {
+	public Date getFechaDeposito() {
 		return fechaDeposito;
 	}
 
-	public void setFechaDeposito(Timestamp fechaDeposito) {
+	public void setFechaDeposito(Date fechaDeposito) {
 		this.fechaDeposito = fechaDeposito;
 	}
 
@@ -94,26 +99,12 @@ public class Deposito extends AbstractEntity implements Serializable{
 		this.estatus = estatus;
 	}
 
-	public List<Pago> getPago() {
+	public Pago getPago() {
 		return pago;
 	}
 
-	public void setPago(List<Pago> pago) {
+	public void setPago(Pago pago) {
 		this.pago = pago;
-	}
-
-	public Pago addPago(Pago pago){
-		getPago().add(pago);
-		pago.setDeposito(this);
-		
-		return pago;
-	}
-	
-	public Pago removePagoCompra(Pago pago){
-		getPago().remove(pago);
-		pago.setDeposito(null);
-		
-		return pago;
 	}
 	
 }
