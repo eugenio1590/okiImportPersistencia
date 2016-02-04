@@ -111,8 +111,16 @@ public class DetalleOferta extends AbstractEntity implements Serializable{
 	}
 
 	/**METODOS PROPIOS DE LA CLASE*/
+	public Float calcularCosto(){
+		return this.detalleCotizacion.calcularTotal();
+	}
+	
+	public Float calcularCostoConverter(){
+		return this.detalleCotizacion.getCotizacion().getHistoricoMoneda().convert(calcularCosto()).floatValue();
+	}
+	
 	public Float calcularPrecioVenta(){
-		Float costo = this.detalleCotizacion.calcularTotal();
+		Float costo = calcularCosto();
 		Float porctGanancia = this.oferta.getPorctGanancia();
 //		Float costo = (detalleCotizacion instanceof DetalleCotizacion) 
 //				? this.detalleCotizacion.calcularTotal() : 

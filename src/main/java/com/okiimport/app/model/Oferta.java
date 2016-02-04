@@ -52,12 +52,15 @@ public class Oferta extends AbstractEntity implements Serializable{
 	private List<DetalleOferta> detalleOfertasAux;
 	
 	public Oferta() {
+		this.estatus = EEstatusOferta.CREADA;
 		this.detalleOfertas = new ArrayList<DetalleOferta>();
 	}
 	
-	public Oferta(Integer nroOferta){
+	public Oferta(Integer nroOferta, Float porctIva, Float porctGanancia){
 		this();
 		this.nroOferta = nroOferta;
+		this.porctIva = porctIva;
+		this.porctGanancia = porctGanancia;
 	}
 
 	public Oferta(Integer idOferta, Date fechaCreacion, EEstatusOferta estatus) {
@@ -155,7 +158,7 @@ public class Oferta extends AbstractEntity implements Serializable{
 	}
 
 	public boolean enviar(){
-		return this.estatus.equals(EEstatusOferta.SELECCION);
+		return this.estatus.equals(EEstatusOferta.SELECCIONADA);
 	}
 	
 	public void copyDetallesOfertas(){
@@ -167,6 +170,16 @@ public class Oferta extends AbstractEntity implements Serializable{
 			detalleOfertas = new ArrayList<DetalleOferta>(detalleOfertasAux);
 			detalleOfertasAux.clear();
 		}
+	}
+	
+	public Float calcularCosto(){
+		float total = 0;
+		if ( detalleOfertas != null && !detalleOfertas.isEmpty()){
+			for(DetalleOferta detalleOferta : detalleOfertas ){
+				total += detalleOferta.calcularCostoConverter();
+			}
+		}
+		return total;
 	}
 	
 	public Float calcularTotal(){
@@ -182,5 +195,21 @@ public class Oferta extends AbstractEntity implements Serializable{
 	@Transient
 	public boolean isNotEmpty(){
 		return !this.getDetalleOfertas().isEmpty();
+	}
+	
+	@Transient
+	public boolean isAprobar(){
+		boolean aprobar = true;
+		if ( detalleOfertas != null && !detalleOfertas.isEmpty()){
+			for(DetalleOferta detalleOferta : detalleOfertas ){
+				aprobar &= detalleOferta.getAprobado();
+				if(!aprobar)
+					break;
+			}
+		}
+		else
+			aprobar = false;
+		
+		return aprobar;
 	}
 }

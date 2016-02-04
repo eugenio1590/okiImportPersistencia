@@ -693,14 +693,14 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	
 	public Integer consultarCantOfertasCreadasPorRequermiento(int idRequerimiento){
 		List<EEstatusOferta> estatus = new ArrayList<EEstatusOferta>();
-		estatus.add(EEstatusOferta.SELECCION);
+		estatus.add(EEstatusOferta.SELECCIONADA);
 		Specification<Oferta> specfOferta = (new OfertaDAO()).consultarOfertasPorRequerimiento(idRequerimiento, estatus);
 		return Long.valueOf(this.ofertaRepository.count(specfOferta)).intValue();		
 	}
 	
 	public Oferta actualizarOferta(Oferta oferta) {
 		if(oferta.getIdOferta()==null)
-	    	oferta.setEstatus(EEstatusOferta.SELECCION);
+	    	oferta.setEstatus(EEstatusOferta.SELECCIONADA);
 		return oferta = ofertaRepository.save(oferta);
 	}
 	
