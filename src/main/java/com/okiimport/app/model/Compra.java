@@ -43,10 +43,6 @@ public class Compra extends AbstractEntity implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private EEstatusCompra estatus;
 	
-	//bi-directional one-to-one association to FormaPago
-	@OneToOne(mappedBy="compra")
-	private PagoCompra pagoCompra;
-	
 	//bi-directional many-to-one association to Requerimiento
 	@ManyToOne
 	@JoinColumn(name="id_requerimiento")
@@ -117,14 +113,6 @@ public class Compra extends AbstractEntity implements Serializable {
 
 	public void setEstatus(EEstatusCompra estatus) {
 		this.estatus = estatus;
-	}
-
-	public PagoCompra getPagoCompra() {
-		return pagoCompra;
-	}
-
-	public void setPagoCompra(PagoCompra pagoCompra) {
-		this.pagoCompra = pagoCompra;
 	}
 
 	public Requerimiento getRequerimiento() {
