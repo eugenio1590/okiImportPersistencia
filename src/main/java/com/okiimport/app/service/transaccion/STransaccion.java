@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.okiimport.app.service.configuracion.SControlUsuario;
-import com.okiimport.app.service.maestros.SMaestros;
 import com.okiimport.app.model.Compra;
 import com.okiimport.app.model.Cotizacion;
 import com.okiimport.app.model.DetalleCotizacion;
@@ -18,6 +16,8 @@ import com.okiimport.app.model.DetalleRequerimiento;
 import com.okiimport.app.model.Oferta;
 import com.okiimport.app.model.Proveedor;
 import com.okiimport.app.model.Requerimiento;
+import com.okiimport.app.service.configuracion.SControlUsuario;
+import com.okiimport.app.service.maestros.SMaestros;
 
 @Service
 @Transactional
@@ -99,10 +99,7 @@ public interface STransaccion {
 	@Transactional(readOnly=true)
 	Boolean validarProveedorEnCotizaciones(Proveedor proveedor);
 	
-	//Detalle de Cotizaciones
-	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
-	void guardarSeleccionRequerimiento(List<DetalleCotizacion> detalleCotizaciones);
-	
+	//Detalle de Cotizaciones	
 	@Transactional(readOnly=true)
 	Map<String, Object> consultarDetallesCotizacion(DetalleCotizacion detalleF, int idCotizacion,
 			String fieldSort, Boolean sortDirection, int pagina, int limit);

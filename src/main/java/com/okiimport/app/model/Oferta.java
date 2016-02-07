@@ -42,7 +42,8 @@ public class Oferta extends AbstractEntity implements Serializable{
 	@Transient
 	private Float total;
 	
-	@OneToMany(mappedBy="oferta", fetch=FetchType.LAZY)
+	//bi-directional one-to-many association to DetalleOferta
+	@OneToMany(mappedBy="oferta", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<DetalleOferta> detalleOfertas;
 	
 	@Transient
@@ -156,9 +157,19 @@ public class Oferta extends AbstractEntity implements Serializable{
 	public String determinarEstatus(){
 		return (estatus!=null) ? estatus.getNombre() : "";
 	}
-
+	
 	public boolean enviar(){
 		return this.estatus.equals(EEstatusOferta.SELECCIONADA);
+	}
+	
+	@Transient
+	public boolean isCreada(){
+		return this.estatus.equals(EEstatusOferta.CREADA);
+	}
+	
+	@Transient
+	public boolean isInvalida(){
+		return this.estatus.equals(EEstatusOferta.INVALIDA);
 	}
 	
 	public void copyDetallesOfertas(){

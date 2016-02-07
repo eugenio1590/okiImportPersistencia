@@ -116,18 +116,6 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		return this.requerimientoRepository.save(requerimiento);
 	}
 	
-	public void guardarSeleccionRequerimiento(List<DetalleCotizacion> detalleCotizaciones) {
-		Oferta oferta = new Oferta();
-		oferta = actualizarOferta(oferta);
-		for (DetalleCotizacion detalleCotizacion: detalleCotizaciones){
-			DetalleOferta detalleOferta = new DetalleOferta();
-			detalleOferta.setDetalleCotizacion(detalleCotizacion);
-			detalleOferta.setOferta(oferta);
-			//detalleOferta.setEstatus(EEstatusDetalleOferta.SELECCION);
-			this.detalleOfertaRepository.save(detalleOferta);
-		}
-	}
-	
 	public void asignarRequerimiento(Requerimiento requerimiento, SMaestros sMaestros) {
 		List<EEstatusRequerimiento> estatus = EEstatusRequerimiento.getEstatusGeneral();
 		List<Analista> analistas = sMaestros.consultarCantRequerimientos(estatus, 0, 1);
