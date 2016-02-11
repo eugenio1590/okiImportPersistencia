@@ -101,19 +101,14 @@ public interface STransaccion {
 	
 	//Detalle de Cotizaciones	
 	@Transactional(readOnly=true)
-	Map<String, Object> consultarDetallesCotizacion(DetalleCotizacion detalleF, int idCotizacion,
-			String fieldSort, Boolean sortDirection, int pagina, int limit);
+	List<DetalleCotizacion> consultarDetallesCotizacion(int idCotizacion);
 	
 	@Transactional(readOnly=true)
-	Map<DetalleRequerimiento, List<DetalleCotizacion>> consultarDetallesCotizacion(Integer idRequerimiento);
-	
-	@Transactional(readOnly=true)
-	Map <String, Object> ConsultarDetalleCotizacion(Integer idcotizacion,int pagina, int limit);
+	Map<DetalleRequerimiento, List<DetalleCotizacion>> consultarDetallesCotizacionEmitidos(Integer idRequerimiento);
 	
 		//Internacional
 	@Transactional(readOnly=true)
-	Map<String, Object> consultarDetallesCotizacion(DetalleCotizacionInternacional detalleF, int idCotizacion,
-			String fieldSort, Boolean sortDirection, int pagina, int limit);
+	List<DetalleCotizacionInternacional> consultarDetallesCotizacion(Integer idCotizacion);
 	
 	//Ofertas
 	@Transactional(readOnly=true)
@@ -130,7 +125,7 @@ public interface STransaccion {
 	Oferta actualizarOferta(Oferta oferta);
 	
 	@Transactional(readOnly=true)
-	Integer consultarCantOfertasCreadasPorRequermiento(int idRequerimiento);
+	List<Oferta> consultarOfertasNoEnviada(Requerimiento requerimiento);
 	
 	//Detalle Oferta
 	@Transactional(readOnly=true)

@@ -40,37 +40,15 @@ public abstract class AbstractDetalleCotizacionDAO<T extends DetalleCotizacion> 
 				Map<String, Join<?,?>> joins = crearJoins(entidades);
 				
 				// 3. Creamos los campos a seleccionar
-				if(distinct){
-					criteriaQuery.multiselect(new Selection[]{
-							entity.get("idDetalleCotizacion"),
-							entity.get("marcaRepuesto"),
-							entity.get("precioVenta"),
-							entity.get("precioFlete"),
-							entity.get("cantidad"),
-							entity.get("estatus"),
-							joins.get("cotizacion"),
-							joins.get("detalleRequerimiento"),
-					});
-					criteriaQuery.distinct(distinct);
-				}
+				if(distinct)
+					addMultiselect(joins, criteriaQuery, distinct);
 				
 				// 4. Creamos las Restricciones de la busqueda
 				List<Predicate> restricciones = new ArrayList<Predicate>();
 				
 				agregarRestricciones(detalleF, restricciones, joins, cantExacta);
 
-				if(idCotizacion!=null)
-					restricciones.add(criteriaBuilder.equal(
-							joins.get("cotizacion").get("idCotizacion"), 
-							idCotizacion));
-				
-				if(idRequerimiento!=null)
-					restricciones.add(criteriaBuilder.equal(
-							joins.get("detalleRequerimiento").join("requerimiento").get("idRequerimiento"), 
-							idRequerimiento));
-				
-				if(estatus!=null && estatus.length!=0)
-					restricciones.add(joins.get("cotizacion").get("estatus").in(Arrays.asList(estatus)));
+				agregarRestricciones(restricciones, joins, idCotizacion, idRequerimiento, estatus);
 				
 				// 5. Ejecutamos
 				return crearPredicate(restricciones);
@@ -80,7 +58,37 @@ public abstract class AbstractDetalleCotizacionDAO<T extends DetalleCotizacion> 
 	}
 	
 	/**METODOS PRIVADOS DE LA CLASE*/
-	private void agregarRestricciones(DetalleCotizacion detalleF, List<Predicate> restricciones, Map<String, Join<?,?>> joins, boolean cantExacta){
+	protected void addMultiselect(Map<String, Join<?,?>> joins, CriteriaQuery<?> criteriaQuery, boolean distinct){
+		criteriaQuery.multiselect(new Selection[]{
+				entity.get("idDetalleCotizacion"),
+				entity.get("marcaRepuesto"),
+				entity.get("precioVenta"),
+				entity.get("precioFlete"),
+				entity.get("cantidad"),
+				entity.get("estatus"),
+				joins.get("cotizacion"),
+				joins.get("detalleRequerimiento"),
+		});
+		criteriaQuery.distinct(distinct);
+	}
+	
+	protected void agregarRestricciones(final List<Predicate> restricciones, final Map<String, Join<?,?>> joins, 
+			Integer idCotizacion, Integer idRequerimiento, EEstatusCotizacion... estatus){
+		if(idCotizacion!=null)
+			restricciones.add(criteriaBuilder.equal(
+					joins.get("cotizacion").get("idCotizacion"), 
+					idCotizacion));
+		
+		if(idRequerimiento!=null)
+			restricciones.add(criteriaBuilder.equal(
+					joins.get("detalleRequerimiento").join("requerimiento").get("idRequerimiento"), 
+					idRequerimiento));
+		
+		if(estatus!=null && estatus.length!=0)
+			restricciones.add(joins.get("cotizacion").get("estatus").in(Arrays.asList(estatus)));
+	}
+	
+	private void agregarRestricciones(DetalleCotizacion detalleF, final List<Predicate> restricciones, final Map<String, Join<?,?>> joins, boolean cantExacta){
 		if(detalleF!=null){
 			if(detalleF.getMarcaRepuesto()!=null)
 				restricciones.add(criteriaBuilder.like(

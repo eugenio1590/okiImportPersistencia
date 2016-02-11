@@ -28,7 +28,6 @@ import com.okiimport.app.dao.transaccion.impl.CotizacionDAO;
 import com.okiimport.app.dao.transaccion.impl.OfertaDAO;
 import com.okiimport.app.dao.transaccion.impl.RequerimientoDAO;
 import com.okiimport.app.dao.transaccion.impl.detalle.cotizacion.DetalleCotizacionDAO;
-import com.okiimport.app.dao.transaccion.impl.detalle.cotizacion.DetalleCotizacionInternacionalDAO;
 import com.okiimport.app.model.Analista;
 import com.okiimport.app.model.Compra;
 import com.okiimport.app.model.Cotizacion;
@@ -392,26 +391,6 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		return parametros;
 	}
 	
-	public Map<String, Object> ConsultarDetalleCotizacion(Integer idCotizacion, int page, int limit) {
-		Map<String, Object> parametros= new HashMap<String, Object>();
-		Integer total = 0;
-		List<DetalleCotizacion> detallesCotizacion = null;
-				
-		if(limit>0){
-			Page<DetalleCotizacion> pageDetalleCotizacion 
-				= this.detalleCotizacionRepository.findByCotizacion_IdCotizacion(idCotizacion, new PageRequest(page, limit));
-			total = Long.valueOf(pageDetalleCotizacion.getTotalElements()).intValue();
-			detallesCotizacion = pageDetalleCotizacion.getContent();
-		}
-		else {
-			detallesCotizacion = this.detalleCotizacionRepository.findByCotizacion_IdCotizacion(idCotizacion);
-			total = detallesCotizacion.size();
-		}
-		parametros.put("total", total);
-		parametros.put("detalleCotizacion", detallesCotizacion);
-        return parametros;
-	}
-	
 	//Cotizaciones
 	public Cotizacion ActualizarCotizacion(Cotizacion cotizacion) {
 		return this.cotizacionRepository.save(cotizacion);
@@ -529,34 +508,13 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	}
 	
 	//Detalles Cotizacion
-	public Map<String, Object> consultarDetallesCotizacion(DetalleCotizacion detalleF, int idCotizacion, 
-			String fieldSort, Boolean sortDirection, int page, int limit) {
-		Map<String, Object> parametros = new HashMap<String, Object>();
-		Integer total = 0;
-		List<DetalleCotizacion> detallesCotizacion = null;
-		Sort sortDetalleCotizacion 
-			= new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idDetalleCotizacion"));
-		Specification<DetalleCotizacion> specfDetalleCotizacion = (new DetalleCotizacionDAO())
-				.consultarDetallesCotizacion(detalleF, idCotizacion, null, false, true);
-		
-		if(limit>0){
-			Page<DetalleCotizacion> pageDetalleCotizacion = this.detalleCotizacionRepository
-					.findAll(specfDetalleCotizacion, new PageRequest(page, limit, sortDetalleCotizacion));
-			total = Long.valueOf(pageDetalleCotizacion.getTotalElements()).intValue();
-			detallesCotizacion = pageDetalleCotizacion.getContent();
-		}
-		else {
-			detallesCotizacion = this.detalleCotizacionRepository.findAll(specfDetalleCotizacion, sortDetalleCotizacion);
-			total = detallesCotizacion.size();
-		}
-		parametros.put("total", total);
-		parametros.put("detallesCotizacion", detallesCotizacion);
-		return parametros;
+	public List<DetalleCotizacion> consultarDetallesCotizacion(int idCotizacion) {
+		return detalleCotizacionRepository.findByCotizacion_IdCotizacion(idCotizacion);
 	}
 	
-	public Map<DetalleRequerimiento, List<DetalleCotizacion>> consultarDetallesCotizacion(Integer idRequerimiento){
+	public Map<DetalleRequerimiento, List<DetalleCotizacion>> consultarDetallesCotizacionEmitidos(Integer idRequerimiento){
 		Specification<DetalleCotizacion> specfDetalleCotizacion = (new DetalleCotizacionDAO())
-				.consultarDetallesCotizacion(null, null, idRequerimiento, true, false, EEstatusCotizacion.EMITIDA); //Verificar Estats Luego
+				.consultarDetallesCotizacionEmitidos(idRequerimiento);
 		
 		List<DetalleCotizacion> detallesCotizacion = this.detalleCotizacionRepository.findAll(specfDetalleCotizacion);
 				
@@ -592,31 +550,8 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	}
 	
 		//Internacional
-	public Map<String, Object> consultarDetallesCotizacion(DetalleCotizacionInternacional detalleF, int idCotizacion, 
-			String fieldSort, Boolean sortDirection, int page, int limit) {
-		Map<String, Object> parametros = new HashMap<String, Object>();
-		Integer total = 0;
-		List<DetalleCotizacionInternacional> detallesCotizacion = null;
-		Sort sortDetalleCotizacion 
-			= new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idDetalleCotizacion"));
-		Specification<DetalleCotizacionInternacional> specfDetalleCotizacion = (new DetalleCotizacionInternacionalDAO())
-				.consultarDetallesCotizacion(detalleF, idCotizacion, null, false, true);
-		
-		if(limit>0){
-			Page<DetalleCotizacionInternacional> pageDetalleCotizacion = 
-					this.detalleCotizacionInternacionalRepository
-						.findAll(specfDetalleCotizacion, new PageRequest(page, limit, sortDetalleCotizacion));
-			total = Long.valueOf(pageDetalleCotizacion.getTotalElements()).intValue();
-			detallesCotizacion = pageDetalleCotizacion.getContent();
-		}
-		else {
-			detallesCotizacion = this.detalleCotizacionInternacionalRepository
-					.findAll(specfDetalleCotizacion, sortDetalleCotizacion);
-			total = detallesCotizacion.size();
-		}
-		parametros.put("total", total);
-		parametros.put("detallesCotizacion", detallesCotizacion);
-		return parametros;
+	public List<DetalleCotizacionInternacional> consultarDetallesCotizacion(Integer idCotizacion) {
+		return this.detalleCotizacionInternacionalRepository.findByCotizacion_IdCotizacion(idCotizacion);
 	}
 
 	//Ofertas
@@ -679,17 +614,21 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		return ofertas;
 	}
 	
-	public Integer consultarCantOfertasCreadasPorRequermiento(int idRequerimiento){
-		List<EEstatusOferta> estatus = new ArrayList<EEstatusOferta>();
-		estatus.add(EEstatusOferta.SELECCIONADA);
-		Specification<Oferta> specfOferta = (new OfertaDAO()).consultarOfertasPorRequerimiento(idRequerimiento, estatus);
-		return Long.valueOf(this.ofertaRepository.count(specfOferta)).intValue();		
+	public Oferta actualizarOferta(Oferta oferta) {
+		return oferta = ofertaRepository.save(oferta);
 	}
 	
-	public Oferta actualizarOferta(Oferta oferta) {
-		if(oferta.getIdOferta()==null)
-	    	oferta.setEstatus(EEstatusOferta.SELECCIONADA);
-		return oferta = ofertaRepository.save(oferta);
+	public List<Oferta> consultarOfertasNoEnviada(Requerimiento requerimiento){
+		EEstatusOferta[] estatus = new EEstatusOferta[]{EEstatusOferta.SELECCIONADA, EEstatusOferta.INVALIDA};
+		List<Oferta> ofertas = this.ofertaRepository
+				.findDistinctIdOfertaByDetalleOfertas_DetalleCotizacion_DetalleRequerimiento_RequerimientoAndEstatusIn(requerimiento, estatus);
+		if(!ofertas.isEmpty())
+			for(int i=0; i<ofertas.size(); i++){
+				Oferta oferta = ofertas.get(i);
+				oferta.setNroOferta(i+1);
+				oferta.setDetalleOfertas(detalleOfertaRepository.findByOferta(oferta));
+			}
+		return ofertas;
 	}
 	
 	//Detalles Oferta

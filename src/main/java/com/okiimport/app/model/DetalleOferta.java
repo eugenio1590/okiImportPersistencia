@@ -14,7 +14,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import com.okiimport.app.resource.model.AbstractEntity;
 
@@ -37,7 +36,6 @@ public class DetalleOferta extends AbstractEntity implements Serializable{
 	@Enumerated(EnumType.STRING)
 	private String estatus;
 	
-	@Transient
 	private Boolean aprobado = false;
 		
 	//bi-directional many-to-one association to Oferta

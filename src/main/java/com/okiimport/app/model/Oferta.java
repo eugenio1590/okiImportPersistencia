@@ -42,9 +42,8 @@ public class Oferta extends AbstractEntity implements Serializable{
 	@Transient
 	private Float total;
 	
-	//bi-directional one-to-many association to DetalleOferta
-	@OneToMany(mappedBy="oferta", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
-	private List<DetalleOferta> detalleOfertas;
+	@Transient
+	private Boolean updateForDecorator;
 	
 	@Transient
 	private Integer nroOferta;
@@ -52,16 +51,22 @@ public class Oferta extends AbstractEntity implements Serializable{
 	@Transient
 	private List<DetalleOferta> detalleOfertasAux;
 	
+	//bi-directional one-to-many association to DetalleOferta
+	@OneToMany(mappedBy="oferta", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
+	private List<DetalleOferta> detalleOfertas;
+	
 	public Oferta() {
 		this.estatus = EEstatusOferta.CREADA;
+		this.updateForDecorator = true;
 		this.detalleOfertas = new ArrayList<DetalleOferta>();
 	}
 	
-	public Oferta(Integer nroOferta, Float porctIva, Float porctGanancia){
+	public Oferta(Integer nroOferta, Float porctIva, Float porctGanancia, Boolean updateForDecorator){
 		this();
 		this.nroOferta = nroOferta;
 		this.porctIva = porctIva;
 		this.porctGanancia = porctGanancia;
+		this.updateForDecorator = updateForDecorator;
 	}
 
 	public Oferta(Integer idOferta, Date fechaCreacion, EEstatusOferta estatus) {
@@ -104,6 +109,31 @@ public class Oferta extends AbstractEntity implements Serializable{
 	public void setEstatus(EEstatusOferta estatus) {
 		this.estatus = estatus;
 	}
+	
+	//Transient
+	public Float getTotal() {
+		return total;
+	}
+
+	public void setTotal(Float total) {
+		this.total = total;
+	}
+	
+	public Boolean getUpdateForDecorator() {
+		return updateForDecorator;
+	}
+
+	public void setUpdateForDecorator(Boolean updateForDecorator) {
+		this.updateForDecorator = updateForDecorator;
+	}
+	
+	public Integer getNroOferta() {
+		return nroOferta;
+	}
+
+	public void setNroOferta(Integer nroOferta) {
+		this.nroOferta = nroOferta;
+	}
 
 	public List<DetalleOferta> getDetalleOfertas() {
 		return detalleOfertas;
@@ -121,14 +151,6 @@ public class Oferta extends AbstractEntity implements Serializable{
 			this.getDetalleOfertas().removeAll(remove);
 		return this.getDetalleOfertas();
 	}
-	
-	public Float getTotal() {
-		return total;
-	}
-
-	public void setTotal(Float total) {
-		this.total = total;
-	}
 
 	public DetalleOferta addDetalleOferta(DetalleOferta detalleOferta){
 		getDetalleOfertas().add(detalleOferta);
@@ -142,15 +164,6 @@ public class Oferta extends AbstractEntity implements Serializable{
 		detalleOferta.setOferta(null);
 		
 		return detalleOferta;
-	}
-	
-	//Transient
-	public Integer getNroOferta() {
-		return nroOferta;
-	}
-
-	public void setNroOferta(Integer nroOferta) {
-		this.nroOferta = nroOferta;
 	}
 
 	/**METODOS PROPIOS DE LA CLASE*/
