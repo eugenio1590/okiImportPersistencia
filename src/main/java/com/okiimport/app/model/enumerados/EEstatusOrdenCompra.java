@@ -1,7 +1,9 @@
 package com.okiimport.app.model.enumerados;
 
 public enum EEstatusOrdenCompra {
-	CREADA("CR", "Orden de Compra Creada");
+	CREADA("CR", "Orden de Compra Creada"),
+	PAGADA("P", "Orden de Compra Pagada"),
+	CERRADA("CR", "Orden de Compra Cerrada");
 	
 	private String value;
 	private String nombre;
