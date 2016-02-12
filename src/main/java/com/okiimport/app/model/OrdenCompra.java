@@ -1,11 +1,12 @@
 package com.okiimport.app.model;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,6 +20,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.okiimport.app.model.enumerados.EEstatusOrdenCompra;
 import com.okiimport.app.resource.model.AbstractEntity;
 
 /**
@@ -38,12 +40,12 @@ public class OrdenCompra extends AbstractEntity implements Serializable {
 	@Column(name="id_orden_compra")
 	private Integer idOrdenCompra;
 	
-	@Column(name="fecha_creacion")
-	private Date fechaCreacion;
-	
 	private String observacion;
 	
 	private Float iva; //Preguntar
+	
+	@Enumerated(EnumType.STRING)
+	private EEstatusOrdenCompra estatus;
 	
 	//bi-directional many-to-one association to PagoProveedor
 	@ManyToOne
@@ -66,14 +68,6 @@ public class OrdenCompra extends AbstractEntity implements Serializable {
 	
 	public void setIdOrdenCompra(Integer idOrdenCompra) {
 		this.idOrdenCompra = idOrdenCompra;
-	}
-
-	public Date getFechaCreacion() {
-		return fechaCreacion;
-	}
-
-	public void setFechaCreacion(Date fechaCreacion) {
-		this.fechaCreacion = fechaCreacion;
 	}
 
 	public String getObservacion() {

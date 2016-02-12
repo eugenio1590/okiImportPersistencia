@@ -38,12 +38,10 @@ public abstract class Pago extends AbstractEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="persona_id_seq")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="pago_id_seq")
 	@SequenceGenerator(name="pago_id_seq", sequenceName="pago_id_seq", initialValue=1, allocationSize=1)
 	@Column(name="id", unique=true, nullable=false)
 	protected Integer id;
-
-	protected Date fechaCreacion;
 
 	protected Date fechaPago;
 
@@ -76,14 +74,6 @@ public abstract class Pago extends AbstractEntity implements Serializable {
 	
 	public void setId(Integer id) {
 		this.id = id;
-	}
-	
-	public Date getFechaCreacion() {
-		return fechaCreacion;
-	}
-
-	public void setFechaCreacion(Date fechaCreacion) {
-		this.fechaCreacion = fechaCreacion;
 	}
 
 	public Date getFechaPago() {
