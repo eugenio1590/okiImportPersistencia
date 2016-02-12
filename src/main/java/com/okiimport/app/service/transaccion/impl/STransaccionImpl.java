@@ -18,6 +18,7 @@ import org.springframework.data.jpa.domain.Specification;
 import com.okiimport.app.dao.transaccion.CompraRepository;
 import com.okiimport.app.dao.transaccion.CotizacionRepository;
 import com.okiimport.app.dao.transaccion.OfertaRepository;
+import com.okiimport.app.dao.transaccion.OrdenCompraRepository;
 import com.okiimport.app.dao.transaccion.RequerimientoRepository;
 import com.okiimport.app.dao.transaccion.detalle.cotizacion.DetalleCotizacionInternacionalRepository;
 import com.okiimport.app.dao.transaccion.detalle.cotizacion.DetalleCotizacionRepository;
@@ -37,12 +38,14 @@ import com.okiimport.app.model.DetalleCotizacionInternacional;
 import com.okiimport.app.model.DetalleOferta;
 import com.okiimport.app.model.DetalleRequerimiento;
 import com.okiimport.app.model.Oferta;
+import com.okiimport.app.model.OrdenCompra;
 import com.okiimport.app.model.Proveedor;
 import com.okiimport.app.model.Requerimiento;
 import com.okiimport.app.model.enumerados.EEstatusCompra;
 import com.okiimport.app.model.enumerados.EEstatusCotizacion;
 import com.okiimport.app.model.enumerados.EEstatusDetalleRequerimiento;
 import com.okiimport.app.model.enumerados.EEstatusOferta;
+import com.okiimport.app.model.enumerados.EEstatusOrdenCompra;
 import com.okiimport.app.model.enumerados.EEstatusRequerimiento;
 import com.okiimport.app.resource.service.AbstractServiceImpl;
 import com.okiimport.app.service.configuracion.SControlUsuario;
@@ -78,6 +81,9 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	
 	@Autowired
 	private CompraRepository compraRepository;
+	
+	@Autowired
+	private OrdenCompraRepository ordenCompraRepository;
 
 	public STransaccionImpl() {
 		super();
@@ -802,6 +808,29 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		parametros.put("total", total);
 		parametros.put("detallesCompra", detallesCompra);
 		return parametros;
+	}
+	
+	//OrdenCompra
+	public Map<String, Object> consultarOrdenesCompraProveedor(OrdenCompra ordenCompra, Requerimiento requerimiento, 
+			String fieldSort, Boolean sortDirection, int page, int limit){
+		Map<String, Object> parametros = new HashMap<String, Object>();
+		Integer total = 0;
+		List<OrdenCompra> ordenesCompra = null;
+		Sort sortCompra = new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idOrdenCompra"));	
+		if(limit>0){
+			Page<OrdenCompra> pageOrdenCompra 
+				= this.ordenCompraRepository.findByDetalleOfertas_Compra_RequerimientoAndEstatusIn(requerimiento, new EEstatusOrdenCompra[]{ EEstatusOrdenCompra.CREADA}, new PageRequest(page, limit, sortCompra));
+			total = Long.valueOf(pageOrdenCompra.getTotalElements()).intValue();
+			ordenesCompra = pageOrdenCompra.getContent();
+		}
+		else {
+			ordenesCompra = this.ordenCompraRepository.findByDetalleOfertas_Compra_RequerimientoAndEstatusIn(requerimiento, new EEstatusOrdenCompra[]{ EEstatusOrdenCompra.CREADA});
+			total = ordenesCompra.size();
+		}
+		parametros.put("total", total);
+		parametros.put("ordenesCompra", ordenesCompra);
+		return parametros;
+		
 	}
 
 	/**METODOS PROPIOS DE LA CLASE*/
