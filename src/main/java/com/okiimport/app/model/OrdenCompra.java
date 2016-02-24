@@ -116,6 +116,15 @@ public class OrdenCompra extends AbstractEntity implements Serializable {
 		return detalleOferta;
 	}
 	
+	
+	public EEstatusOrdenCompra getEstatus() {
+		return estatus;
+	}
+
+	public void setEstatus(EEstatusOrdenCompra estatus) {
+		this.estatus = estatus;
+	}
+
 	//Transient
 	public Proveedor getProveedor() {
 		return proveedor;

@@ -3,6 +3,9 @@ package com.okiimport.app.service.transaccion.impl;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -14,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.util.comparator.ComparableComparator;
 
 import com.okiimport.app.dao.transaccion.CompraRepository;
 import com.okiimport.app.dao.transaccion.CotizacionRepository;
@@ -832,7 +836,31 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		return parametros;
 		
 	}
-
+	
+	public void guardarOrdenCompra(Compra compra){
+		Map<Proveedor, List<DetalleOferta>> map = compra.getMap();
+		List<DetalleOferta> detalles = compra.getDetalleOfertas();
+		//Para agrupar los detalles por proveedor
+		for(int i=0; i < detalles.size(); i++){
+			Proveedor prov1 = detalles.get(i).getDetalleCotizacion().getCotizacion().getProveedor();
+				if(map.get(prov1).equals(null))
+					map.put(prov1, new ArrayList<DetalleOferta>());
+				
+				map.get(prov1).add((DetalleOferta) detalles.get(i));
+		}
+		//Generamos la orden de compra
+		OrdenCompra ordenSave = new OrdenCompra();
+		for (List<DetalleOferta> values : map.values()) {
+			OrdenCompra orden = new OrdenCompra();
+			ordenSave.setEstatus(EEstatusOrdenCompra.CREADA);
+			ordenSave.setIva(orden.getIva());
+			ordenSave.setObservacion(orden.getObservacion());
+			ordenSave.setDetalleOfertas(values);
+			ordenSave.setPagoProveedor(orden.getPagoProveedor());
+			this.ordenCompraRepository.save(ordenSave);
+		}
+	}
+	
 	/**METODOS PROPIOS DE LA CLASE*/
 	private void llenarNroOfertas(List<Requerimiento> requerimientos){
 		Integer nroOfertas = 0;

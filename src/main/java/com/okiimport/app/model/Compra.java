@@ -3,7 +3,9 @@ package com.okiimport.app.model;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.*;
 
@@ -181,5 +183,9 @@ public class Compra extends AbstractEntity implements Serializable {
 			}
 		}
 		return total;
+	}
+	
+	public Map<Proveedor, List<DetalleOferta>> getMap(){
+		return new HashMap<Proveedor, List<DetalleOferta>>();
 	}
 }
