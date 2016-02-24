@@ -1,19 +1,11 @@
 package com.okiimport.app.dao.pago;
 
-
 import com.okiimport.app.model.Pago;
-
 import com.okiimport.app.resource.dao.IGenericJPARepository;
 
-import java.util.List;
+import org.springframework.data.repository.NoRepositoryBean;
 
-import org.springframework.stereotype.Repository;
-
-
-@Repository
-public interface PagoRepository extends IGenericJPARepository<Pago, Integer> {
-	
+@NoRepositoryBean
+public interface PagoRepository<T extends Pago> extends IGenericJPARepository<T, Integer> {
 	
 }
-
-
