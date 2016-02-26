@@ -2,6 +2,7 @@ package com.okiimport.app.model;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -185,7 +186,18 @@ public class Compra extends AbstractEntity implements Serializable {
 		return total;
 	}
 	
+	@Transient
 	public Map<Proveedor, List<DetalleOferta>> getMap(){
-		return new HashMap<Proveedor, List<DetalleOferta>>();
+		Map<Proveedor, List<DetalleOferta>> map = new HashMap<Proveedor, List<DetalleOferta>>();
+		List<DetalleOferta> detalles = this.getDetalleOfertas();
+		//Para agrupar los detalles por proveedor
+		for(int i=0; i < detalles.size(); i++){
+			Proveedor prov1 = detalles.get(i).getDetalleCotizacion().getCotizacion().getProveedor();
+				if(map.get(prov1).equals(null))
+					map.put(prov1, new ArrayList<DetalleOferta>());
+				
+				map.get(prov1).add((DetalleOferta) detalles.get(i));
+		}
+		return map;
 	}
 }

@@ -17,6 +17,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import com.okiimport.app.model.Cliente;
 import com.okiimport.app.model.MarcaVehiculo;
+import com.okiimport.app.model.OrdenCompra;
 import com.okiimport.app.model.Requerimiento;
 import com.okiimport.app.model.enumerados.EEstatusCotizacion;
 import com.okiimport.app.model.enumerados.EEstatusRequerimiento;
@@ -179,9 +180,47 @@ public class RequerimientoDAO extends AbstractJpaDao<Requerimiento> {
 						criteriaBuilder.equal(joinCotizacion.get("estatus"), EEstatusCotizacion.EMITIDA)));
 				restricciones.add(criteriaBuilder.not(entity.get("estatus").in(estatus)));
 				
-				//4. Ejecutamos
+				//5. Ejecutamos
 				return crearPredicate(restricciones);
 			}
+		};
+	}
+	
+	public Specification<Requerimiento> consultarPorOrdenCompra(final OrdenCompra ordenCompra){
+		return new Specification<Requerimiento>(){
+
+			@Override
+			public Predicate toPredicate(Root<Requerimiento> entity, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+				//1. Inicializar Variables
+				inicializar(entity, criteriaQuery, criteriaBuilder);
+				
+				//2. Generamos los Joins
+				Map<String, JoinType> entidades = new HashMap<String, JoinType>();
+				entidades.put("compras", JoinType.INNER);
+				Map<String, Join<?,?>> joins = crearJoins(entidades);
+				
+				//3. Creamos los campos a seleccionar
+				criteriaQuery.multiselect(new Selection[]{
+						entity.get("idRequerimiento"),
+						entity.get("estatus"),
+						entity.get("fechaCreacion"),
+						entity.get("fechaVencimiento"),
+						entity.get("modeloV"),
+						entity.get("tipoRepuesto")
+				});
+				criteriaQuery.distinct(true);
+				
+				//4. Creamos las Restricciones de la busqueda
+				List<Predicate> restricciones = new ArrayList<Predicate>();
+				if(ordenCompra!=null)
+					restricciones.add(criteriaBuilder.equal(
+							joins.get("compras").join("detalleOfertas").join("ordenCompra").get("idOrdenCompra"), 
+							ordenCompra.getIdOrdenCompra()));
+				
+				//5. Ejecutamos
+				return crearPredicate(restricciones);
+			}
+			
 		};
 	}
 	

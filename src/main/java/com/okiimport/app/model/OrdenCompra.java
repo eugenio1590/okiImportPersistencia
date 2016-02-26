@@ -58,8 +58,15 @@ public class OrdenCompra extends AbstractEntity implements Serializable {
 	
 	@Transient
 	private Proveedor proveedor;
+	
+	@Transient
+	private Requerimiento requerimiento;
 
 	public OrdenCompra() {
+	}
+	
+	public OrdenCompra(Proveedor proveedor){
+		this.proveedor = proveedor;
 	}
 	
 	public Integer getIdOrdenCompra() {
@@ -134,10 +141,26 @@ public class OrdenCompra extends AbstractEntity implements Serializable {
 		this.proveedor = proveedor;
 	}
 	
+	public Requerimiento getRequerimiento() {
+		return requerimiento;
+	}
+
+	public void setRequerimiento(Requerimiento requerimiento) {
+		this.requerimiento = requerimiento;
+	}
+
 	/**METODOS PROPIOS DE LA CLASE*/
 	@Transient
 	public Float total(){
 		return new Float(0);
+	}
+	
+	@Transient
+	public int getTotalProductos(){
+		int total = 0;
+		for(DetalleOferta detalle : this.getDetalleOfertas())
+			total += detalle.getDetalleCotizacion().getCantidad();
+		return total;
 	}
 
 }
