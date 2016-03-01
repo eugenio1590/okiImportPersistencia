@@ -2,12 +2,10 @@ package com.okiimport.app.model;
 
 import java.io.Serializable;
 import java.util.Comparator;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,7 +14,6 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PostLoad;
 import javax.persistence.SequenceGenerator;
@@ -38,7 +35,7 @@ import com.okiimport.app.resource.model.AbstractEntity;
 @NamedQuery(name="Persona.findAll", query="SELECT p FROM Persona p")
 @Inheritance(strategy=InheritanceType.JOINED)
 @DiscriminatorColumn(name="person_type")
-@JsonIgnoreProperties({"tipoMenu", "usuario", "pagoCompras"})
+@JsonIgnoreProperties({"tipoMenu", "usuario"})
 public abstract class Persona extends AbstractEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -84,10 +81,6 @@ public abstract class Persona extends AbstractEntity implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="id_ciudad")
 	protected Ciudad ciudad;
-	
-	//bi-directional many-to-one association to PagoCompra
-	@OneToMany(mappedBy="persona", fetch=FetchType.LAZY)
-	private List<PagoCompra> pagoCompras;
 
 	public Persona() {
 	}
@@ -206,28 +199,6 @@ public abstract class Persona extends AbstractEntity implements Serializable {
 
 	public void setHistoricoMoneda(HistoricoMoneda historicoMoneda) {
 		this.historicoMoneda = historicoMoneda;
-	}
-
-	public List<PagoCompra> getPagoCompras() {
-		return pagoCompras;
-	}
-
-	public void setPagoCompras(List<PagoCompra> pagoCompras) {
-		this.pagoCompras = pagoCompras;
-	}
-	
-	public PagoCompra addPagoCompra(PagoCompra pagoCompra){
-		getPagoCompras().add(pagoCompra);
-		pagoCompra.setPersona(this);
-		
-		return pagoCompra;
-	}
-	
-	public PagoCompra removePagoCompra(PagoCompra pagoCompra){
-		getPagoCompras().remove(pagoCompra);
-		pagoCompra.setPersona(null);
-		
-		return pagoCompra;
 	}
 
 	/**METODOS PROPIOS DE LA CLASE*/

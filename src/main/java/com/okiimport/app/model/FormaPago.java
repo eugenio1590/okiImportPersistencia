@@ -16,7 +16,7 @@ import com.okiimport.app.resource.model.AbstractEntity;
 @Entity
 @Table(name="forma_pago")
 @NamedQuery(name="FormaPago.findAll", query="SELECT f FROM FormaPago f")
-@JsonIgnoreProperties({"pagoCompras"})
+@JsonIgnoreProperties({"pago"})
 public class FormaPago extends AbstractEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
@@ -28,12 +28,14 @@ public class FormaPago extends AbstractEntity implements Serializable {
 	
 	private String nombre;
 	
+	private String url;
+	
 	@Enumerated(EnumType.STRING)
 	private EEstatusFormaPago estatus;
 	
 	//bi-directional one-to-many association to PagoCompra
 	@OneToMany(mappedBy="formaPago", fetch=FetchType.LAZY)
-	private List<PagoCompra> pagoCompras;
+	private List<Pago> pago;
 	
 	public FormaPago() {
 	}
@@ -50,6 +52,14 @@ public class FormaPago extends AbstractEntity implements Serializable {
 		return nombre;
 	}
 
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
@@ -62,25 +72,25 @@ public class FormaPago extends AbstractEntity implements Serializable {
 		this.estatus = estatus;
 	}
 
-	public List<PagoCompra> getPagoCompras() {
-		return pagoCompras;
+	public List<Pago> getPago() {
+		return pago;
 	}
 
-	public void setPagoCompras(List<PagoCompra> pagoCompras) {
-		this.pagoCompras = pagoCompras;
+	public void setPago(List<Pago> pago) {
+		this.pago = pago;
 	}
 	
-	public PagoCompra addPagoCompra(PagoCompra pagoCompra){
-		getPagoCompras().add(pagoCompra);
-		pagoCompra.setFormaPago(this);
+	public Pago addPago(Pago pago){
+		getPago().add(pago);
+		pago.setFormaPago(this);
 		
-		return pagoCompra;
+		return pago;
 	}
 	
-	public PagoCompra removePagoCompra(PagoCompra pagoCompra){
-		getPagoCompras().remove(pagoCompra);
-		pagoCompra.setFormaPago(null);
+	public Pago removePagoCompra(Pago pago){
+		getPago().remove(pago);
+		pago.setFormaPago(null);
 		
-		return pagoCompra;
+		return pago;
 	}
 }

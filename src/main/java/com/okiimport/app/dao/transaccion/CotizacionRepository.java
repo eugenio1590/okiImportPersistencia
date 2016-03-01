@@ -11,8 +11,6 @@ import com.okiimport.app.resource.dao.IGenericJPARepository;
 
 @Repository
 public interface CotizacionRepository extends IGenericJPARepository<Cotizacion, Integer> {
-	
 	List<Cotizacion> findByProveedorAndEstatusIn(Proveedor proveedor,List<EEstatusCotizacion> estatus);
-	
 	List<Cotizacion> findTop1ByProveedorAndEstatusIn(Proveedor proveedor,List<EEstatusCotizacion> estatus);
 }

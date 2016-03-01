@@ -16,7 +16,7 @@ import com.okiimport.app.resource.model.AbstractEntity;
 @Entity
 @Table(name="banco")
 @NamedQuery(name="Banco.findAll", query="SELECT b FROM Banco b")
-@JsonIgnoreProperties({"pagoCompras"})
+@JsonIgnoreProperties({"pago"})
 public class Banco extends AbstractEntity implements Serializable{
 	private static final long serialVersionUID = 1L;
 
@@ -30,9 +30,9 @@ public class Banco extends AbstractEntity implements Serializable{
 	
 	private EEstatusGeneral estatus;
 	
-	//bi-directional one-to-many association to PagoCompra
+	//bi-directional one-to-many association to Pago
 	@OneToMany(mappedBy="banco", fetch=FetchType.LAZY)
-	private List<PagoCompra> pagoCompras;
+	private List<Pago> pago;
 
 	public Banco() {
 	}
@@ -53,8 +53,6 @@ public class Banco extends AbstractEntity implements Serializable{
 		this.nombre = nombre;
 	}
 
-	
-
 	public EEstatusGeneral getEstatus() {
 		return estatus;
 	}
@@ -63,25 +61,25 @@ public class Banco extends AbstractEntity implements Serializable{
 		this.estatus = estatus;
 	}
 
-	public List<PagoCompra> getPagoCompras() {
-		return pagoCompras;
+	public List<Pago> getPago() {
+		return pago;
 	}
 
-	public void setPagoCompras(List<PagoCompra> pagoCompras) {
-		this.pagoCompras = pagoCompras;
+	public void setPago(List<Pago> pago) {
+		this.pago = pago;
 	}
 	
-	public PagoCompra addPagoCompra(PagoCompra pagoCompra){
-		getPagoCompras().add(pagoCompra);
-		pagoCompra.setBanco(this);
+	public Pago addPago(Pago pago){
+		getPago().add(pago);
+		pago.setBanco(this);
 		
-		return pagoCompra;
+		return pago;
 	}
 	
-	public PagoCompra removePagoCompra(PagoCompra pagoCompra){
-		getPagoCompras().remove(pagoCompra);
-		pagoCompra.setBanco(null);
+	public Pago removePago(Pago pago){
+		getPago().remove(pago);
+		pago.setBanco(null);
 		
-		return pagoCompra;
+		return pago;
 	}
 }

@@ -1,15 +1,14 @@
 package com.okiimport.app.model.enumerados;
 
-public enum EEstatusDetalleCotizacion {
-	
-	SOLICITADO("SO", "Solicitado"),
-	ENCONTRADO("EN", "Encontrado"),
-	COMPRADO("CO","Comprado");
+public enum EEstatusOrdenCompra {
+	CREADA("CR", "Orden de Compra Creada"),
+	PAGADA("P", "Orden de Compra Pagada"),
+	CERRADA("CR", "Orden de Compra Cerrada");
 	
 	private String value;
 	private String nombre;
 	
-	EEstatusDetalleCotizacion(String value, String nombre){
+	EEstatusOrdenCompra(String value, String nombre){
 		this.value = value;
 		this.nombre = nombre;
 	}
@@ -29,5 +28,4 @@ public enum EEstatusDetalleCotizacion {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
-
 }

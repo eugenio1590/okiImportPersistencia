@@ -48,6 +48,10 @@ public class DetalleOferta extends AbstractEntity implements Serializable{
 	@JoinColumn(name="id_compra")
 	private Compra compra;
 	
+	@ManyToOne
+	@JoinColumn(name="id_orden_compra")
+	private OrdenCompra ordenCompra;
+	
 	//bi-directional many-to-one association to DetalleCotizacion
 	@ManyToOne
 	@JoinColumn(name="id_detalle_cotizacion")
@@ -98,6 +102,14 @@ public class DetalleOferta extends AbstractEntity implements Serializable{
 
 	public void setCompra(Compra compra) {
 		this.compra = compra;
+	}
+	
+	public OrdenCompra getOrdenCompra() {
+		return ordenCompra;
+	}
+
+	public void setOrdenCompra(OrdenCompra ordenCompra) {
+		this.ordenCompra = ordenCompra;
 	}
 
 	public DetalleCotizacion getDetalleCotizacion() {
