@@ -24,19 +24,21 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class PagoCliente  extends Pago implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	//bi-directional one-to-one association to Venta
-//	@OneToOne
-//	@JoinColumn(name="id_venta")
-//	protected Venta venta;
-//	
-//	public PagoCliente() {
-//	}
-//
-//	public Venta getVenta() {
-//		return venta;
-//	}
-//
-//	public void setVenta(Venta venta) {
-//		this.venta = venta;
-//	}
+	//bi-directional one-to-one association to Compra
+	@OneToOne
+	@JoinColumn(name="id_compra")
+	protected Compra compra; //Se cambiara por venta en otra rama
+	
+	public PagoCliente() {
+	}
+
+	public Compra getCompra() {
+		return compra;
+	}
+
+	public void setCompra(Compra compra) {
+		this.compra = compra;
+	}
+
+	
 }

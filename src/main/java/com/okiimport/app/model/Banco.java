@@ -53,8 +53,6 @@ public class Banco extends AbstractEntity implements Serializable{
 		this.nombre = nombre;
 	}
 
-	
-
 	public EEstatusGeneral getEstatus() {
 		return estatus;
 	}
