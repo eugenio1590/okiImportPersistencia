@@ -186,6 +186,16 @@ public class Compra extends AbstractEntity implements Serializable {
 		return total;
 	}
 	
+	public Float calcularSubTotal(){
+		float total = 0;
+		if ( detalleOfertas != null && !detalleOfertas.isEmpty()){
+			for(DetalleOferta detalleOferta : detalleOfertas){
+				total = total + detalleOferta.calcularPrecioVentaConverter();
+			}
+		}
+		return total;
+	}
+	
 	@Transient
 	public Map<Proveedor, List<DetalleOferta>> getMap(){
 		Map<Proveedor, List<DetalleOferta>> map = new HashMap<Proveedor, List<DetalleOferta>>();
