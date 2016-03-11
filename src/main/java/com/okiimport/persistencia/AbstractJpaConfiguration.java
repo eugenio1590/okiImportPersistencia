@@ -46,9 +46,9 @@ public class AbstractJpaConfiguration {
     public DataSource dataSource() {
         BasicDataSource dataSource = new BasicDataSource();
         dataSource.setDriverClassName("org.postgresql.Driver");
-        dataSource.setUrl("jdbc:postgresql://localhost:5432/Ubica23");
+        dataSource.setUrl("jdbc:postgresql://localhost:5432/requerimientos");
         dataSource.setUsername("postgres");
-        dataSource.setPassword("123456");
+        dataSource.setPassword("postgres");
 //        dataSource.setTestOnBorrow(Boolean.TRUE);
 //        dataSource.setTestOnReturn(Boolean.TRUE);
 //        dataSource.setTestWhileIdle(Boolean.TRUE);
