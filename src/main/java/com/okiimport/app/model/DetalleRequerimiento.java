@@ -132,7 +132,7 @@ public class DetalleRequerimiento extends AbstractEntity implements Serializable
 	/**METODOS OVERRIDE*/
 	@Override
 	public boolean equals(Object obj) {
-		if(obj instanceof DetalleRequerimiento)
+		if(obj instanceof DetalleRequerimiento && this.idDetalleRequerimiento != null)
 			return this.getIdDetalleRequerimiento().equals(((DetalleRequerimiento) obj).getIdDetalleRequerimiento());
 		else
 			return super.equals(obj);
@@ -140,9 +140,7 @@ public class DetalleRequerimiento extends AbstractEntity implements Serializable
 
 	@Override
 	public int hashCode() {
-		// TODO Auto-generated method stub
-		//return super.hashCode();
-		return this.getIdDetalleRequerimiento();
+		return (this.idDetalleRequerimiento == null) ? super.hashCode() : this.idDetalleRequerimiento;
 	}
 
 	/**METODOS PROPIOS DE LA CLASE*/
