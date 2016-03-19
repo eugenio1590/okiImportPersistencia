@@ -536,15 +536,15 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 			}
 		}
 		
-		if(!detallesEliminar.isEmpty()){
-			detallesCotizacion = new ArrayList<DetalleCotizacion>(detallesCotizacion);
-			detallesCotizacion.removeAll(detallesEliminar);
-		}
-		
 		if(!detallesIncluir.isEmpty())
 			for(Integer index : detallesIncluir.keySet())
 				detallesCotizacion.add(index, detallesIncluir.get(index));
 		
+		if(!detallesEliminar.isEmpty()){
+			detallesCotizacion = new ArrayList<DetalleCotizacion>(detallesCotizacion);
+			detallesCotizacion.removeAll(detallesEliminar);
+		}
+				
 		Map<DetalleRequerimiento, List<DetalleCotizacion>> parametros = new LinkedHashMap<DetalleRequerimiento, List<DetalleCotizacion>>();
 		for(int i=0; i<detallesCotizacion.size(); i++){
 			DetalleCotizacion detalle = detallesCotizacion.get(i);
