@@ -63,12 +63,14 @@ public class DetalleCotizacion extends AbstractEntity implements Serializable {
 	private List<DetalleOferta> detalleOfertas;
 
 	public DetalleCotizacion() {
+		super();
+		this.tipoRepuesto = false;
 	}
 	
 	public DetalleCotizacion(Integer idDetalleCotizacion, String marcaRepuesto,
 			Float precioVenta, Float precioFlete, Long cantidad, EEstatusDetalleCotizacion estatus,
 			Cotizacion cotizacion, DetalleRequerimiento detalleRequerimiento) {
-		super();
+		this();
 		this.idDetalleCotizacion = idDetalleCotizacion;
 		this.marcaRepuesto = marcaRepuesto;
 		this.precioVenta = precioVenta;
