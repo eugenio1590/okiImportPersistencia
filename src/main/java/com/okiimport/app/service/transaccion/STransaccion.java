@@ -15,8 +15,10 @@ import com.okiimport.app.model.DetalleOferta;
 import com.okiimport.app.model.DetalleRequerimiento;
 import com.okiimport.app.model.Oferta;
 import com.okiimport.app.model.OrdenCompra;
+import com.okiimport.app.model.PagoCliente;
 import com.okiimport.app.model.Proveedor;
 import com.okiimport.app.model.Requerimiento;
+import com.okiimport.app.service.configuracion.SControlConfiguracion;
 import com.okiimport.app.service.configuracion.SControlUsuario;
 import com.okiimport.app.service.maestros.SMaestros;
 
@@ -158,4 +160,10 @@ public interface STransaccion {
 	@Transactional(readOnly=true)
 	Map<String, Object> consultarOrdenesCompraProveedor(OrdenCompra ordenCompra, Requerimiento requerimiento, 
 			String fieldSort, Boolean sortDirection, int page, int limit);
+	
+	@Transactional(readOnly=true)
+	void guardarOrdenCompra(Compra compra, SControlConfiguracion sControlConfiguracion);
+	
+	@Transactional(readOnly=true)
+	void registrarPagoFactura(PagoCliente pagoC);
 }

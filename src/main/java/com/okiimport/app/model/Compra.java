@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.persistence.*;
 
@@ -183,7 +184,7 @@ public class Compra extends AbstractEntity implements Serializable {
 				total = total + detalleOferta.calcularPrecioVentaConverter();
 			}
 		}
-		return total;
+		return calcularSubTotal() + calcularFlete();
 	}
 	
 	public Float calcularSubTotal(){
@@ -196,6 +197,12 @@ public class Compra extends AbstractEntity implements Serializable {
 		return total;
 	}
 	
+	//SIMULACION DE CALCULO DE FLETE SE DEBE CORREGIR
+	public Float calcularFlete(){
+		Random rnd = new Random();
+		return rnd.nextFloat();
+	}
+	
 	@Transient
 	public Map<Proveedor, List<DetalleOferta>> getMap(){
 		Map<Proveedor, List<DetalleOferta>> map = new HashMap<Proveedor, List<DetalleOferta>>();
@@ -203,7 +210,7 @@ public class Compra extends AbstractEntity implements Serializable {
 		//Para agrupar los detalles por proveedor
 		for(int i=0; i < detalles.size(); i++){
 			Proveedor prov1 = detalles.get(i).getDetalleCotizacion().getCotizacion().getProveedor();
-				if(map.get(prov1).equals(null))
+				if(map.get(prov1) == (null))
 					map.put(prov1, new ArrayList<DetalleOferta>());
 				
 				map.get(prov1).add((DetalleOferta) detalles.get(i));
