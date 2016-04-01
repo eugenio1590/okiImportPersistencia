@@ -15,6 +15,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
+import com.okiimport.app.dao.maestros.DepositoRepository;
+import com.okiimport.app.dao.pago.PagoClienteRepository;
 import com.okiimport.app.dao.transaccion.CompraRepository;
 import com.okiimport.app.dao.transaccion.CotizacionRepository;
 import com.okiimport.app.dao.transaccion.OfertaRepository;
@@ -31,13 +33,17 @@ import com.okiimport.app.dao.transaccion.impl.RequerimientoDAO;
 import com.okiimport.app.dao.transaccion.impl.detalle.cotizacion.DetalleCotizacionDAO;
 import com.okiimport.app.model.Analista;
 import com.okiimport.app.model.Compra;
+import com.okiimport.app.model.Configuracion;
 import com.okiimport.app.model.Cotizacion;
+import com.okiimport.app.model.Deposito;
 import com.okiimport.app.model.DetalleCotizacion;
 import com.okiimport.app.model.DetalleCotizacionInternacional;
 import com.okiimport.app.model.DetalleOferta;
 import com.okiimport.app.model.DetalleRequerimiento;
+import com.okiimport.app.model.HistoricoMoneda;
 import com.okiimport.app.model.Oferta;
 import com.okiimport.app.model.OrdenCompra;
+import com.okiimport.app.model.PagoCliente;
 import com.okiimport.app.model.Proveedor;
 import com.okiimport.app.model.Requerimiento;
 import com.okiimport.app.model.enumerados.EEstatusCompra;
@@ -47,6 +53,7 @@ import com.okiimport.app.model.enumerados.EEstatusOferta;
 import com.okiimport.app.model.enumerados.EEstatusOrdenCompra;
 import com.okiimport.app.model.enumerados.EEstatusRequerimiento;
 import com.okiimport.app.resource.service.AbstractServiceImpl;
+import com.okiimport.app.service.configuracion.SControlConfiguracion;
 import com.okiimport.app.service.configuracion.SControlUsuario;
 import com.okiimport.app.service.maestros.SMaestros;
 import com.okiimport.app.service.transaccion.STransaccion;
@@ -83,6 +90,14 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	
 	@Autowired
 	private OrdenCompraRepository ordenCompraRepository;
+	
+	@Autowired
+	private PagoClienteRepository pagoRepository;
+	
+	@Autowired
+	private DepositoRepository depositoRepository;
+	
+	private SControlConfiguracion sControlConfiguracion;
 
 	public STransaccionImpl() {
 		super();
@@ -536,15 +551,15 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 			}
 		}
 		
-		if(!detallesEliminar.isEmpty()){
-			detallesCotizacion = new ArrayList<DetalleCotizacion>(detallesCotizacion);
-			detallesCotizacion.removeAll(detallesEliminar);
-		}
-		
 		if(!detallesIncluir.isEmpty())
 			for(Integer index : detallesIncluir.keySet())
 				detallesCotizacion.add(index, detallesIncluir.get(index));
 		
+		if(!detallesEliminar.isEmpty()){
+			detallesCotizacion = new ArrayList<DetalleCotizacion>(detallesCotizacion);
+			detallesCotizacion.removeAll(detallesEliminar);
+		}
+				
 		Map<DetalleRequerimiento, List<DetalleCotizacion>> parametros = new LinkedHashMap<DetalleRequerimiento, List<DetalleCotizacion>>();
 		for(int i=0; i<detallesCotizacion.size(); i++){
 			DetalleCotizacion detalle = detallesCotizacion.get(i);
@@ -781,21 +796,63 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		return parametros;
 		
 	}
-	
+	/*
 	public void guardarOrdenCompra(Compra compra){
 		Map<Proveedor, List<DetalleOferta>> map = compra.getMap();
-		
+		HistoricoMoneda hm ;
 		//Generamos la orden de compra
 		OrdenCompra ordenSave = new OrdenCompra();
-		for (List<DetalleOferta> values : map.values()) {
+		for(Proveedor proveedor : map.keySet()){
+			List<DetalleOferta> values = map.get(proveedor);
 			OrdenCompra orden = new OrdenCompra();
 			ordenSave.setEstatus(EEstatusOrdenCompra.CREADA);
-			ordenSave.setIva(orden.getIva());
+//			Moneda monedaBase = sControlConfiguracion.consultarMonedaBase();
+			HistoricoMoneda monedaBase = sControlConfiguracion.consultarActualConversion(proveedor);
+			if(monedaBase != null){
+				hm = sControlConfiguracion.consultarActualConversion(monedaBase.getMoneda());
+				ordenSave.setIva(hm.getMontoConversion());
+			}
 			ordenSave.setObservacion(orden.getObservacion());
 			ordenSave.setDetalleOfertas(values);
 			ordenSave.setPagoProveedor(orden.getPagoProveedor());
 			this.ordenCompraRepository.save(ordenSave);
 		}
+	}*/
+	
+	public void guardarOrdenCompra(Compra compra, SControlConfiguracion sControlConfiguracion){
+        Map<Proveedor, List<DetalleOferta>> map = compra.getMap();
+        //Generamos la orden de compra
+        OrdenCompra ordenSave = new OrdenCompra();
+        for(Proveedor proveedor : map.keySet()){
+            List<DetalleOferta> values = map.get(proveedor);
+            OrdenCompra orden = new OrdenCompra();
+            ordenSave.setEstatus(EEstatusOrdenCompra.CREADA);
+			Configuracion configuracion = sControlConfiguracion.consultarConfiguracionActual();
+			ordenSave.setIva(configuracion.getPorctIva());
+            ordenSave.setObservacion(orden.getObservacion());
+            ordenSave.setDetalleOfertas(values);
+            ordenSave.setPagoProveedor(orden.getPagoProveedor());
+            this.ordenCompraRepository.save(ordenSave);
+        }
+    }
+	
+	public void registrarPagoFactura(PagoCliente pago){
+		PagoCliente p = new PagoCliente();
+		this.compraRepository.save(pago.getCompra());
+		p.setCompra(pago.getCompra());
+		p.setFechaPago(pago.getFechaPago());
+		p.setMonto(pago.getMonto());
+		p.setEstatus(pago.getEstatus());
+		p.setDescripcion(pago.getDescripcion());
+		p.setFormaPago(pago.getFormaPago());
+		p.setBanco(pago.getBanco());
+		List<Deposito> depositos = pago.getDepositos();
+		//Si  hay depositos entonces los almacenamos
+		if(depositos.size() > 0)
+			for (Deposito deposito : depositos) {
+				this.depositoRepository.save(deposito);
+			}
+		this.pagoRepository.save(p);
 	}
 	
 	/**METODOS PROPIOS DE LA CLASE*/
