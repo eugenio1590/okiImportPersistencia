@@ -236,4 +236,40 @@ public class Oferta extends AbstractEntity implements Serializable{
 		
 		return aprobar;
 	}
+	
+	@Transient
+	public boolean isReCotizacion(){
+		if(isNotEmpty()){
+			DetalleOferta detalleOferta = detalleOfertas.get(0);
+			for(int i = 1; i<detalleOfertas.size(); i++){
+				if(!detalleOferta.getProveedor().equals(detalleOfertas.get(i).getProveedor()))
+					return false;
+				
+			}
+		}
+		return true;
+	}
+	
+	@Transient
+	public boolean validoParaRecotizar(){
+		boolean valido = true;
+		if(isNotEmpty()){
+			for(DetalleOferta detalleOferta : detalleOfertas)
+				valido &= (detalleOferta.getAprobado() == null || !detalleOferta.getAprobado()) ? false : true;
+			
+		}
+		else
+			valido = false;
+		return valido;
+	}
+	
+	@Transient
+	public List<DetalleCotizacion> getDetallesCotizacionParaRecotizacion(){
+		List<DetalleCotizacion> detalles = new ArrayList<DetalleCotizacion>();
+		if(isNotEmpty()){
+			for(DetalleOferta detalleOferta : detalleOfertas)
+				detalles.add(detalleOferta.getDetalleCotizacionParaRecotizacion());
+		}
+		return detalles;
+	}
 }

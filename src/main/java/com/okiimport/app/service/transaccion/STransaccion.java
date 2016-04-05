@@ -102,6 +102,9 @@ public interface STransaccion {
 	@Transactional(readOnly=true)
 	Boolean validarProveedorEnCotizaciones(Proveedor proveedor);
 	
+	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
+	Cotizacion registrarRecotizacion(Requerimiento requerimiento, Proveedor proveedor, List<DetalleCotizacion> detalles);
+	
 	//Detalle de Cotizaciones	
 	@Transactional(readOnly=true)
 	List<DetalleCotizacion> consultarDetallesCotizacion(int idCotizacion);
