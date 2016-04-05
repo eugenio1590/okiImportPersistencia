@@ -59,6 +59,12 @@ public class MailProveedorImpl extends AbstractMailImpl implements MailProveedor
 	}
 	
 	@Override
+	public void enviarRecotizacionProveedor(final Proveedor proveedor, final Requerimiento requerimiento, 
+			final Cotizacion cotizacion, final MailService mailService) {
+		//Falta Implementacion
+	}
+	
+	@Override
 	public void enviarCotAprobadaProveedor(final Proveedor proveedor, final Requerimiento requerimiento,
 			final Cotizacion cotizacion, final MailService mailService) {
 		super.sendMail(new Runnable(){

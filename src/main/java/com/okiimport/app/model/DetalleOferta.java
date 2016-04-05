@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.okiimport.app.resource.model.AbstractEntity;
 
@@ -144,5 +145,24 @@ public class DetalleOferta extends AbstractEntity implements Serializable{
 	
 	public Float calcularPrecioVentaUnit(){
 		return calcularPrecioVenta() / getDetalleCotizacion().getCantidad();
+	}
+	
+	@Transient
+	public Proveedor getProveedor(){
+		return this.getDetalleCotizacion().getCotizacion().getProveedor();
+	}
+	
+	@Transient
+	public DetalleCotizacion getDetalleCotizacionParaRecotizacion(boolean nullCotizacion){
+		DetalleCotizacion detalleCotizacion = this.getDetalleCotizacion().clon();
+		detalleCotizacion.setIdDetalleCotizacion(null);
+		if(nullCotizacion)
+			detalleCotizacion.setCotizacion(null);
+		if(this.aprobado == null || !this.aprobado){
+			detalleCotizacion.setCantidad(null);
+			detalleCotizacion.setPrecioVenta(null);
+			detalleCotizacion.setPrecioFlete(null);
+		}
+		return detalleCotizacion;
 	}
 }
