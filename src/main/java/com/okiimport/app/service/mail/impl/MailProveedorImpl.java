@@ -61,8 +61,23 @@ public class MailProveedorImpl extends AbstractMailImpl implements MailProveedor
 	@Override
 	public void enviarRecotizacionProveedor(final Proveedor proveedor, final Requerimiento requerimiento, 
 			final Cotizacion cotizacion, final MailService mailService) {
-		// TODO Auto-generated method stub
-		//Falta Correo.
+		super.sendMail(new Runnable(){
+			@Override
+			public void run() {
+				try {
+					final Map<String, Object> model = new HashMap<String, Object>();
+					model.put("fechaCreacion", dateFormat.format(requerimiento.getFechaCreacion()));
+					model.put("fechaVencimiento", dateFormat.format(requerimiento.getFechaVencimiento()));
+					model.put("requerimiento", requerimiento);
+
+					mailService.send(proveedor.getCorreo(), "Solicitud de Recotizacion",
+							"enviarRecotizacionProveedor.html", model);
+				}
+				catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 	
 	@Override
