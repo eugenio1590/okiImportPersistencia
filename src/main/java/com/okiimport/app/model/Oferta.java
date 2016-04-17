@@ -51,6 +51,11 @@ public class Oferta extends AbstractEntity implements Serializable{
 	@Transient
 	private List<DetalleOferta> detalleOfertasAux;
 	
+	//bi-directional one-to-one association to Cotizacion
+	@OneToOne
+	@JoinColumn(name="id_re_cotizacion")
+	private Cotizacion cotizacion;
+	
 	//bi-directional one-to-many association to DetalleOferta
 	@OneToMany(mappedBy="oferta", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<DetalleOferta> detalleOfertas;
@@ -74,7 +79,6 @@ public class Oferta extends AbstractEntity implements Serializable{
 		this.idOferta = idOferta;
 		this.fechaCreacion = new Timestamp(fechaCreacion.getTime());
 		this.estatus = estatus;
-		this.detalleOfertas = new ArrayList<DetalleOferta>();
 	}
 
 	public Integer getIdOferta() {
@@ -135,6 +139,14 @@ public class Oferta extends AbstractEntity implements Serializable{
 		this.nroOferta = nroOferta;
 	}
 
+	public Cotizacion getCotizacion() {
+		return cotizacion;
+	}
+
+	public void setCotizacion(Cotizacion cotizacion) {
+		this.cotizacion = cotizacion;
+	}
+
 	public List<DetalleOferta> getDetalleOfertas() {
 		return detalleOfertas;
 	}
@@ -183,6 +195,11 @@ public class Oferta extends AbstractEntity implements Serializable{
 	@Transient
 	public boolean isInvalida(){
 		return this.estatus.equals(EEstatusOferta.INVALIDA);
+	}
+	
+	@Transient
+	public boolean isReCotizacion(){
+		return (cotizacion != null);
 	}
 	
 	public void copyDetallesOfertas(){
@@ -246,7 +263,10 @@ public class Oferta extends AbstractEntity implements Serializable{
 	}
 	
 	@Transient
-	public boolean isReCotizacion(){
+	public boolean isParaReCotizacion(){
+		if(isReCotizacion())
+			return false;
+		
 		if(isNotEmpty()){
 			DetalleOferta detalleOferta = detalleOfertas.get(0);
 			for(int i = 1; i<detalleOfertas.size(); i++){
@@ -263,7 +283,7 @@ public class Oferta extends AbstractEntity implements Serializable{
 		boolean valido = true;
 		if(isNotEmpty()){
 			for(DetalleOferta detalleOferta : detalleOfertas)
-				valido &= (detalleOferta.getAprobado() == null || !detalleOferta.getAprobado()) ? false : true;
+				valido &= (detalleOferta.getAprobado() == null) ? false : true;
 			
 		}
 		else
