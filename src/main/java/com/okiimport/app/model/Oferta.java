@@ -225,8 +225,10 @@ public class Oferta extends AbstractEntity implements Serializable{
 	public boolean isAprobar(){
 		boolean aprobar = true;
 		if ( detalleOfertas != null && !detalleOfertas.isEmpty()){
+			Boolean aprobado;
 			for(DetalleOferta detalleOferta : detalleOfertas ){
-				aprobar &= detalleOferta.getAprobado();
+				aprobado = detalleOferta.getAprobado();
+				aprobar &= (aprobado != null) ? aprobado : false;
 				if(!aprobar)
 					break;
 			}
@@ -235,6 +237,12 @@ public class Oferta extends AbstractEntity implements Serializable{
 			aprobar = false;
 		
 		return aprobar;
+	}
+	
+	@Transient
+
+	public String getTitleNroOferta(){
+		return "Oferta Nro. "+String.valueOf(getNroOferta());
 	}
 	
 	@Transient
@@ -264,11 +272,12 @@ public class Oferta extends AbstractEntity implements Serializable{
 	}
 	
 	@Transient
-	public List<DetalleCotizacion> getDetallesCotizacionParaRecotizacion(){
+	public List<DetalleCotizacion> getDetallesCotizacionParaRecotizacion(boolean nullCotizacion){
 		List<DetalleCotizacion> detalles = new ArrayList<DetalleCotizacion>();
 		if(isNotEmpty()){
 			for(DetalleOferta detalleOferta : detalleOfertas)
-				detalles.add(detalleOferta.getDetalleCotizacionParaRecotizacion());
+				detalles.add(detalleOferta.getDetalleCotizacionParaRecotizacion(nullCotizacion));
+		
 		}
 		return detalles;
 	}

@@ -59,8 +59,8 @@ public class MailProveedorImpl extends AbstractMailImpl implements MailProveedor
 	}
 	
 	@Override
-	public void enviarRecotizacionProveedor(final Proveedor proveedor, final Requerimiento requerimiento, 
-			final Cotizacion cotizacion, final MailService mailService) {
+	public void enviarRecotizacionProveedor(final Proveedor proveedor, final Requerimiento requerimiento, final Cotizacion cotizacion,
+			final List<DetalleCotizacion> detallesCotizacion, final MailService mailService) {
 		super.sendMail(new Runnable(){
 			@Override
 			public void run() {
@@ -69,6 +69,8 @@ public class MailProveedorImpl extends AbstractMailImpl implements MailProveedor
 					model.put("fechaCreacion", dateFormat.format(requerimiento.getFechaCreacion()));
 					model.put("fechaVencimiento", dateFormat.format(requerimiento.getFechaVencimiento()));
 					model.put("requerimiento", requerimiento);
+					model.put("proveedor", proveedor);
+					model.put("detallesCotizacion", detallesCotizacion);
 
 					mailService.send(proveedor.getCorreo(), "Solicitud de Recotizacion",
 							"enviarRecotizacionProveedor.html", model);

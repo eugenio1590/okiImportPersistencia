@@ -153,10 +153,18 @@ public class DetalleOferta extends AbstractEntity implements Serializable{
 	}
 	
 	@Transient
-	public DetalleCotizacion getDetalleCotizacionParaRecotizacion(){
+
+	public DetalleCotizacion getDetalleCotizacionParaRecotizacion(boolean nullCotizacion){
 		DetalleCotizacion detalleCotizacion = this.getDetalleCotizacion().clon();
 		detalleCotizacion.setIdDetalleCotizacion(null);
-		detalleCotizacion.setCotizacion(null);
+		if(nullCotizacion)
+			detalleCotizacion.setCotizacion(null);
+		if(this.aprobado == null || !this.aprobado){
+			detalleCotizacion.setCantidad(null);
+			detalleCotizacion.setPrecioVenta(null);
+			detalleCotizacion.setPrecioFlete(null);
+		}
+
 		return detalleCotizacion;
 	}
 }

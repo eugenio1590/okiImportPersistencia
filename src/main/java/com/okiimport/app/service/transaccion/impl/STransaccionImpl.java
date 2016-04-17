@@ -535,7 +535,11 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		Cotizacion cotizacion = new Cotizacion(proveedor);
 		cotizacion.setDetalleCotizacions(detalles);
 		cotizacion.setEstatus(EEstatusCotizacion.SOLICITADA);
-		this.cotizacionRepository.save(cotizacion);
+
+		cotizacion = this.cotizacionRepository.save(cotizacion);
+		for(DetalleCotizacion detalle : detalles)
+			this.detalleCotizacionRepository.saveAndFlush(detalle);
+
 		return cotizacion;
 	}
 	

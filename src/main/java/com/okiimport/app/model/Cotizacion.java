@@ -102,6 +102,7 @@ public class Cotizacion extends AbstractEntity implements Serializable{
 	}
 	
 	public Cotizacion(Proveedor proveedor){
+		this();
 		this.proveedor = proveedor;
 	}
 

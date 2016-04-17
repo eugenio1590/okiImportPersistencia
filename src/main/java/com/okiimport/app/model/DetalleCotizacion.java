@@ -227,4 +227,9 @@ public class DetalleCotizacion extends AbstractEntity implements Serializable {
 		this.setPrecioVenta(null);
 		this.setPrecioFlete(null);
 	}
+	
+	@Transient
+	public boolean isVisibleParaRecotizar(){
+		return (this.precioVenta == null && this.precioFlete == null && this.precioVenta == null);
+	}
 }
