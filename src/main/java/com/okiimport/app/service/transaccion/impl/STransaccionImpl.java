@@ -836,25 +836,6 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
         }
     }
 	
-	public void registrarPagoFactura(PagoCliente pago){
-		PagoCliente p = new PagoCliente();
-		this.compraRepository.save(pago.getCompra());
-		p.setCompra(pago.getCompra());
-		p.setFechaPago(pago.getFechaPago());
-		p.setMonto(pago.getMonto());
-		p.setEstatus(pago.getEstatus());
-		p.setDescripcion(pago.getDescripcion());
-		p.setFormaPago(pago.getFormaPago());
-		p.setBanco(pago.getBanco());
-		List<Deposito> depositos = pago.getDepositos();
-		//Si  hay depositos entonces los almacenamos
-		if(depositos.size() > 0)
-			for (Deposito deposito : depositos) {
-				this.depositoRepository.save(deposito);
-			}
-		this.pagoRepository.save(p);
-	}
-	
 	/**METODOS PROPIOS DE LA CLASE*/
 	private void llenarNroOfertas(List<Requerimiento> requerimientos){
 		Integer nroOfertas = 0;

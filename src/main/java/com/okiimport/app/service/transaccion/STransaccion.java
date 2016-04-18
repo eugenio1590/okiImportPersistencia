@@ -163,7 +163,4 @@ public interface STransaccion {
 	
 	@Transactional(readOnly=true)
 	void guardarOrdenCompra(Compra compra, SControlConfiguracion sControlConfiguracion);
-	
-	@Transactional(readOnly=true)
-	void registrarPagoFactura(PagoCliente pagoC);
 }
