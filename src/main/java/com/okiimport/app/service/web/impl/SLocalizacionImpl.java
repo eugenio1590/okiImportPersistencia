@@ -9,6 +9,7 @@ import com.google.maps.model.DistanceMatrixElementStatus;
 import com.google.maps.model.GeocodingResult;
 import com.google.maps.model.LatLng;
 import com.okiimport.app.model.Ciudad;
+import com.okiimport.app.model.Compra;
 import com.okiimport.app.model.Pais;
 import com.okiimport.app.service.web.SLocalizacion;
 
@@ -49,6 +50,11 @@ public class SLocalizacionImpl implements SLocalizacion {
 			}
 		}
 		return result;
+	}
+	
+	@Override
+	public double calcularFleteZoomConPesoYDistancia(Compra compra, Ciudad ciudadDestino) {
+		return 0;
 	}
 	
 	/**METODOS PROPIOS DE LA CLASE*/
