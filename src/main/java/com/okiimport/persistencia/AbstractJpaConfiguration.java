@@ -36,6 +36,8 @@ public class AbstractJpaConfiguration {
 //	@Value("#{dataSource}")
 //	private javax.sql.DataSource dataSource;
 	
+	public static final String ZOOM_URL = "http://sandbox.grupozoom.com/localhost/htdocs/internet/servicios/webservices";
+	
 	private ConfigMail configMail;
 	
 	public AbstractJpaConfiguration(String user, String password){

@@ -5,8 +5,10 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
+import com.google.gson.annotations.JsonAdapter;
+import com.google.gson.annotations.SerializedName;
 import com.okiimport.app.resource.model.AbstractEntity;
+import com.okiimport.app.resource.model.adapter.EstadoZoomAdapter;
 
 import java.util.List;
 
@@ -28,11 +30,18 @@ public class Ciudad extends AbstractEntity implements Serializable {
 	private Integer idCiudad;
 
 	@Column(name="nombre")
+	@SerializedName("nombre_ciudad")
 	private String nombre;
+	
+	@Transient
+	@SerializedName("codciudad")
+	private String codigo;
 
 	//bi-directional many-to-one association to Estado
 	@ManyToOne()
 	@JoinColumn(name="id_estado")
+	@SerializedName("nombre_estado")
+	@JsonAdapter(EstadoZoomAdapter.class)
 	private Estado estado;
 
 	//bi-directional one-to-many association to Persona
@@ -40,6 +49,10 @@ public class Ciudad extends AbstractEntity implements Serializable {
 	private List<Persona> personas;
 
 	public Ciudad() {
+	}
+	
+	public Ciudad(Estado estado){
+		this.estado = estado;
 	}
 	
 	public Ciudad(String nombre, Estado estado){
@@ -57,6 +70,14 @@ public class Ciudad extends AbstractEntity implements Serializable {
 
 	public String getNombre() {
 		return this.nombre;
+	}
+
+	public String getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
 	}
 
 	public void setNombre(String nombre) {
@@ -93,6 +114,19 @@ public class Ciudad extends AbstractEntity implements Serializable {
 		return persona;
 	}
 	
+	/**METODOS OVERRIDE*/
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof Ciudad){
+			if(this.getIdCiudad()!=null)
+				return this.getIdCiudad().equals(((Ciudad) obj).getIdCiudad());
+			else
+				return (this.getNombre().equalsIgnoreCase(((Ciudad) obj).getNombre()));
+		}
+		else
+			return super.equals(obj);
+	}
+	
 	/**METODOS PROPIOS DE LA CLASE*/
 	@Transient
 	public String ubicacion(String separador){
@@ -100,5 +134,10 @@ public class Ciudad extends AbstractEntity implements Serializable {
 		if(separador!=null)
 			ubicacion.append(separador).append(getEstado().getNombre());
 		return ubicacion.toString();
+	}
+	
+	@Transient
+	public boolean isIgualEstado(Estado estado){
+		return this.getEstado().getNombre().equalsIgnoreCase(estado.getNombre());
 	}
 }
