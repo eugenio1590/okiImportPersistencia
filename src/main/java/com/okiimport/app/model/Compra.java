@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.okiimport.app.model.enumerados.EEstatusCompra;
 import com.okiimport.app.model.enumerados.EEstatusRequerimiento;
 import com.okiimport.app.resource.model.AbstractEntity;
+import com.okiimport.app.resource.service.model.FleteZoom;
 
 /**
  * The persistent class for the compra database table.
@@ -61,6 +62,8 @@ public class Compra extends AbstractEntity implements Serializable {
 	@OneToMany(mappedBy="compra", fetch=FetchType.LAZY)
 	private List<DetalleOferta> detalleOfertas;
 
+	private FleteZoom flete;
+
 	public Compra() {
 	}
 	
@@ -95,6 +98,14 @@ public class Compra extends AbstractEntity implements Serializable {
 	
 	public Boolean getTipoFlete() {
 		return tipoFlete;
+	}
+
+	public FleteZoom getFlete() {
+		return flete;
+	}
+
+	public void setFleteZoom(FleteZoom flete) {
+		this.flete = flete;
 	}
 
 	public void setTipoFlete(Boolean tipoFlete) {
@@ -233,4 +244,6 @@ public class Compra extends AbstractEntity implements Serializable {
 		
 		return parametros;
 	}
+
+
 }

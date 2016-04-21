@@ -29,6 +29,7 @@ import com.google.maps.model.LatLng;
 import com.okiimport.app.model.Ciudad;
 import com.okiimport.app.model.Compra;
 import com.okiimport.app.model.Pais;
+import com.okiimport.app.resource.service.model.FleteZoom;
 import com.okiimport.app.resource.service.model.Oficina;
 import com.okiimport.app.service.web.SLocalizacion;
 import com.okiimport.persistencia.AbstractJpaConfiguration;
@@ -75,6 +76,8 @@ public class SLocalizacionImpl implements SLocalizacion {
 	
 	@Override
 	public double calcularFleteZoomConPesoYDistancia(Compra compra, Ciudad ciudadDestino) {
+		
+		try {
 		double flete = 0;
 		
 		Ciudad ciudadDestinatario = obtenerCiudadZoomDestinatario(ciudadDestino);
@@ -92,14 +95,29 @@ public class SLocalizacionImpl implements SLocalizacion {
 				parametros.put("oficina_retirar", oficina.getCodigo());
 				parametros.put("cantidad_piezas", String.valueOf(parametrosCompra.get("cantidadPiezas")));
 				parametros.put("peso", String.valueOf(parametrosCompra.get("pesoTotal")));
+				HttpResponse response = requestPostZoom("/CalcularTarifa", GSON.toJson(parametros));
+				if(response!=null && response.getStatusLine().getStatusCode() == 200){ 
+					Reader reader = new InputStreamReader(response.getEntity().getContent());
+					FleteZoom flete = GSON.fromJson(reader, FleteZoom.class);
+					compra.setFleteZoom(flete);
+				}	
 			}
 			else
 				System.out.println("Oficina No Encontrada");
 		}
+		
 		else
 			System.out.println("Ciudad No Encontrada");
+		}
+		catch (UnsupportedOperationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		return flete;
+		return null;
 	}
 	
 	@Override
