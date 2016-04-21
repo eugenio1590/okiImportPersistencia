@@ -217,4 +217,20 @@ public class Compra extends AbstractEntity implements Serializable {
 		}
 		return map;
 	}
+	
+	public Map<String, Number> cantidadPiezasYPeso(){
+		float pesoTotal = 0;
+		int cantidadPiezas = 0;
+		
+		for(DetalleOferta detalle : this.getDetalleOfertas()){
+			cantidadPiezas += detalle.getDetalleCotizacion().getCantidad();
+			pesoTotal += detalle.getDetalleCotizacion().calcularTotal();
+		}
+		
+		Map<String, Number> parametros = new HashMap<String, Number>();
+		parametros.put("pesoTotal", pesoTotal);
+		parametros.put("cantidadPiezas", cantidadPiezas);
+		
+		return parametros;
+	}
 }

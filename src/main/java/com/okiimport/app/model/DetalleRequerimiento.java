@@ -37,6 +37,8 @@ public class DetalleRequerimiento extends AbstractEntity implements Serializable
 	private byte[] foto;
 	
 	private String descripcion;
+	
+	private Float peso = new Float(0);
 
 	//bi-directional many-to-one association to ClasificacionRepuesto
 	@ManyToOne
@@ -103,6 +105,14 @@ public class DetalleRequerimiento extends AbstractEntity implements Serializable
 
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
+	}
+
+	public Float getPeso() {
+		return peso;
+	}
+
+	public void setPeso(Float peso) {
+		this.peso = peso;
 	}
 
 	public ClasificacionRepuesto getClasificacionRepuesto() {

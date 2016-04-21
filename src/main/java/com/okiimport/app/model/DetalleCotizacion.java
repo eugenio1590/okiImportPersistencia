@@ -227,4 +227,8 @@ public class DetalleCotizacion extends AbstractEntity implements Serializable {
 		this.setPrecioVenta(null);
 		this.setPrecioFlete(null);
 	}
+	
+	public Float pesoTotal(){
+		return this.getCantidad() * this.getDetalleRequerimiento().getPeso();
+	}
 }

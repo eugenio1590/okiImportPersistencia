@@ -7,6 +7,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -81,6 +82,7 @@ public class SLocalizacionImpl implements SLocalizacion {
 			System.out.println("Ciudad Encontrada "+ciudadDestinatario.getCodigo());
 			Oficina oficina = obtenerOficinaARetirarZoom(ciudadDestinatario);
 			if(oficina!=null){
+				Map<String, Number> parametrosCompra = compra.cantidadPiezasYPeso();
 				System.out.println("Oficina Encontrada");
 				HashMap<String, String> parametros = new HashMap<String, String>();
 				parametros.put("tipo_tarifa", "2");
@@ -88,8 +90,8 @@ public class SLocalizacionImpl implements SLocalizacion {
 				parametros.put("ciudad_remitente", "44");
 				parametros.put("ciudad_destinatartio", ciudadDestinatario.getCodigo());
 				parametros.put("oficina_retirar", oficina.getCodigo());
-				parametros.put("cantidad_piezas", "8"); //Por Ahora estatica
-				parametros.put("peso", "20"); //Por Ahora estatica
+				parametros.put("cantidad_piezas", String.valueOf(parametrosCompra.get("cantidadPiezas")));
+				parametros.put("peso", String.valueOf(parametrosCompra.get("pesoTotal")));
 			}
 			else
 				System.out.println("Oficina No Encontrada");
