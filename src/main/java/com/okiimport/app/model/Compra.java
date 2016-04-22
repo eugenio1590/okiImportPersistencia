@@ -58,18 +58,19 @@ public class Compra extends AbstractEntity implements Serializable {
 	private HistoricoMoneda historicoMoneda;
 	
 	//bi-directional one-to-many association to DetalleOferta
-	@OneToMany(mappedBy="compra", fetch=FetchType.LAZY)
+	@OneToMany(mappedBy="compra", fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	private List<DetalleOferta> detalleOfertas;
 
 	@Transient
 	private FleteZoom fleteZoom;
 
 	public Compra() {
+		this.detalleOfertas = new ArrayList<DetalleOferta>();
 	}
 	
 	public Compra(Requerimiento requerimiento, Date fechaCreacion){
+		this();
 		this.requerimiento = requerimiento;
-		this.fechaCreacion = new Timestamp(fechaCreacion.getTime());
 	}
 
 	public Integer getIdCompra() {
@@ -141,7 +142,9 @@ public class Compra extends AbstractEntity implements Serializable {
 	}
 
 	public void setDetalleOfertas(List<DetalleOferta> detalleOfertas) {
-		this.detalleOfertas = detalleOfertas;
+		if(detalleOfertas != null && !detalleOfertas.isEmpty())
+			for(DetalleOferta detalle : detalleOfertas)
+				this.addDetalleOferta(detalle);
 	}
 	
 	public DetalleOferta addDetalleOferta(DetalleOferta detalleOferta){

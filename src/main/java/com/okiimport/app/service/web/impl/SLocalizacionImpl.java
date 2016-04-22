@@ -42,7 +42,7 @@ public class SLocalizacionImpl implements SLocalizacion {
 	
 	private GeoApiContext context = new GeoApiContext().setApiKey("AIzaSyDK6oh7fuTOOWIMh9OSJSxDSvJkw7jdrmQ");
 
-	@Override
+	
 	public double calcularDistancia(Ciudad ciudadOrigen, Ciudad ciudadDestino) {
 		double distancia = 0;
 		if(!ciudadOrigen.equals(ciudadDestino)){
@@ -59,7 +59,6 @@ public class SLocalizacionImpl implements SLocalizacion {
 		return distancia;
 	}
 	
-	@Override
 	public double calcularDistancia(Pais paisOrigen, Pais paisDestino) {
 		double result = 0;
 		if(!paisOrigen.equals(paisDestino)){

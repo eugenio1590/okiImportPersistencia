@@ -19,6 +19,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.okiimport.app.resource.model.AbstractEntity;
@@ -42,14 +43,20 @@ public abstract class Pago extends AbstractEntity implements Serializable {
 	@SequenceGenerator(name="pago_id_seq", sequenceName="pago_id_seq", initialValue=1, allocationSize=1)
 	@Column(name="id", unique=true, nullable=false)
 	protected Integer id;
+	
+	@Column(name="transaction_id")
+	protected String transactionId;
 
 	protected Date fechaPago;
 
 	private Float monto;
 
-	protected String Descripcion; 
+	protected String descripcion; 
 
 	protected String estatus;
+	
+	@Transient
+	protected String paymentMethodNonce;
 
 	//bi-directional many-to-one association to FormaPago
 	@ManyToOne
@@ -76,6 +83,14 @@ public abstract class Pago extends AbstractEntity implements Serializable {
 		this.id = id;
 	}
 
+	public String getTransactionId() {
+		return transactionId;
+	}
+
+	public void setTransactionId(String transactionId) {
+		this.transactionId = transactionId;
+	}
+
 	public Date getFechaPago() {
 		return fechaPago;
 	}
@@ -85,11 +100,11 @@ public abstract class Pago extends AbstractEntity implements Serializable {
 	}
 
 	public String getDescripcion() {
-		return Descripcion;
+		return descripcion;
 	}
 
 	public void setDescripcion(String descripcion) {
-		Descripcion = descripcion;
+		this.descripcion = descripcion;
 	}
 
 	public Float getMonto() {
@@ -106,6 +121,14 @@ public abstract class Pago extends AbstractEntity implements Serializable {
 
 	public void setEstatus(String estatus) {
 		this.estatus = estatus;
+	}
+
+	public String getPaymentMethodNonce() {
+		return paymentMethodNonce;
+	}
+
+	public void setPaymentMethodNonce(String paymentMethodNonce) {
+		this.paymentMethodNonce = paymentMethodNonce;
 	}
 
 	public FormaPago getFormaPago() {

@@ -25,6 +25,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+import com.braintreegateway.BraintreeGateway;
+import com.braintreegateway.Environment;
 import com.okiimport.app.service.mail.MailService;
 import com.okiimport.app.service.mail.impl.MailServiceImpl;
 import com.okiimport.persistencia.mail.ConfigMail;
@@ -135,5 +137,16 @@ public class AbstractJpaConfiguration {
 	@Bean(name="velocityEngine")
 	public VelocityEngine velocityEngine(){
 		return this.configMail.getVelocityEngine();
+	}
+	
+	/**BRAINTREE*/
+	@Bean(name="gateway")
+	public BraintreeGateway gateway(){
+		return new BraintreeGateway(		
+				Environment.SANDBOX,
+				"382dm4xp72sqgpjk",
+				"wcwgq6pytzjs4q8c",
+				"aec72812f66e5c89d2f404f51d6dac7a"
+				);
 	}
 }
