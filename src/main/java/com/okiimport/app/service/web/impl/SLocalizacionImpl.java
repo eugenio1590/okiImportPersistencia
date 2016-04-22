@@ -6,6 +6,7 @@ import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -75,49 +76,51 @@ public class SLocalizacionImpl implements SLocalizacion {
 	}
 	
 	@Override
-	public double calcularFleteZoomConPesoYDistancia(Compra compra, Ciudad ciudadDestino) {
-		
-		try {
-		double flete = 0;
+	public float calcularFleteZoomConPesoYDistancia(Compra compra, Ciudad ciudadDestino) {
+		float flete = 0;
 		
 		Ciudad ciudadDestinatario = obtenerCiudadZoomDestinatario(ciudadDestino);
 		if(ciudadDestinatario!=null){
 			System.out.println("Ciudad Encontrada "+ciudadDestinatario.getCodigo());
 			Oficina oficina = obtenerOficinaARetirarZoom(ciudadDestinatario);
 			if(oficina!=null){
-				Map<String, Number> parametrosCompra = compra.cantidadPiezasYPeso();
-				System.out.println("Oficina Encontrada");
-				HashMap<String, String> parametros = new HashMap<String, String>();
-				parametros.put("tipo_tarifa", "2");
-				parametros.put("modalidad_tarifa", "2");
-				parametros.put("ciudad_remitente", "44");
-				parametros.put("ciudad_destinatartio", ciudadDestinatario.getCodigo());
-				parametros.put("oficina_retirar", oficina.getCodigo());
-				parametros.put("cantidad_piezas", String.valueOf(parametrosCompra.get("cantidadPiezas")));
-				parametros.put("peso", String.valueOf(parametrosCompra.get("pesoTotal")));
-				HttpResponse response = requestPostZoom("/CalcularTarifa", GSON.toJson(parametros));
-				if(response!=null && response.getStatusLine().getStatusCode() == 200){ 
-					Reader reader = new InputStreamReader(response.getEntity().getContent());
-					FleteZoom flete = GSON.fromJson(reader, FleteZoom.class);
-					compra.setFleteZoom(flete);
-				}	
+				try {
+					Map<String, Number> parametrosCompra = compra.cantidadPiezasYPeso();
+					System.out.println("Oficina Encontrada "+oficina.getCodigo());
+					LinkedHashMap<String, String> parametros = new LinkedHashMap<String, String>();
+					parametros.put("tipo_tarifa", "2");
+					parametros.put("modalidad_tarifa", "1");
+					parametros.put("ciudad_remitente", "44");
+					parametros.put("ciudad_destinatartio", ciudadDestinatario.getCodigo());
+					parametros.put("oficina_retirar", oficina.getCodigo());
+					parametros.put("cantidad_piezas", String.valueOf(parametrosCompra.get("cantidadPiezas")));
+					parametros.put("peso", String.valueOf(parametrosCompra.get("pesoTotal")));
+					System.out.println(GSON.toJson(parametros));
+					HttpResponse response = requestPostZoom("/CalcularTarifa", GSON.toJson(parametros));
+					if(response!=null && response.getStatusLine().getStatusCode() == 200){ 
+						Reader reader = new InputStreamReader(response.getEntity().getContent());
+						Type fleteType = new TypeToken<FleteZoom>() {}.getType();
+						FleteZoom fleteZoom = GSON.fromJson(reader, fleteType);
+						compra.setFleteZoom(fleteZoom);
+						flete = fleteZoom.totalReal();
+						System.out.println("FLETE:"+flete);
+					}	
+				}
+				catch (UnsupportedOperationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			else
 				System.out.println("Oficina No Encontrada");
 		}
-		
 		else
 			System.out.println("Ciudad No Encontrada");
-		}
-		catch (UnsupportedOperationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
-		return null;
+		return flete;
 	}
 	
 	@Override

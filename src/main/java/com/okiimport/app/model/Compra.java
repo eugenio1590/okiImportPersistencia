@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import javax.persistence.*;
 
@@ -62,7 +61,8 @@ public class Compra extends AbstractEntity implements Serializable {
 	@OneToMany(mappedBy="compra", fetch=FetchType.LAZY)
 	private List<DetalleOferta> detalleOfertas;
 
-	private FleteZoom flete;
+	@Transient
+	private FleteZoom fleteZoom;
 
 	public Compra() {
 	}
@@ -100,14 +100,6 @@ public class Compra extends AbstractEntity implements Serializable {
 		return tipoFlete;
 	}
 
-	public FleteZoom getFlete() {
-		return flete;
-	}
-
-	public void setFleteZoom(FleteZoom flete) {
-		this.flete = flete;
-	}
-
 	public void setTipoFlete(Boolean tipoFlete) {
 		this.tipoFlete = tipoFlete;
 	}
@@ -119,8 +111,6 @@ public class Compra extends AbstractEntity implements Serializable {
 	public void setObservacion(String observacion) {
 		this.observacion = observacion;
 	}
-
-	
 
 	public EEstatusCompra getEstatus() {
 		return estatus;
@@ -168,6 +158,14 @@ public class Compra extends AbstractEntity implements Serializable {
 		return detalleOferta;
 	}
 	
+	public FleteZoom getFleteZoom() {
+		return fleteZoom;
+	}
+
+	public void setFleteZoom(FleteZoom fleteZoom) {
+		this.fleteZoom = fleteZoom;
+	}
+
 	/**EVENTOS*/
 	@PostLoad
 	public void postLoad(){
@@ -195,7 +193,11 @@ public class Compra extends AbstractEntity implements Serializable {
 				total = total + detalleOferta.calcularPrecioVentaConverter();
 			}
 		}
-		return calcularSubTotal() + calcularFlete();
+		
+		if(getFleteZoom()!=null)
+			return calcularSubTotal() + getFleteZoom().totalReal();
+		else
+			return calcularSubTotal();
 	}
 	
 	public Float calcularSubTotal(){
@@ -206,12 +208,6 @@ public class Compra extends AbstractEntity implements Serializable {
 			}
 		}
 		return total;
-	}
-	
-	//SIMULACION DE CALCULO DE FLETE SE DEBE CORREGIR
-	public Float calcularFlete(){
-		Random rnd = new Random();
-		return rnd.nextFloat();
 	}
 	
 	@Transient
