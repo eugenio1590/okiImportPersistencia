@@ -83,6 +83,11 @@ public class Cotizacion extends AbstractEntity implements Serializable{
 		this.tipo = tipo;
 	}
 	
+	public Cotizacion(Date fechaCreacion){
+		this();
+		this.fechaCreacion = fechaCreacion;
+	}
+	
 	public Cotizacion(String mensaje, Boolean tipo){
 		this(tipo);
 		this.mensaje = mensaje;
@@ -195,9 +200,13 @@ public class Cotizacion extends AbstractEntity implements Serializable{
 	}
 
 	public void setDetalleCotizacions(List<DetalleCotizacion> detalleCotizacions) {
-		if(detalleCotizacions!=null && !detalleCotizacions.isEmpty())
-			for(DetalleCotizacion detalle : detalleCotizacions)
-				this.addDetalleCotizacion(detalle);
+		try {
+			if(detalleCotizacions!=null && !detalleCotizacions.isEmpty())
+				for(DetalleCotizacion detalle : detalleCotizacions)
+					this.addDetalleCotizacion(detalle);
+		} catch(Exception e){
+			this.detalleCotizacions = detalleCotizacions;
+		}
 	}
 
 	public DetalleCotizacion addDetalleCotizacion(DetalleCotizacion detalleCotizacion) {
@@ -250,12 +259,14 @@ public class Cotizacion extends AbstractEntity implements Serializable{
 	/**EVENTOS*/
 	@PrePersist
 	public void prePersist(){
+		super.prePersist();
 		if(this.historicoMoneda!=null && this.historicoMoneda.getIdHistoria()==null)
 			this.historicoMoneda = null;
 	}
 
 	@PreUpdate
 	public void preUpdate(){
+		super.preUpdate();
 		if(this.historicoMoneda!=null && this.historicoMoneda.getIdHistoria()==null)
 			this.historicoMoneda = null;
 	}

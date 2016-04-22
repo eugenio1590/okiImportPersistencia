@@ -3,6 +3,7 @@ package com.okiimport.app.service.web.impl;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,6 +16,7 @@ import com.okiimport.app.dao.pago.PagoClienteRepository;
 import com.okiimport.app.dao.transaccion.CompraRepository;
 import com.okiimport.app.dao.transaccion.detalle.oferta.DetalleOfertaRepository;
 import com.okiimport.app.model.Compra;
+import com.okiimport.app.model.Deposito;
 import com.okiimport.app.model.DetalleOferta;
 import com.okiimport.app.model.HistoricoMoneda;
 import com.okiimport.app.model.Pago;
@@ -32,23 +34,22 @@ public class SPagoImpl extends AbstractServiceImpl implements SPago{
 	private PagoClienteRepository pagoRepository;
 	
 	@Autowired 
-	private CompraRepository compraRespository;
+	private CompraRepository compraRepository;
 	
 	@Autowired
 	private DetalleOfertaRepository detalleOfertaRepository;
 	
 
 	public Boolean guardarPagoCliente(SControlConfiguracion sControlConfiguracion, BraintreeGateway gateway, PagoCliente pagoCliente) {
-		Boolean valor=false;
+		Boolean valor = false;
 		Result<Transaction> result = crearTransaccion(sControlConfiguracion, gateway, pagoCliente);
 		System.out.println("Result: "+result.isSuccess()+" "+result.getMessage());
 
 		if(valor=result.isSuccess()){
 			
 			Compra compra = pagoCliente.getCompra();
-			compra.setIdCompra(null);
 			compra.setEstatus(EEstatusCompra.PAGADA);
-			compraRespository.save(compra);
+			compraRepository.save(compra);
 			for(DetalleOferta detalle : pagoCliente.getCompra().getDetalleOfertas()){
 				detalle.setCompra(compra);
 				detalleOfertaRepository.save(detalle);
@@ -67,6 +68,7 @@ public class SPagoImpl extends AbstractServiceImpl implements SPago{
 			//como banco, forma de pago
 			
 			pagoRepository.save(pagoCliente);
+			valor = true;
 		}
 		else
 		{

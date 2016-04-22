@@ -257,7 +257,6 @@ public class Oferta extends AbstractEntity implements Serializable{
 	}
 	
 	@Transient
-
 	public String getTitleNroOferta(){
 		return "Oferta Nro. "+String.valueOf(getNroOferta());
 	}
@@ -300,5 +299,19 @@ public class Oferta extends AbstractEntity implements Serializable{
 		
 		}
 		return detalles;
+	}
+	
+	/**EVENTOS*/
+	@PreUpdate
+	public void preUpdate(){
+		try {
+			super.preUpdate();
+			if(getEstatus() == EEstatusOferta.ENVIADA)
+				for(DetalleOferta detalle : getDetalleOfertas()){
+					detalle.setAprobado(false);
+				}
+		} catch(Exception e){
+			
+		}
 	}
 }

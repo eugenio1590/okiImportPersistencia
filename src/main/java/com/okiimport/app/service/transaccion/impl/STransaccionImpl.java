@@ -29,21 +29,19 @@ import com.okiimport.app.dao.transaccion.detalle.requerimiento.DetalleRequerimie
 import com.okiimport.app.dao.transaccion.impl.CompraDAO;
 import com.okiimport.app.dao.transaccion.impl.CotizacionDAO;
 import com.okiimport.app.dao.transaccion.impl.OfertaDAO;
+import com.okiimport.app.dao.transaccion.impl.OrdenCompraDAO;
 import com.okiimport.app.dao.transaccion.impl.RequerimientoDAO;
 import com.okiimport.app.dao.transaccion.impl.detalle.cotizacion.DetalleCotizacionDAO;
 import com.okiimport.app.model.Analista;
 import com.okiimport.app.model.Compra;
 import com.okiimport.app.model.Configuracion;
 import com.okiimport.app.model.Cotizacion;
-import com.okiimport.app.model.Deposito;
 import com.okiimport.app.model.DetalleCotizacion;
 import com.okiimport.app.model.DetalleCotizacionInternacional;
 import com.okiimport.app.model.DetalleOferta;
 import com.okiimport.app.model.DetalleRequerimiento;
-import com.okiimport.app.model.HistoricoMoneda;
 import com.okiimport.app.model.Oferta;
 import com.okiimport.app.model.OrdenCompra;
-import com.okiimport.app.model.PagoCliente;
 import com.okiimport.app.model.Proveedor;
 import com.okiimport.app.model.Requerimiento;
 import com.okiimport.app.model.enumerados.EEstatusCompra;
@@ -773,30 +771,17 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		Integer total = 0;
 		List<OrdenCompra> ordenesCompra = null;
-		Sort sortCompra = new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idOrdenCompra"));
-		if(requerimiento!=null){
-			if(limit>0){
-				Page<OrdenCompra> pageOrdenCompra 
-				= this.ordenCompraRepository.findByDetalleOfertas_Compra_RequerimientoAndEstatusIn(requerimiento, new EEstatusOrdenCompra[]{ EEstatusOrdenCompra.CREADA}, new PageRequest(page, limit, sortCompra));
-				total = Long.valueOf(pageOrdenCompra.getTotalElements()).intValue();
-				ordenesCompra = pageOrdenCompra.getContent();
-			}
-			else {
-				ordenesCompra = this.ordenCompraRepository.findByDetalleOfertas_Compra_RequerimientoAndEstatusIn(requerimiento, new EEstatusOrdenCompra[]{ EEstatusOrdenCompra.CREADA});
-				total = ordenesCompra.size();
-			}
+		Sort sortOrdenCompra = new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idOrdenCompra"));
+		Specification<OrdenCompra> specfOrdenCompra = new OrdenCompraDAO().consultarOrdenesCompra(ordenCompra, requerimiento);
+		if(limit>0){
+			Page<OrdenCompra> pageOrdenCompra 
+			= this.ordenCompraRepository.findAll(specfOrdenCompra, new PageRequest(page, limit, sortOrdenCompra));
+			total = Long.valueOf(pageOrdenCompra.getTotalElements()).intValue();
+			ordenesCompra = pageOrdenCompra.getContent();
 		}
-		else if(ordenCompra != null && ordenCompra.getProveedor()!=null){
-			if(limit>0){
-				Page<OrdenCompra> pageOrdenCompra 
-				= this.ordenCompraRepository.findByDetalleOfertas_DetalleCotizacion_Cotizacion_ProveedorAndEstatusIn(ordenCompra.getProveedor(), new EEstatusOrdenCompra[]{ EEstatusOrdenCompra.CREADA}, new PageRequest(page, limit));
-				total = Long.valueOf(pageOrdenCompra.getTotalElements()).intValue();
-				ordenesCompra = pageOrdenCompra.getContent();
-			}
-			else {
-				ordenesCompra = this.ordenCompraRepository.findByDetalleOfertas_DetalleCotizacion_Cotizacion_ProveedorAndEstatusIn(ordenCompra.getProveedor(), new EEstatusOrdenCompra[]{ EEstatusOrdenCompra.CREADA});
-				total = ordenesCompra.size();
-			}
+		else {
+			ordenesCompra = this.ordenCompraRepository.findAll(specfOrdenCompra);
+			total = ordenesCompra.size();
 		}
 		if(ordenesCompra!=null && !ordenesCompra.isEmpty()){
 			Requerimiento requerimientoF;
@@ -811,43 +796,21 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		return parametros;
 		
 	}
-	/*
-	public void guardarOrdenCompra(Compra compra){
-		Map<Proveedor, List<DetalleOferta>> map = compra.getMap();
-		HistoricoMoneda hm ;
-		//Generamos la orden de compra
-		OrdenCompra ordenSave = new OrdenCompra();
-		for(Proveedor proveedor : map.keySet()){
-			List<DetalleOferta> values = map.get(proveedor);
-			OrdenCompra orden = new OrdenCompra();
-			ordenSave.setEstatus(EEstatusOrdenCompra.CREADA);
-//			Moneda monedaBase = sControlConfiguracion.consultarMonedaBase();
-			HistoricoMoneda monedaBase = sControlConfiguracion.consultarActualConversion(proveedor);
-			if(monedaBase != null){
-				hm = sControlConfiguracion.consultarActualConversion(monedaBase.getMoneda());
-				ordenSave.setIva(hm.getMontoConversion());
-			}
-			ordenSave.setObservacion(orden.getObservacion());
-			ordenSave.setDetalleOfertas(values);
-			ordenSave.setPagoProveedor(orden.getPagoProveedor());
-			this.ordenCompraRepository.save(ordenSave);
-		}
-	}*/
 	
 	public void guardarOrdenCompra(Compra compra, SControlConfiguracion sControlConfiguracion){
         Map<Proveedor, List<DetalleOferta>> map = compra.getMap();
+        System.out.println("Proveedores: "+map.keySet().size());
         //Generamos la orden de compra
-        OrdenCompra ordenSave = new OrdenCompra();
+        Configuracion configuracion = sControlConfiguracion.consultarConfiguracionActual();
+        OrdenCompra ordenCompra = new OrdenCompra();
         for(Proveedor proveedor : map.keySet()){
+        	ordenCompra = new OrdenCompra(EEstatusOrdenCompra.CREADA);
+        	ordenCompra.setIva(configuracion.getPorctIva());
             List<DetalleOferta> values = map.get(proveedor);
-            OrdenCompra orden = new OrdenCompra();
-            ordenSave.setEstatus(EEstatusOrdenCompra.CREADA);
-			Configuracion configuracion = sControlConfiguracion.consultarConfiguracionActual();
-			ordenSave.setIva(configuracion.getPorctIva());
-            ordenSave.setObservacion(orden.getObservacion());
-            ordenSave.setDetalleOfertas(values);
-            ordenSave.setPagoProveedor(orden.getPagoProveedor());
-            this.ordenCompraRepository.save(ordenSave);
+            this.ordenCompraRepository.save(ordenCompra);
+            ordenCompra.setDetalleOfertas(values);
+            for(DetalleOferta detalle : ordenCompra.getDetalleOfertas())
+            	this.detalleOfertaRepository.save(detalle);
         }
     }
 	

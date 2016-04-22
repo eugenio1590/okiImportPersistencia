@@ -1,6 +1,8 @@
 package com.okiimport.app.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -63,12 +65,25 @@ public class OrdenCompra extends AbstractEntity implements Serializable {
 	private Requerimiento requerimiento;
 
 	public OrdenCompra() {
+		this.detalleOfertas = new ArrayList<DetalleOferta>();
 	}
 	
 	public OrdenCompra(Proveedor proveedor){
+		this();
 		this.proveedor = proveedor;
 	}
 	
+	public OrdenCompra(EEstatusOrdenCompra estatus){
+		this();
+		this.estatus = estatus;
+	}
+	
+	public OrdenCompra(Integer idOrdenCompra, Date fechaCreacion, EEstatusOrdenCompra estatus) {
+		this(estatus);
+		this.idOrdenCompra = idOrdenCompra;
+		this.fechaCreacion = fechaCreacion;
+	}
+
 	public Integer getIdOrdenCompra() {
 		return idOrdenCompra;
 	}
@@ -106,7 +121,13 @@ public class OrdenCompra extends AbstractEntity implements Serializable {
 	}
 
 	public void setDetalleOfertas(List<DetalleOferta> detalleOfertas) {
-		this.detalleOfertas = detalleOfertas;
+		try {
+			if(detalleOfertas!=null && !detalleOfertas.isEmpty())
+				for(DetalleOferta detalle : detalleOfertas)
+					addDetalleOferta(detalle);
+		} catch(Exception e){
+			this.detalleOfertas = detalleOfertas;
+		}
 	}
 	
 	public DetalleOferta addDetalleOferta(DetalleOferta detalleOferta){
@@ -122,7 +143,6 @@ public class OrdenCompra extends AbstractEntity implements Serializable {
 		
 		return detalleOferta;
 	}
-	
 	
 	public EEstatusOrdenCompra getEstatus() {
 		return estatus;
