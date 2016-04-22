@@ -528,6 +528,21 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		return this.cotizacionRepository.findByProveedorAndEstatusIn(proveedor, estatus).size()==0;
 	}
 	
+	@Override
+	public Cotizacion registrarRecotizacion(Requerimiento requerimiento, Proveedor proveedor, List<DetalleCotizacion> detalles){
+		requerimiento.setEstatus(EEstatusRequerimiento.CON_RECOTIZACIONES);
+		this.requerimientoRepository.save(requerimiento);
+		Cotizacion cotizacion = new Cotizacion(proveedor);
+		cotizacion.setDetalleCotizacions(detalles);
+		cotizacion.setEstatus(EEstatusCotizacion.SOLICITADA);
+
+		cotizacion = this.cotizacionRepository.save(cotizacion);
+		for(DetalleCotizacion detalle : detalles)
+			this.detalleCotizacionRepository.saveAndFlush(detalle);
+
+		return cotizacion;
+	}
+	
 	//Detalles Cotizacion
 	public List<DetalleCotizacion> consultarDetallesCotizacion(int idCotizacion) {
 		return detalleCotizacionRepository.findByCotizacion_IdCotizacion(idCotizacion);

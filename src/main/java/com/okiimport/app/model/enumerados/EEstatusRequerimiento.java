@@ -10,6 +10,7 @@ public enum EEstatusRequerimiento {
 	ENVIADO_PROVEEDOR("EP", "Enviado a Proveedores"),
 	CON_COTIZACIONES_A("CCA", "Con Cotizaciones Asignadas"),
 	CON_COTIZACIONES_I("CCI", "Con Cotizaciones Incompletas"),
+	CON_RECOTIZACIONES("RR", "Esperando por Recotizaciones"),
 	OFERTADO("O", "Ofertado"),
 	CONCRETADO("CC", "Concretado"),
 	COMPRADO("CP", "Comprado"),

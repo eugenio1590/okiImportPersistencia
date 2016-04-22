@@ -231,4 +231,9 @@ public class DetalleCotizacion extends AbstractEntity implements Serializable {
 	public Float pesoTotal(){
 		return this.getCantidad() * this.getDetalleRequerimiento().getPeso();
 	}
+
+	@Transient
+	public boolean isVisibleParaRecotizar(){
+		return (this.precioVenta == null && this.precioFlete == null && this.precioVenta == null);
+	}
 }

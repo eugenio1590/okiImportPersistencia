@@ -55,6 +55,10 @@ public class Cotizacion extends AbstractEntity implements Serializable{
 	@Transient
 	private Float totalFleteCalculado=new Float(0);
 	
+	//bi-directional one-to-one association to Oferta
+	@OneToOne(mappedBy="cotizacion")
+	private Oferta oferta;
+	
 	//bi-directional many-to-one association to Proveedor
 	@ManyToOne
 	@JoinColumn(name="id_proveedor")
@@ -102,6 +106,7 @@ public class Cotizacion extends AbstractEntity implements Serializable{
 	}
 	
 	public Cotizacion(Proveedor proveedor){
+		this();
 		this.proveedor = proveedor;
 	}
 
@@ -161,6 +166,14 @@ public class Cotizacion extends AbstractEntity implements Serializable{
 		this.precioFlete = precioFlete;
 	}
 
+	public Oferta getOferta() {
+		return oferta;
+	}
+
+	public void setOferta(Oferta oferta) {
+		this.oferta = oferta;
+	}
+
 	public Proveedor getProveedor() {
 		return proveedor;
 	}
@@ -182,7 +195,9 @@ public class Cotizacion extends AbstractEntity implements Serializable{
 	}
 
 	public void setDetalleCotizacions(List<DetalleCotizacion> detalleCotizacions) {
-		this.detalleCotizacions = detalleCotizacions;
+		if(detalleCotizacions!=null && !detalleCotizacions.isEmpty())
+			for(DetalleCotizacion detalle : detalleCotizacions)
+				this.addDetalleCotizacion(detalle);
 	}
 
 	public DetalleCotizacion addDetalleCotizacion(DetalleCotizacion detalleCotizacion) {
