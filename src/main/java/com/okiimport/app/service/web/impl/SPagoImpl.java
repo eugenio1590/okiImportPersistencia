@@ -3,6 +3,7 @@ package com.okiimport.app.service.web.impl;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,6 +16,7 @@ import com.okiimport.app.dao.pago.PagoClienteRepository;
 import com.okiimport.app.dao.transaccion.CompraRepository;
 import com.okiimport.app.dao.transaccion.detalle.oferta.DetalleOfertaRepository;
 import com.okiimport.app.model.Compra;
+import com.okiimport.app.model.Deposito;
 import com.okiimport.app.model.DetalleOferta;
 import com.okiimport.app.model.HistoricoMoneda;
 import com.okiimport.app.model.Pago;
@@ -32,7 +34,7 @@ public class SPagoImpl extends AbstractServiceImpl implements SPago{
 	private PagoClienteRepository pagoRepository;
 	
 	@Autowired 
-	private CompraRepository compraRespository;
+	private CompraRepository compraRepository;
 	
 	@Autowired
 	private DetalleOfertaRepository detalleOfertaRepository;
@@ -45,14 +47,24 @@ public class SPagoImpl extends AbstractServiceImpl implements SPago{
 
 		if(valor=result.isSuccess()){
 			
-			Compra compra = pagoCliente.getCompra();
+			/*Compra compra = pagoCliente.getCompra();
 			compra.setIdCompra(null);
 			compra.setEstatus(EEstatusCompra.PAGADA);
-			compraRespository.save(compra);
+			compraRepository.save(compra);
 			for(DetalleOferta detalle : pagoCliente.getCompra().getDetalleOfertas()){
 				detalle.setCompra(compra);
 				detalleOfertaRepository.save(detalle);
-			}
+			}*/
+			//Por ahora para evitar errores
+			PagoCliente p = new PagoCliente();
+			this.compraRepository.save(pagoCliente.getCompra());
+			p.setCompra(pagoCliente.getCompra());
+			p.setFechaPago(pagoCliente.getFechaPago());
+			p.setMonto(pagoCliente.getMonto());
+			p.setEstatus(pagoCliente.getEstatus());
+			p.setDescripcion(pagoCliente.getDescripcion());
+			p.setFormaPago(pagoCliente.getFormaPago());
+			this.pagoRepository.save(p);
 			
 			// donde deberia crearse el atributo idTransaccion?? si en modelo Pago o PagoCliente
 			String idTransaccion=result.getTarget().getId();
@@ -62,7 +74,7 @@ public class SPagoImpl extends AbstractServiceImpl implements SPago{
 			pagoCliente.setEstatus(estatus);
 			
 			pagoCliente.setFechaPago(this.calendar.getTime());
-			pagoCliente.setDescripcion("Pago de Compra Nro. "+compra.getIdCompra());
+			pagoCliente.setDescripcion("Pago de Compra Nro. "+pagoCliente.getCompra().getIdCompra());
 			//falta otros atributos para setear en el objeto pagoCliente
 			//como banco, forma de pago
 			
