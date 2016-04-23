@@ -1,8 +1,10 @@
 package com.okiimport.app.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -63,9 +65,11 @@ public class OrdenCompra extends AbstractEntity implements Serializable {
 	private Requerimiento requerimiento;
 
 	public OrdenCompra() {
+		this.detalleOfertas = new ArrayList<DetalleOferta>();
 	}
 	
 	public OrdenCompra(Proveedor proveedor){
+		this();
 		this.proveedor = proveedor;
 	}
 	
@@ -106,7 +110,9 @@ public class OrdenCompra extends AbstractEntity implements Serializable {
 	}
 
 	public void setDetalleOfertas(List<DetalleOferta> detalleOfertas) {
-		this.detalleOfertas = detalleOfertas;
+		if(detalleOfertas!=null && !detalleOfertas.isEmpty())
+			for(DetalleOferta detalle : detalleOfertas)
+				addDetalleOferta(detalle);
 	}
 	
 	public DetalleOferta addDetalleOferta(DetalleOferta detalleOferta){
