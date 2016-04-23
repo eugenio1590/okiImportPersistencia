@@ -528,6 +528,21 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		return this.cotizacionRepository.findByProveedorAndEstatusIn(proveedor, estatus).size()==0;
 	}
 	
+	@Override
+	public Cotizacion registrarRecotizacion(Requerimiento requerimiento, Proveedor proveedor, List<DetalleCotizacion> detalles){
+		requerimiento.setEstatus(EEstatusRequerimiento.CON_RECOTIZACIONES);
+		this.requerimientoRepository.save(requerimiento);
+		Cotizacion cotizacion = new Cotizacion(proveedor);
+		cotizacion.setDetalleCotizacions(detalles);
+		cotizacion.setEstatus(EEstatusCotizacion.SOLICITADA);
+
+		cotizacion = this.cotizacionRepository.save(cotizacion);
+		for(DetalleCotizacion detalle : detalles)
+			this.detalleCotizacionRepository.saveAndFlush(detalle);
+
+		return cotizacion;
+	}
+	
 	//Detalles Cotizacion
 	public List<DetalleCotizacion> consultarDetallesCotizacion(int idCotizacion) {
 		return detalleCotizacionRepository.findByCotizacion_IdCotizacion(idCotizacion);
@@ -835,25 +850,6 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
             this.ordenCompraRepository.save(ordenSave);
         }
     }
-	
-	public void registrarPagoFactura(PagoCliente pago){
-		PagoCliente p = new PagoCliente();
-		this.compraRepository.save(pago.getCompra());
-		p.setCompra(pago.getCompra());
-		p.setFechaPago(pago.getFechaPago());
-		p.setMonto(pago.getMonto());
-		p.setEstatus(pago.getEstatus());
-		p.setDescripcion(pago.getDescripcion());
-		p.setFormaPago(pago.getFormaPago());
-		p.setBanco(pago.getBanco());
-		List<Deposito> depositos = pago.getDepositos();
-		//Si  hay depositos entonces los almacenamos
-		if(depositos.size() > 0)
-			for (Deposito deposito : depositos) {
-				this.depositoRepository.save(deposito);
-			}
-		this.pagoRepository.save(p);
-	}
 	
 	/**METODOS PROPIOS DE LA CLASE*/
 	private void llenarNroOfertas(List<Requerimiento> requerimientos){

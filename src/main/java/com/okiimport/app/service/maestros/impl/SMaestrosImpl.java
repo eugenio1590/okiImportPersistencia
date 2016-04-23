@@ -116,7 +116,7 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 	}
 	
 	//Estados
-	public Map<String, Object> ConsultarEstado(int page, int limit) {
+	public Map<String, Object> consultarEstados(int page, int limit) {
 		Map<String, Object> Parametros= new HashMap<String, Object>();
 		Integer total = 0;
 		List<Estado> estados = null;

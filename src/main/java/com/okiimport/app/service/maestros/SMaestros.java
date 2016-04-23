@@ -31,7 +31,7 @@ public interface SMaestros {
 	
 	//Estados
 	@Transactional(readOnly=true)
-	Map<String,Object> ConsultarEstado(int page, int limit);
+	Map<String,Object> consultarEstados(int page, int limit);
 			
 	//Ciudades
 	@Transactional(readOnly=true)

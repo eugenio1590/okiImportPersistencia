@@ -51,6 +51,11 @@ public class Oferta extends AbstractEntity implements Serializable{
 	@Transient
 	private List<DetalleOferta> detalleOfertasAux;
 	
+	//bi-directional one-to-one association to Cotizacion
+	@OneToOne
+	@JoinColumn(name="id_re_cotizacion")
+	private Cotizacion cotizacion;
+	
 	//bi-directional one-to-many association to DetalleOferta
 	@OneToMany(mappedBy="oferta", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<DetalleOferta> detalleOfertas;
@@ -74,7 +79,6 @@ public class Oferta extends AbstractEntity implements Serializable{
 		this.idOferta = idOferta;
 		this.fechaCreacion = new Timestamp(fechaCreacion.getTime());
 		this.estatus = estatus;
-		this.detalleOfertas = new ArrayList<DetalleOferta>();
 	}
 
 	public Integer getIdOferta() {
@@ -135,6 +139,14 @@ public class Oferta extends AbstractEntity implements Serializable{
 		this.nroOferta = nroOferta;
 	}
 
+	public Cotizacion getCotizacion() {
+		return cotizacion;
+	}
+
+	public void setCotizacion(Cotizacion cotizacion) {
+		this.cotizacion = cotizacion;
+	}
+
 	public List<DetalleOferta> getDetalleOfertas() {
 		return detalleOfertas;
 	}
@@ -185,6 +197,11 @@ public class Oferta extends AbstractEntity implements Serializable{
 		return this.estatus.equals(EEstatusOferta.INVALIDA);
 	}
 	
+	@Transient
+	public boolean isReCotizacion(){
+		return (cotizacion != null);
+	}
+	
 	public void copyDetallesOfertas(){
 		detalleOfertasAux = new ArrayList<DetalleOferta>(detalleOfertas);
 	}
@@ -225,8 +242,10 @@ public class Oferta extends AbstractEntity implements Serializable{
 	public boolean isAprobar(){
 		boolean aprobar = true;
 		if ( detalleOfertas != null && !detalleOfertas.isEmpty()){
+			Boolean aprobado;
 			for(DetalleOferta detalleOferta : detalleOfertas ){
-				aprobar &= detalleOferta.getAprobado();
+				aprobado = detalleOferta.getAprobado();
+				aprobar &= (aprobado != null) ? aprobado : false;
 				if(!aprobar)
 					break;
 			}
@@ -235,5 +254,51 @@ public class Oferta extends AbstractEntity implements Serializable{
 			aprobar = false;
 		
 		return aprobar;
+	}
+	
+	@Transient
+
+	public String getTitleNroOferta(){
+		return "Oferta Nro. "+String.valueOf(getNroOferta());
+	}
+	
+	@Transient
+	public boolean isParaReCotizacion(){
+		if(isReCotizacion())
+			return false;
+		
+		if(isNotEmpty()){
+			DetalleOferta detalleOferta = detalleOfertas.get(0);
+			for(int i = 1; i<detalleOfertas.size(); i++){
+				if(!detalleOferta.getProveedor().equals(detalleOfertas.get(i).getProveedor()))
+					return false;
+				
+			}
+		}
+		return true;
+	}
+	
+	@Transient
+	public boolean validoParaRecotizar(){
+		boolean valido = true;
+		if(isNotEmpty()){
+			for(DetalleOferta detalleOferta : detalleOfertas)
+				valido &= (detalleOferta.getAprobado() == null) ? false : true;
+			
+		}
+		else
+			valido = false;
+		return valido;
+	}
+	
+	@Transient
+	public List<DetalleCotizacion> getDetallesCotizacionParaRecotizacion(boolean nullCotizacion){
+		List<DetalleCotizacion> detalles = new ArrayList<DetalleCotizacion>();
+		if(isNotEmpty()){
+			for(DetalleOferta detalleOferta : detalleOfertas)
+				detalles.add(detalleOferta.getDetalleCotizacionParaRecotizacion(nullCotizacion));
+		
+		}
+		return detalles;
 	}
 }

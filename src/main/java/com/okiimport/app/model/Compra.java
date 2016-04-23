@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import javax.persistence.*;
 
@@ -15,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.okiimport.app.model.enumerados.EEstatusCompra;
 import com.okiimport.app.model.enumerados.EEstatusRequerimiento;
 import com.okiimport.app.resource.model.AbstractEntity;
+import com.okiimport.app.resource.service.model.FleteZoom;
 
 /**
  * The persistent class for the compra database table.
@@ -58,15 +58,19 @@ public class Compra extends AbstractEntity implements Serializable {
 	private HistoricoMoneda historicoMoneda;
 	
 	//bi-directional one-to-many association to DetalleOferta
-	@OneToMany(mappedBy="compra", fetch=FetchType.LAZY)
+	@OneToMany(mappedBy="compra", fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	private List<DetalleOferta> detalleOfertas;
 
+	@Transient
+	private FleteZoom fleteZoom;
+
 	public Compra() {
+		this.detalleOfertas = new ArrayList<DetalleOferta>();
 	}
 	
 	public Compra(Requerimiento requerimiento, Date fechaCreacion){
+		this();
 		this.requerimiento = requerimiento;
-		this.fechaCreacion = new Timestamp(fechaCreacion.getTime());
 	}
 
 	public Integer getIdCompra() {
@@ -109,8 +113,6 @@ public class Compra extends AbstractEntity implements Serializable {
 		this.observacion = observacion;
 	}
 
-	
-
 	public EEstatusCompra getEstatus() {
 		return estatus;
 	}
@@ -140,7 +142,9 @@ public class Compra extends AbstractEntity implements Serializable {
 	}
 
 	public void setDetalleOfertas(List<DetalleOferta> detalleOfertas) {
-		this.detalleOfertas = detalleOfertas;
+		if(detalleOfertas != null && !detalleOfertas.isEmpty())
+			for(DetalleOferta detalle : detalleOfertas)
+				this.addDetalleOferta(detalle);
 	}
 	
 	public DetalleOferta addDetalleOferta(DetalleOferta detalleOferta){
@@ -157,6 +161,14 @@ public class Compra extends AbstractEntity implements Serializable {
 		return detalleOferta;
 	}
 	
+	public FleteZoom getFleteZoom() {
+		return fleteZoom;
+	}
+
+	public void setFleteZoom(FleteZoom fleteZoom) {
+		this.fleteZoom = fleteZoom;
+	}
+
 	/**EVENTOS*/
 	@PostLoad
 	public void postLoad(){
@@ -184,7 +196,11 @@ public class Compra extends AbstractEntity implements Serializable {
 				total = total + detalleOferta.calcularPrecioVentaConverter();
 			}
 		}
-		return calcularSubTotal() + calcularFlete();
+		
+		if(getFleteZoom()!=null)
+			return calcularSubTotal() + getFleteZoom().totalReal();
+		else
+			return calcularSubTotal();
 	}
 	
 	public Float calcularSubTotal(){
@@ -195,12 +211,6 @@ public class Compra extends AbstractEntity implements Serializable {
 			}
 		}
 		return total;
-	}
-	
-	//SIMULACION DE CALCULO DE FLETE SE DEBE CORREGIR
-	public Float calcularFlete(){
-		Random rnd = new Random();
-		return rnd.nextFloat();
 	}
 	
 	@Transient
@@ -217,4 +227,22 @@ public class Compra extends AbstractEntity implements Serializable {
 		}
 		return map;
 	}
+	
+	public Map<String, Number> cantidadPiezasYPeso(){
+		float pesoTotal = 0;
+		int cantidadPiezas = 0;
+		
+		for(DetalleOferta detalle : this.getDetalleOfertas()){
+			cantidadPiezas += detalle.getDetalleCotizacion().getCantidad();
+			pesoTotal += detalle.getDetalleCotizacion().calcularTotal();
+		}
+		
+		Map<String, Number> parametros = new HashMap<String, Number>();
+		parametros.put("pesoTotal", pesoTotal);
+		parametros.put("cantidadPiezas", cantidadPiezas);
+		
+		return parametros;
+	}
+
+
 }
