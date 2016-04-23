@@ -35,15 +35,12 @@ import com.okiimport.app.model.Analista;
 import com.okiimport.app.model.Compra;
 import com.okiimport.app.model.Configuracion;
 import com.okiimport.app.model.Cotizacion;
-import com.okiimport.app.model.Deposito;
 import com.okiimport.app.model.DetalleCotizacion;
 import com.okiimport.app.model.DetalleCotizacionInternacional;
 import com.okiimport.app.model.DetalleOferta;
 import com.okiimport.app.model.DetalleRequerimiento;
-import com.okiimport.app.model.HistoricoMoneda;
 import com.okiimport.app.model.Oferta;
 import com.okiimport.app.model.OrdenCompra;
-import com.okiimport.app.model.PagoCliente;
 import com.okiimport.app.model.Proveedor;
 import com.okiimport.app.model.Requerimiento;
 import com.okiimport.app.model.enumerados.EEstatusCompra;
@@ -803,7 +800,7 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 			for(OrdenCompra ordenCompraF : ordenesCompra){
 				requerimientoF = this.requerimientoRepository.findAll(new RequerimientoDAO().consultarPorOrdenCompra(ordenCompraF)).get(0);
 				ordenCompraF.setRequerimiento(requerimientoF);
-				ordenCompraF.setDetalleOfertas(this.detalleOfertaRepository.findByOrdenCompra(ordenCompraF));
+				ordenCompraF.addNewDetallesOfertas(this.detalleOfertaRepository.findByOrdenCompra(ordenCompraF));
 			}
 		}
 		parametros.put("total", total);
@@ -811,28 +808,6 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		return parametros;
 		
 	}
-	/*
-	public void guardarOrdenCompra(Compra compra){
-		Map<Proveedor, List<DetalleOferta>> map = compra.getMap();
-		HistoricoMoneda hm ;
-		//Generamos la orden de compra
-		OrdenCompra ordenSave = new OrdenCompra();
-		for(Proveedor proveedor : map.keySet()){
-			List<DetalleOferta> values = map.get(proveedor);
-			OrdenCompra orden = new OrdenCompra();
-			ordenSave.setEstatus(EEstatusOrdenCompra.CREADA);
-//			Moneda monedaBase = sControlConfiguracion.consultarMonedaBase();
-			HistoricoMoneda monedaBase = sControlConfiguracion.consultarActualConversion(proveedor);
-			if(monedaBase != null){
-				hm = sControlConfiguracion.consultarActualConversion(monedaBase.getMoneda());
-				ordenSave.setIva(hm.getMontoConversion());
-			}
-			ordenSave.setObservacion(orden.getObservacion());
-			ordenSave.setDetalleOfertas(values);
-			ordenSave.setPagoProveedor(orden.getPagoProveedor());
-			this.ordenCompraRepository.save(ordenSave);
-		}
-	}*/
 	
 	public void guardarOrdenCompra(Compra compra, SControlConfiguracion sControlConfiguracion){
         Map<Proveedor, List<DetalleOferta>> map = compra.getMap();
@@ -845,9 +820,11 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 			Configuracion configuracion = sControlConfiguracion.consultarConfiguracionActual();
 			ordenSave.setIva(configuracion.getPorctIva());
             ordenSave.setObservacion(orden.getObservacion());
-            ordenSave.setDetalleOfertas(values);
             ordenSave.setPagoProveedor(orden.getPagoProveedor());
             this.ordenCompraRepository.save(ordenSave);
+            ordenSave.setDetalleOfertas(values);
+            for(DetalleOferta detalle : ordenSave.getDetalleOfertas())
+            	this.detalleOfertaRepository.save(detalle);
         }
     }
 	

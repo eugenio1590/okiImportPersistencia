@@ -41,30 +41,19 @@ public class SPagoImpl extends AbstractServiceImpl implements SPago{
 	
 
 	public Boolean guardarPagoCliente(SControlConfiguracion sControlConfiguracion, BraintreeGateway gateway, PagoCliente pagoCliente) {
-		Boolean valor=false;
+		Boolean valor = false;
 		Result<Transaction> result = crearTransaccion(sControlConfiguracion, gateway, pagoCliente);
 		System.out.println("Result: "+result.isSuccess()+" "+result.getMessage());
 
 		if(valor=result.isSuccess()){
 			
-			/*Compra compra = pagoCliente.getCompra();
-			compra.setIdCompra(null);
+			Compra compra = pagoCliente.getCompra();
 			compra.setEstatus(EEstatusCompra.PAGADA);
 			compraRepository.save(compra);
 			for(DetalleOferta detalle : pagoCliente.getCompra().getDetalleOfertas()){
 				detalle.setCompra(compra);
 				detalleOfertaRepository.save(detalle);
-			}*/
-			//Por ahora para evitar errores
-			PagoCliente p = new PagoCliente();
-			this.compraRepository.save(pagoCliente.getCompra());
-			p.setCompra(pagoCliente.getCompra());
-			p.setFechaPago(pagoCliente.getFechaPago());
-			p.setMonto(pagoCliente.getMonto());
-			p.setEstatus(pagoCliente.getEstatus());
-			p.setDescripcion(pagoCliente.getDescripcion());
-			p.setFormaPago(pagoCliente.getFormaPago());
-			this.pagoRepository.save(p);
+			}
 			
 			// donde deberia crearse el atributo idTransaccion?? si en modelo Pago o PagoCliente
 			String idTransaccion=result.getTarget().getId();
@@ -74,11 +63,12 @@ public class SPagoImpl extends AbstractServiceImpl implements SPago{
 			pagoCliente.setEstatus(estatus);
 			
 			pagoCliente.setFechaPago(this.calendar.getTime());
-			pagoCliente.setDescripcion("Pago de Compra Nro. "+pagoCliente.getCompra().getIdCompra());
+			pagoCliente.setDescripcion("Pago de Compra Nro. "+compra.getIdCompra());
 			//falta otros atributos para setear en el objeto pagoCliente
 			//como banco, forma de pago
 			
 			pagoRepository.save(pagoCliente);
+			valor = true;
 		}
 		else
 		{
