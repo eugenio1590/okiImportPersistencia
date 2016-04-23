@@ -35,15 +35,12 @@ import com.okiimport.app.model.Analista;
 import com.okiimport.app.model.Compra;
 import com.okiimport.app.model.Configuracion;
 import com.okiimport.app.model.Cotizacion;
-import com.okiimport.app.model.Deposito;
 import com.okiimport.app.model.DetalleCotizacion;
 import com.okiimport.app.model.DetalleCotizacionInternacional;
 import com.okiimport.app.model.DetalleOferta;
 import com.okiimport.app.model.DetalleRequerimiento;
-import com.okiimport.app.model.HistoricoMoneda;
 import com.okiimport.app.model.Oferta;
 import com.okiimport.app.model.OrdenCompra;
-import com.okiimport.app.model.PagoCliente;
 import com.okiimport.app.model.Proveedor;
 import com.okiimport.app.model.Requerimiento;
 import com.okiimport.app.model.enumerados.EEstatusCompra;
@@ -803,7 +800,7 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 			for(OrdenCompra ordenCompraF : ordenesCompra){
 				requerimientoF = this.requerimientoRepository.findAll(new RequerimientoDAO().consultarPorOrdenCompra(ordenCompraF)).get(0);
 				ordenCompraF.setRequerimiento(requerimientoF);
-				ordenCompraF.setDetalleOfertas(this.detalleOfertaRepository.findByOrdenCompra(ordenCompraF));
+				ordenCompraF.addNewDetallesOfertas(this.detalleOfertaRepository.findByOrdenCompra(ordenCompraF));
 			}
 		}
 		parametros.put("total", total);

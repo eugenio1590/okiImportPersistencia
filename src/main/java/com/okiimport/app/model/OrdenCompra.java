@@ -129,6 +129,9 @@ public class OrdenCompra extends AbstractEntity implements Serializable {
 		return detalleOferta;
 	}
 	
+	public void addNewDetallesOfertas(List<DetalleOferta> detallesOfertas){
+		this.detalleOfertas = detallesOfertas;
+	}
 	
 	public EEstatusOrdenCompra getEstatus() {
 		return estatus;
