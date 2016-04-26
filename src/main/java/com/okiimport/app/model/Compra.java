@@ -1,6 +1,7 @@
 package com.okiimport.app.model;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -219,10 +220,10 @@ public class Compra extends AbstractEntity implements Serializable {
 		//Para agrupar los detalles por proveedor
 		for(int i=0; i < detalles.size(); i++){
 			Proveedor prov1 = detalles.get(i).getDetalleCotizacion().getCotizacion().getProveedor();
-			if(map.get(prov1) == (null))
-				map.put(prov1, new ArrayList<DetalleOferta>());
-
-			map.get(prov1).add((DetalleOferta) detalles.get(i));
+				if(map.get(prov1) == (null))
+					map.put(prov1, new ArrayList<DetalleOferta>());
+				
+				map.get(prov1).add((DetalleOferta) detalles.get(i));
 		}
 		return map;
 	}
@@ -233,7 +234,7 @@ public class Compra extends AbstractEntity implements Serializable {
 		
 		for(DetalleOferta detalle : this.getDetalleOfertas()){
 			cantidadPiezas += detalle.getDetalleCotizacion().getCantidad();
-			pesoTotal += detalle.getDetalleCotizacion().pesoTotal();
+			pesoTotal += detalle.getDetalleCotizacion().calcularTotal();
 		}
 		
 		Map<String, Number> parametros = new HashMap<String, Number>();

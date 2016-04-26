@@ -102,6 +102,7 @@ public class SPagoImpl extends AbstractServiceImpl implements SPago{
 		TransactionRequest request = new TransactionRequest()
 			.amount(new BigDecimal(decimalFormat.format((float) historico.convert(pago.getMonto()))))
 			.paymentMethodNonce(pago.getPaymentMethodNonce())
+			.merchantAccountId("okiimport")
 			.options()
 				.submitForSettlement(true)
 				.done();

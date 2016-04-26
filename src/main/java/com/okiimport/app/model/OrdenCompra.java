@@ -121,13 +121,9 @@ public class OrdenCompra extends AbstractEntity implements Serializable {
 	}
 
 	public void setDetalleOfertas(List<DetalleOferta> detalleOfertas) {
-		try {
-			if(detalleOfertas!=null && !detalleOfertas.isEmpty())
-				for(DetalleOferta detalle : detalleOfertas)
-					addDetalleOferta(detalle);
-		} catch(Exception e){
-			this.detalleOfertas = detalleOfertas;
-		}
+		if(detalleOfertas!=null && !detalleOfertas.isEmpty())
+			for(DetalleOferta detalle : detalleOfertas)
+				addDetalleOferta(detalle);
 	}
 	
 	public DetalleOferta addDetalleOferta(DetalleOferta detalleOferta){
@@ -142,6 +138,10 @@ public class OrdenCompra extends AbstractEntity implements Serializable {
 		detalleOferta.setOrdenCompra(null);
 		
 		return detalleOferta;
+	}
+	
+	public void addNewDetallesOfertas(List<DetalleOferta> detallesOfertas){
+		this.detalleOfertas = detallesOfertas;
 	}
 	
 	public EEstatusOrdenCompra getEstatus() {

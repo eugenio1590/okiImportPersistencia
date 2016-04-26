@@ -49,11 +49,6 @@ public class OrdenCompraDAO extends AbstractJpaDao<OrdenCompra> {
 				// 4. Creamos las Restricciones de la busqueda
 				List<Predicate> restricciones = new ArrayList<Predicate>();
 				
-				restricciones.add(criteriaBuilder.equal(
-						joins.get("detalleOfertas").join("detalleCotizacion").join("cotizacion").join("proveedor").get("id"),
-						ordenCompra.getProveedor().getId()
-				));
-				
 				if(requerimiento!=null)
 					restricciones.add(criteriaBuilder.equal(
 							joins.get("detalleOfertas").join("compra").join("requerimiento").get("idRequerimiento"), 
