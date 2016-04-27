@@ -44,34 +44,41 @@ public class SPagoImpl extends AbstractServiceImpl implements SPago{
 		Boolean valor = false;
 		Result<Transaction> result = crearTransaccion(sControlConfiguracion, gateway, pagoCliente);
 		System.out.println("Result: "+result.isSuccess()+" "+result.getMessage());
-
-		if(valor=result.isSuccess()){
-			
-			Compra compra = pagoCliente.getCompra();
-			compra.setEstatus(EEstatusCompra.PAGADA);
-			compraRepository.save(compra);
-			for(DetalleOferta detalle : pagoCliente.getCompra().getDetalleOfertas()){
-				detalle.setCompra(compra);
-				detalleOfertaRepository.save(detalle);
-			}
-			
-			// donde deberia crearse el atributo idTransaccion?? si en modelo Pago o PagoCliente
-			String idTransaccion=result.getTarget().getId();
-			pagoCliente.setTransactionId(idTransaccion);
-			
-			String estatus=result.getTarget().getStatus().toString();
-			pagoCliente.setEstatus(estatus);
-			
-			pagoCliente.setFechaPago(this.calendar.getTime());
-			pagoCliente.setDescripcion("Pago de Compra Nro. "+compra.getIdCompra());
-			//falta otros atributos para setear en el objeto pagoCliente
-			//como banco, forma de pago
-			
-			pagoRepository.save(pagoCliente);
-			valor = true;
-		}
-		else
-		{
+		try{
+				if(valor=result.isSuccess()){
+					
+					Compra compra = pagoCliente.getCompra();
+					compra.setEstatus(EEstatusCompra.PAGADA);
+					compraRepository.save(compra);
+					for(DetalleOferta detalle : pagoCliente.getCompra().getDetalleOfertas()){
+						detalle.setCompra(compra);
+						detalleOfertaRepository.save(detalle);
+					}
+					
+					// donde deberia crearse el atributo idTransaccion?? si en modelo Pago o PagoCliente
+					String idTransaccion=result.getTarget().getId();
+					pagoCliente.setTransactionId(idTransaccion);
+					
+					String estatus=result.getTarget().getStatus().toString();
+					pagoCliente.setEstatus(estatus);
+					
+					pagoCliente.setFechaPago(this.calendar.getTime());
+					pagoCliente.setDescripcion("Pago de Compra Nro. "+compra.getIdCompra());
+					//falta otros atributos para setear en el objeto pagoCliente
+					//como banco, forma de pago
+					
+					pagoRepository.save(pagoCliente);
+					valor = true;
+				}
+				else
+				{
+					for (ValidationError error : result.getErrors().getAllDeepValidationErrors()) {
+					    System.out.println(error.getCode());
+					    System.out.println(error.getMessage());
+					}
+				}
+		}catch(Exception e){
+			e.printStackTrace();
 			for (ValidationError error : result.getErrors().getAllDeepValidationErrors()) {
 			    System.out.println(error.getCode());
 			    System.out.println(error.getMessage());
