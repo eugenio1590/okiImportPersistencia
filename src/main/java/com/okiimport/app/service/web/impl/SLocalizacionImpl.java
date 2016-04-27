@@ -81,29 +81,33 @@ public class SLocalizacionImpl implements SLocalizacion {
 		Ciudad ciudadDestinatario = obtenerCiudadZoomDestinatario(ciudadDestino);
 		if(ciudadDestinatario!=null){
 			System.out.println("Ciudad Encontrada "+ciudadDestinatario.getCodigo());
-			Oficina oficina = obtenerOficinaARetirarZoom(ciudadDestinatario);
-			if(oficina!=null){
+			List<Oficina> oficinas = obtenerOficinasARetirarZoom(ciudadDestinatario);
+			if(oficinas!=null){
 				try {
-					Map<String, Number> parametrosCompra = compra.cantidadPiezasYPeso();
-					System.out.println("Oficina Encontrada "+oficina.getCodigo());
-					LinkedHashMap<String, String> parametros = new LinkedHashMap<String, String>();
-					parametros.put("tipo_tarifa", "2");
-					parametros.put("modalidad_tarifa", "1");
-					parametros.put("ciudad_remitente", "44");
-					parametros.put("ciudad_destinatartio", ciudadDestinatario.getCodigo());
-					parametros.put("oficina_retirar", oficina.getCodigo());
-					parametros.put("cantidad_piezas", String.valueOf(parametrosCompra.get("cantidadPiezas")));
-					parametros.put("peso", String.valueOf(parametrosCompra.get("pesoTotal")));
-					System.out.println(GSON.toJson(parametros));
-					HttpResponse response = requestPostZoom("/CalcularTarifa", GSON.toJson(parametros));
-					if(response!=null && response.getStatusLine().getStatusCode() == 200){ 
-						Reader reader = new InputStreamReader(response.getEntity().getContent());
-						Type fleteType = new TypeToken<FleteZoom>() {}.getType();
-						FleteZoom fleteZoom = GSON.fromJson(reader, fleteType);
-						compra.setFleteZoom(fleteZoom);
-						flete = fleteZoom.totalReal();
-						System.out.println("FLETE:"+flete);
-					}	
+					for(Oficina oficina : oficinas){
+						Map<String, Number> parametrosCompra = compra.cantidadPiezasYPeso();
+						System.out.println("Oficina Encontrada "+oficina.getCodigo());
+						LinkedHashMap<String, String> parametros = new LinkedHashMap<String, String>();
+						parametros.put("tipo_tarifa", "2");
+						parametros.put("modalidad_tarifa", "1");
+						parametros.put("ciudad_remitente", "44");
+						parametros.put("ciudad_destinatartio", ciudadDestinatario.getCodigo());
+						parametros.put("oficina_retirar", oficina.getCodigo());
+						parametros.put("cantidad_piezas", "1");
+						parametros.put("peso", String.valueOf(parametrosCompra.get("pesoTotal")));
+						parametros.put("valor_declarado", "20000"); //Constante temporal
+						System.out.println(GSON.toJson(parametros));
+						HttpResponse response = requestPostZoom("/CalcularTarifa", GSON.toJson(parametros));
+						if(response!=null && response.getStatusLine().getStatusCode() == 200){ 
+							Reader reader = new InputStreamReader(response.getEntity().getContent());
+							Type fleteType = new TypeToken<FleteZoom>() {}.getType();
+							FleteZoom fleteZoom = GSON.fromJson(reader, fleteType);
+							compra.setFleteZoom(fleteZoom);
+							flete = fleteZoom.totalReal();
+							System.out.println("FLETE:"+flete);
+							return flete;
+						}	
+					}
 				}
 				catch (UnsupportedOperationException e) {
 					// TODO Auto-generated catch block
@@ -151,7 +155,7 @@ public class SLocalizacionImpl implements SLocalizacion {
 	}
 	
 	@Override
-	public Oficina obtenerOficinaARetirarZoom(Ciudad ciudadZoomRemitente){
+	public List<Oficina> obtenerOficinasARetirarZoom(Ciudad ciudadZoomRemitente){
 		try {
 			HashMap<String, String> parametros = new HashMap<String, String>();
 			parametros.put("codigo_ciudad_destino", ciudadZoomRemitente.getCodigo());
@@ -162,11 +166,10 @@ public class SLocalizacionImpl implements SLocalizacion {
 				Type listType = new TypeToken<HashMap<String, String>>() {}.getType();
 				HashMap<String, String> oficinas = GSON.fromJson(reader, listType);
 				if(oficinas!=null && !oficinas.isEmpty()){
-					//Se tomara una Oficina Aleatoria.
-					int posc = (int)(Math.random()*oficinas.size());
-					String key = new ArrayList<String>(oficinas.keySet()).get(posc);
-					if(!key.equalsIgnoreCase("errormessage"))
-						return new Oficina(key, oficinas.get(key));
+					ArrayList<Oficina> oficinasRetirar = new ArrayList<Oficina>();
+					for(String key : oficinas.keySet())
+						oficinasRetirar.add(new Oficina(key, oficinas.get(key)));
+					return oficinasRetirar;
 				}
 				else
 					System.out.println("No Existen Oficinas");

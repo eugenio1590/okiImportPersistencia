@@ -1,7 +1,6 @@
 package com.okiimport.app.model;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -142,9 +141,13 @@ public class Compra extends AbstractEntity implements Serializable {
 	}
 
 	public void setDetalleOfertas(List<DetalleOferta> detalleOfertas) {
-		if(detalleOfertas != null && !detalleOfertas.isEmpty())
-			for(DetalleOferta detalle : detalleOfertas)
-				this.addDetalleOferta(detalle);
+		try {
+			if(detalleOfertas != null && !detalleOfertas.isEmpty())
+				for(DetalleOferta detalle : detalleOfertas)
+					this.addDetalleOferta(detalle);
+		} catch(Exception e){
+			this.detalleOfertas = detalleOfertas;
+		}
 	}
 	
 	public DetalleOferta addDetalleOferta(DetalleOferta detalleOferta){

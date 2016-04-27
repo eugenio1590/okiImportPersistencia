@@ -1,5 +1,7 @@
 package com.okiimport.app.service.web;
 
+import java.util.List;
+
 import com.okiimport.app.model.Ciudad;
 import com.okiimport.app.model.Compra;
 import com.okiimport.app.model.Pais;
@@ -10,5 +12,5 @@ public interface SLocalizacion {
 	double calcularDistancia(Pais paisOrigen, Pais paisDestino);
 	float calcularFleteZoomConPesoYDistancia(Compra compra, Ciudad ciudadDestino);
 	Ciudad obtenerCiudadZoomDestinatario(Ciudad ciudadDestino);
-	Oficina obtenerOficinaARetirarZoom(Ciudad ciudadZoomDestinatario);
+	List<Oficina> obtenerOficinasARetirarZoom(Ciudad ciudadZoomDestinatario);
 }

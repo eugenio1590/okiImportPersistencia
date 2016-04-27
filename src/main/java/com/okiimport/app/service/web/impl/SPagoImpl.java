@@ -3,7 +3,6 @@ package com.okiimport.app.service.web.impl;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -16,7 +15,6 @@ import com.okiimport.app.dao.pago.PagoClienteRepository;
 import com.okiimport.app.dao.transaccion.CompraRepository;
 import com.okiimport.app.dao.transaccion.detalle.oferta.DetalleOfertaRepository;
 import com.okiimport.app.model.Compra;
-import com.okiimport.app.model.Deposito;
 import com.okiimport.app.model.DetalleOferta;
 import com.okiimport.app.model.HistoricoMoneda;
 import com.okiimport.app.model.Pago;
