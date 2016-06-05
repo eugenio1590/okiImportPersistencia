@@ -22,6 +22,7 @@ import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.okiimport.app.model.factory.persona.EstatusPersonaFactory;
+import com.okiimport.app.model.factory.persona.EstatusProveedorFactory;
 import com.okiimport.app.model.factory.persona.EstatusPersonaFactory.IEstatusPersona;
 import com.okiimport.app.resource.model.AbstractEntity;
 
@@ -216,6 +217,11 @@ public abstract class Persona extends AbstractEntity implements Serializable {
 			public void postLoad(String estatus) {
 				
 			}
+
+			@Override
+			public boolean isEliminar() {
+				return false;
+			}
 		};
 	}
 	
@@ -230,10 +236,16 @@ public abstract class Persona extends AbstractEntity implements Serializable {
 	/**METODOS ABSTRACTOS DE LA CLASE*/
 	public abstract Integer getTipoMenu();
 	public abstract void postLoad(String estatus);
+	public abstract boolean isEliminar();
 	
 	/**EVENTOS*/
 	@PostLoad
 	public void postLoad(){
 		postLoad(estatus);
 	}
+	
+	
+	
+	
+	
 }

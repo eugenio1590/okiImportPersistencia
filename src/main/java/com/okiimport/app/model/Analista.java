@@ -6,6 +6,9 @@ import java.util.List;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.okiimport.app.model.factory.persona.EstatusAnalistaFactory;
+import com.okiimport.app.model.factory.persona.EstatusProveedorFactory;
+import com.okiimport.app.model.factory.persona.EstatusPersonaFactory.IEstatusPersona;
 
 /**
  * The persistent class for the analista database table.
@@ -95,5 +98,14 @@ public class Analista extends Persona implements Serializable {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Transient
+	@SuppressWarnings("static-access")
+	public boolean isEliminar() {
+		IEstatusPersona eliminado = ((EstatusAnalistaFactory) factoryEstatus).getEstatusInactivo();
+		return this.estatus.equals(eliminado.getValue());
+	}
+	
+	
 	
 }

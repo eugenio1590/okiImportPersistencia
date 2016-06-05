@@ -68,4 +68,10 @@ public class Cliente extends Persona implements Serializable {
 		
 	}
 
+	@Override
+	public boolean isEliminar() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }
