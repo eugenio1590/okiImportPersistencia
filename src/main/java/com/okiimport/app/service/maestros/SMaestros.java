@@ -11,6 +11,8 @@ import com.okiimport.app.model.Analista;
 import com.okiimport.app.model.Cliente;
 import com.okiimport.app.model.MarcaVehiculo;
 import com.okiimport.app.model.Motor;
+import com.okiimport.app.model.Pago;
+import com.okiimport.app.model.PagoCliente;
 import com.okiimport.app.model.Persona;
 import com.okiimport.app.model.Proveedor;
 import com.okiimport.app.model.Requerimiento;
@@ -111,5 +113,11 @@ public interface SMaestros {
 	//Pais
 	@Transactional(readOnly=true)
 	Map<String, Object> consultarPaises(int page, int limit);
+	
+	//Pagos
+	@Transactional(readOnly=true)
+	Map<String, Object> consultarPagosClientes(PagoCliente pagoFiltro,  String fieldSort, Boolean sortDirection, 
+			 int page, int limit);
+	
 
 }
