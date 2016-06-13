@@ -114,10 +114,7 @@ public interface SMaestros {
 	@Transactional(readOnly=true)
 	Map<String, Object> consultarPaises(int page, int limit);
 	
-	//Pagos
-	@Transactional(readOnly=true)
-	Map<String, Object> consultarPagosClientes(PagoCliente pagoFiltro,  String fieldSort, Boolean sortDirection, 
-			 int page, int limit);
+	
 	
 
 }

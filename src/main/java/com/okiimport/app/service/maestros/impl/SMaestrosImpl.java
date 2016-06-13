@@ -78,8 +78,7 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 	@Autowired
 	private PaisRepository paisRepository;
 
-	@Autowired
-	private PagoClienteRepository pagoClienteRepository;
+	
 
 	// Marcas
 	public Map<String, Object> consultarMarcas(int page, int limit) {
@@ -527,30 +526,7 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 		return parametros;
 	}
 
-	// PAGOS
-	@Override
-	public Map<String, Object> consultarPagosClientes(PagoCliente pagoFiltro,  String fieldSort, Boolean sortDirection, 
-			 int page, int limit) {
-		Map<String, Object> parametros = new HashMap<String, Object>();
-		Integer total = 0;
-		List<PagoCliente> pagoClientes = null;
-		Sort sortPagosCliente = new Sort(getDirection(sortDirection,
-				Sort.Direction.ASC), getFieldSort(fieldSort, "id"));
-		Specification<PagoCliente> specfPagoCliente = (new PagoClienteDAO())
-				.consultarPagoCliente(pagoFiltro);
-		if (limit > 0) {
-			Page<PagoCliente> pagePagoCliente = this.pagoClienteRepository
-					.findAll(specfPagoCliente, new PageRequest(page, limit,sortPagosCliente));
-			total = Long.valueOf(pagePagoCliente.getTotalElements()).intValue();
-			pagoClientes = pagePagoCliente.getContent();
-		} else {
-			pagoClientes = this.pagoClienteRepository.findAll(specfPagoCliente,sortPagosCliente);
-			total = pagoClientes.size();
-		}
-		parametros.put("total", total);
-		parametros.put("pagoClientes", pagoClientes);
-		return parametros;
-	}
+	
 
 	/** METODOS PROPIOS DE LA CLASE */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
