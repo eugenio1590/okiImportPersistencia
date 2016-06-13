@@ -73,6 +73,7 @@ public abstract class Pago extends AbstractEntity implements Serializable {
 	private List<Deposito> depositos;
 
 	public Pago() {
+		super();
 	}
 
 	public Integer getId() {

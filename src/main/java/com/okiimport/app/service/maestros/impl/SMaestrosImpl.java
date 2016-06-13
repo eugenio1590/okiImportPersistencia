@@ -535,7 +535,7 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 		Integer total = 0;
 		List<PagoCliente> pagoClientes = null;
 		Sort sortPagosCliente = new Sort(getDirection(sortDirection,
-				Sort.Direction.ASC), getFieldSort(fieldSort, "idPago"));
+				Sort.Direction.ASC), getFieldSort(fieldSort, "id"));
 		Specification<PagoCliente> specfPagoCliente = (new PagoClienteDAO())
 				.consultarPagoCliente(pagoFiltro);
 		if (limit > 0) {

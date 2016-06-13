@@ -2,6 +2,7 @@ package com.okiimport.app.model;
 
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -30,6 +31,12 @@ public class PagoCliente  extends Pago implements Serializable {
 	protected Compra compra; //Se cambiara por venta en otra rama
 	
 	public PagoCliente() {
+		super();
+	}
+	
+	public PagoCliente(Date fechaCreacion){
+		super();
+		this.fechaCreacion = fechaCreacion;
 	}
 
 	public Compra getCompra() {
