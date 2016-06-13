@@ -59,7 +59,7 @@ public class PagoClienteDAO extends AbstractJpaDao<PagoCliente> {
 			if(pagoFiltro.getFormaPago() != null){
 				restricciones.add(this.criteriaBuilder.like(
 						this.entity.get("formaPago").as(String.class), 
-						"%"));
+						"%" + String.valueOf(pagoFiltro.getFormaPago()) + "%"));
 			}
 			
 			if(pagoFiltro.getFechaCreacion() != null){
@@ -71,8 +71,8 @@ public class PagoClienteDAO extends AbstractJpaDao<PagoCliente> {
 			if (pagoFiltro.getMonto() != null)
 			{
 				restricciones.add(this.criteriaBuilder.like(
-						this.entity.get("montoPago").as(String.class), 
-						"%" ));
+						this.entity.get("monto").as(String.class), 
+						"%" + String.valueOf(pagoFiltro.getMonto()) + "%"));
 			}
 			
 			if(joins!=null){
@@ -87,12 +87,10 @@ public class PagoClienteDAO extends AbstractJpaDao<PagoCliente> {
 
 					if (pagoFiltro.getCompra().getRequerimiento().getCliente().getNombre() != null) {
 						restricciones.add(this.criteriaBuilder.like(
-						joins.get("compra").join("cliente").get("nombre").as(String.class),
-						"%"+pagoFiltro.getCompra().getRequerimiento().getCliente().getNombre() + "%" ));
-
-				}
+								this.criteriaBuilder.lower(joins.get("compra").join("requerimiento").join("cliente").get("nombre").as(String.class)),
+								"%"+pagoFiltro.getCompra().getRequerimiento().getCliente().getNombre().toLowerCase() + "%" ));
 					}
-				
+				}
 			}
 		}
 	}

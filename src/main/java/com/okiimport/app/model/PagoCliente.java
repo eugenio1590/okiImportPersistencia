@@ -34,8 +34,9 @@ public class PagoCliente  extends Pago implements Serializable {
 		super();
 	}
 	
-	public PagoCliente(Date fechaCreacion){
+	public PagoCliente(Compra compra, Date fechaCreacion){
 		super();
+		this.compra = compra;
 		this.fechaCreacion = fechaCreacion;
 	}
 
