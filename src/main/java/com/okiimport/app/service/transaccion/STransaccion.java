@@ -166,4 +166,9 @@ public interface STransaccion {
 	
 	@Transactional(readOnly=true)
 	void guardarOrdenCompra(Compra compra, SControlConfiguracion sControlConfiguracion);
+	
+	//Pagos
+		@Transactional(readOnly=true)
+		Map<String, Object> consultarPagosClientes(PagoCliente pagoFiltro,  String fieldSort, Boolean sortDirection, 
+				 int page, int limit);
 }

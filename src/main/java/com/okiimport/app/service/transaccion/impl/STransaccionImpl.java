@@ -17,6 +17,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import com.okiimport.app.dao.maestros.DepositoRepository;
 import com.okiimport.app.dao.pago.PagoClienteRepository;
+import com.okiimport.app.dao.pago.impl.PagoClienteDAO;
 import com.okiimport.app.dao.transaccion.CompraRepository;
 import com.okiimport.app.dao.transaccion.CotizacionRepository;
 import com.okiimport.app.dao.transaccion.OfertaRepository;
@@ -42,6 +43,7 @@ import com.okiimport.app.model.DetalleOferta;
 import com.okiimport.app.model.DetalleRequerimiento;
 import com.okiimport.app.model.Oferta;
 import com.okiimport.app.model.OrdenCompra;
+import com.okiimport.app.model.PagoCliente;
 import com.okiimport.app.model.Proveedor;
 import com.okiimport.app.model.Requerimiento;
 import com.okiimport.app.model.enumerados.EEstatusCompra;
@@ -94,6 +96,9 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	
 	@Autowired
 	private DepositoRepository depositoRepository;
+	
+	@Autowired
+	private PagoClienteRepository pagoClienteRepository;
 	
 	private SControlConfiguracion sControlConfiguracion;
 
@@ -813,6 +818,31 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
             	this.detalleOfertaRepository.save(detalle);
         }
     }
+	
+	// PAGOS
+		@Override
+		public Map<String, Object> consultarPagosClientes(PagoCliente pagoFiltro,  String fieldSort, Boolean sortDirection, 
+				 int page, int limit) {
+			Map<String, Object> parametros = new HashMap<String, Object>();
+			Integer total = 0;
+			List<PagoCliente> pagoClientes = null;
+			Sort sortPagosCliente = new Sort(getDirection(sortDirection,
+					Sort.Direction.ASC), getFieldSort(fieldSort, "id"));
+			Specification<PagoCliente> specfPagoCliente = (new PagoClienteDAO())
+					.consultarPagoCliente(pagoFiltro);
+			if (limit > 0) {
+				Page<PagoCliente> pagePagoCliente = this.pagoClienteRepository
+						.findAll(specfPagoCliente, new PageRequest(page, limit,sortPagosCliente));
+				total = Long.valueOf(pagePagoCliente.getTotalElements()).intValue();
+				pagoClientes = pagePagoCliente.getContent();
+			} else {
+				pagoClientes = this.pagoClienteRepository.findAll(specfPagoCliente,sortPagosCliente);
+				total = pagoClientes.size();
+			}
+			parametros.put("total", total);
+			parametros.put("pagoClientes", pagoClientes);
+			return parametros;
+		}
 	
 	/**METODOS PROPIOS DE LA CLASE*/
 	private void llenarNroOfertas(List<Requerimiento> requerimientos){

@@ -200,9 +200,13 @@ public class Cotizacion extends AbstractEntity implements Serializable{
 	}
 
 	public void setDetalleCotizacions(List<DetalleCotizacion> detalleCotizacions) {
-		if(detalleCotizacions!=null && !detalleCotizacions.isEmpty())
-			for(DetalleCotizacion detalle : detalleCotizacions)
-				this.addDetalleCotizacion(detalle);
+		try {
+			if(detalleCotizacions!=null && !detalleCotizacions.isEmpty())
+				for(DetalleCotizacion detalle : detalleCotizacions)
+					this.addDetalleCotizacion(detalle);
+		} catch(Exception e){
+			this.detalleCotizacions = detalleCotizacions;
+		}
 	}
 
 	public DetalleCotizacion addDetalleCotizacion(DetalleCotizacion detalleCotizacion) {
