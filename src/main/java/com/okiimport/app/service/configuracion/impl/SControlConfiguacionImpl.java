@@ -44,20 +44,15 @@ public class SControlConfiguacionImpl extends AbstractServiceImpl implements SCo
 	//Configuracion
 	public Configuracion consultarConfiguracionActual() {
 		Page<Configuracion> configuraciones = configuracionRepository.findAll(new PageRequest(0, 1));
+		System.out.println("sc"+configuraciones.getContent().get(0));
+		System.out.println("sc iva "+configuraciones.getContent().get(0).getPorctIva());
 		return configuraciones.getContent().get(0);
 	}
 	
-	public void guardarConfiguracion(Configuracion configuracion, Moneda monedaBase){
+	public void guardarConfiguracion(Configuracion configuracion){
 		configuracionRepository.save(configuracion);
 		
-		Moneda monedaBaseAnt = consultarMonedaBase();
-		if(monedaBaseAnt!=null){
-			monedaBaseAnt.setPais(false);
-			monedaRepository.save(monedaBaseAnt);
-		}
 		
-		monedaBase.setPais(true);
-		monedaRepository.save(monedaBase);
 	}
 
 	//Moneda

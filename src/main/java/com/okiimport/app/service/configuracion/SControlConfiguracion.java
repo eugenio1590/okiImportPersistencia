@@ -19,7 +19,7 @@ public interface SControlConfiguracion {
 	Configuracion consultarConfiguracionActual();
 	
 	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
-	void guardarConfiguracion(Configuracion configuracion, Moneda monedaBase);
+	void guardarConfiguracion(Configuracion configuracion/*, Moneda monedaBase*/);
 	
 	//Moneda
 	@Transactional(readOnly=true)
