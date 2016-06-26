@@ -49,6 +49,8 @@ public class Ciudad extends AbstractEntity implements Serializable {
 	private List<Persona> personas;
 
 	public Ciudad() {
+		this.estado=new Estado();
+		this.nombre="";
 	}
 	
 	public Ciudad(Estado estado){

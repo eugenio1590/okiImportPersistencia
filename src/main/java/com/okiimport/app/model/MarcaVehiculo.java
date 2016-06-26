@@ -6,6 +6,8 @@ import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.okiimport.app.model.enumerados.EEstatusGeneral;
+import com.okiimport.app.model.factory.persona.EstatusAnalistaFactory;
+import com.okiimport.app.model.factory.persona.EstatusPersonaFactory.IEstatusPersona;
 import com.okiimport.app.resource.model.AbstractEntity;
 
 import java.util.ArrayList;
@@ -113,6 +115,11 @@ public class MarcaVehiculo extends AbstractEntity implements Serializable {
 				return marca1.getIdMarcaVehiculo().compareTo(marca2.getIdMarcaVehiculo());
 			}
 		};
+	}
+	
+	@Transient
+	public boolean isEliminar() {
+		return this.estatus.equals(EEstatusGeneral.INACTIVO);
 	}
 	
 }

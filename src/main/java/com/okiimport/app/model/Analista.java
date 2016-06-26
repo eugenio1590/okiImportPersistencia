@@ -32,6 +32,7 @@ public class Analista extends Persona implements Serializable {
 	private List<Requerimiento> requerimientos;
 
 	public Analista() {
+		this.ciudad=new Ciudad();
 	}
 	
 	public Analista(Persona persona) {
