@@ -257,14 +257,18 @@ public class Cotizacion extends AbstractEntity implements Serializable{
 	}
 
 	/**EVENTOS*/
+	@Override
 	@PrePersist
 	public void prePersist(){
+		super.prePersist();
 		if(this.historicoMoneda!=null && this.historicoMoneda.getIdHistoria()==null)
 			this.historicoMoneda = null;
 	}
 
+	@Override
 	@PreUpdate
 	public void preUpdate(){
+		super.preUpdate();
 		if(this.historicoMoneda!=null && this.historicoMoneda.getIdHistoria()==null)
 			this.historicoMoneda = null;
 	}
