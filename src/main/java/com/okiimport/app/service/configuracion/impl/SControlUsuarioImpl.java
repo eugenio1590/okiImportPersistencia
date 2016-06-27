@@ -67,11 +67,9 @@ public class SControlUsuarioImpl extends AbstractServiceImpl implements SControl
 	public Usuario grabarUsuario(Usuario usuario, SMaestros sMaestros) {
 		//usuario.setPasword(this.bcryptEncoder.encode(usuario.getPasword()));
 		Persona persona = usuario.getPersona();
-		persona.getTipoMenu();
-		usuario = actualizarUsuario(usuario, true);
 		persona = sMaestros.acutalizarPersona(persona);
 		usuario.setPersona(persona);
-		return usuario;
+		return actualizarUsuario(usuario, true);
 	}
 	
 	public Usuario actualizarUsuario(Usuario usuario, boolean encriptar){

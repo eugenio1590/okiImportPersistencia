@@ -74,6 +74,11 @@ public class Usuario extends AbstractEntity implements Serializable {
 	public Usuario(Persona persona){
 		this.persona = persona;
 	}
+	
+	public Usuario(Persona persona, Boolean activo){
+		this(persona);
+		this.activo = activo;
+	}	
 
 	public Integer getId() {
 		return this.id;
