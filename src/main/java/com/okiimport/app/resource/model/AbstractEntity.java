@@ -1,6 +1,8 @@
 package com.okiimport.app.resource.model;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -128,6 +130,32 @@ public abstract class AbstractEntity implements Prototipo{
 			return this.fechaCreacion.compareTo(objectCompare.fechaCreacion);
 		
 	}
+	
+	/**RETORNA LA DIFERENCIA EN DIAS ENTRE DOS FECHAS*/
+	public static int obtener_dias_entre_2_fechas(Date fechainicial, Date fechafinal) {
+
+		DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
+		String fechainiciostring = df.format(fechainicial);
+		try {
+			fechainicial = df.parse(fechainiciostring);
+		}
+		catch (ParseException ex) {
+		}
+
+		String fechafinalstring = df.format(fechafinal);
+		try {
+			fechafinal = df.parse(fechafinalstring);
+		}
+		catch (ParseException ex) {
+		}
+
+		long fechainicialms = fechainicial.getTime();
+		long fechafinalms = fechafinal.getTime();
+		long diferencia = fechafinalms - fechainicialms;
+		double dias = Math.floor(diferencia / 86400000L);// 3600*24*1000 
+		return ( (int) dias);
+	}
+
 	
 	/**INTERFACE*/
 	/**1. Interface Prototipo*/

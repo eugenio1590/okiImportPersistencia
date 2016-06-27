@@ -188,6 +188,28 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 			requerimientos = this.requerimientoRepository.findAll(specfRequerimiento, sortRequerimiento);
 			total = requerimientos.size();
 		}
+		Date hoy = new Date();
+		int transcurridos = 0;
+		for (Requerimiento req : requerimientos) {
+			if(req.getEstatus().equals(EEstatusRequerimiento.EMITIDO)){
+				if(req.getFechaUltimaModificacion() != null){
+					transcurridos = obtener_dias_entre_2_fechas(req.getFechaUltimaModificacion(), hoy);
+					System.out.println("transcurridos1: "+transcurridos);
+					if(transcurridos > 1){
+						req.setEstatus(EEstatusRequerimiento.RECIBIDO_EDITADO);
+						requerimientoRepository.save(req);
+					}
+				}else if(req.getFechaCreacion() != null){
+					transcurridos = obtener_dias_entre_2_fechas(req.getFechaCreacion(), hoy);
+					System.out.println("transcurridos2: "+transcurridos);
+					if(transcurridos > 1){
+						req.setEstatus(EEstatusRequerimiento.RECIBIDO_EDITADO);
+						requerimientoRepository.save(req);
+					}
+					
+				} 
+			}
+		}
 		parametros.put("total", total);
 		parametros.put("requerimientos", requerimientos);
 		return parametros;

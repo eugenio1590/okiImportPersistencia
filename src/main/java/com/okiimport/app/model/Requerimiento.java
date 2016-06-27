@@ -26,6 +26,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.mapping.Fetchable;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.okiimport.app.model.enumerados.EEstatusRequerimiento;
@@ -387,6 +389,44 @@ public class Requerimiento extends AbstractEntity implements Serializable {
 	
 	public boolean editar(){
 		return (estatus.equals(EEstatusRequerimiento.EMITIDO) || estatus.equals(EEstatusRequerimiento.RECIBIDO_EDITADO)) ? true : false;
+	}
+	
+	/**SI HA TRANSCURRIDO MAS DE 1 DIA NO PERMITIRA EDITAR */
+	public boolean editarV2(){
+		Date hoy = new Date();
+		int transcurridos = 0;
+		if(estatus.equals(EEstatusRequerimiento.EMITIDO) || estatus.equals(EEstatusRequerimiento.RECIBIDO_EDITADO)){
+			if(fechaUltimaModificacion != null){
+				transcurridos = obtener_dias_entre_2_fechas(fechaUltimaModificacion, hoy);
+				if(transcurridos == 0 || transcurridos == 1)
+					return true;
+				else 
+					return false;
+			}else if(fechaCreacion != null){
+				transcurridos = obtener_dias_entre_2_fechas(fechaCreacion, hoy);
+				if(transcurridos == 0 || transcurridos == 1)
+					return true;
+				else 
+					return false;
+			} 
+		}
+		return false;	
+	}
+	
+	/**SI HA TRANSCURRIDO MAS DE 3 DIAS NO PERMITIRA ENVIAR A PROVEEDORES */
+	public boolean puedeEnviar(){
+		Date hoy = new Date();
+		int transcurridos = 0;
+		if(fechaUltimaModificacion != null){
+			transcurridos = obtener_dias_entre_2_fechas(fechaUltimaModificacion, hoy);
+			if(transcurridos > 3)
+				return false;
+		}else if(fechaCreacion != null){
+			transcurridos = obtener_dias_entre_2_fechas(fechaCreacion, hoy);
+			if(transcurridos > 3)
+				return false;
+		} 
+		return true;	
 	}
 	
 	public boolean cotizar(){
