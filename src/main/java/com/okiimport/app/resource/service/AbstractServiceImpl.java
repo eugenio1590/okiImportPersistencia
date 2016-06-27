@@ -1,5 +1,7 @@
 package com.okiimport.app.resource.service;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -75,4 +77,30 @@ public abstract class AbstractServiceImpl {
 	protected static String getFieldSort(String fieldSort, String defaultField){
 		return (fieldSort==null) ? defaultField : fieldSort;
 	}
+	
+	/**RETORNA LA DIFERENCIA EN DIAS ENTRE DOS FECHAS*/
+	public static int obtener_dias_entre_2_fechas(Date fechainicial, Date fechafinal) {
+
+		DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
+		String fechainiciostring = df.format(fechainicial);
+		try {
+			fechainicial = df.parse(fechainiciostring);
+		}
+		catch (ParseException ex) {
+		}
+
+		String fechafinalstring = df.format(fechafinal);
+		try {
+			fechafinal = df.parse(fechafinalstring);
+		}
+		catch (ParseException ex) {
+		}
+
+		long fechainicialms = fechainicial.getTime();
+		long fechafinalms = fechafinal.getTime();
+		long diferencia = fechafinalms - fechainicialms;
+		double dias = Math.floor(diferencia / 86400000L);// 3600*24*1000 
+		return ( (int) dias);
+	}
+
 }
