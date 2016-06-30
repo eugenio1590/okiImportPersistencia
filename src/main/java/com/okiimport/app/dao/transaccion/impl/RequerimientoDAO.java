@@ -15,6 +15,7 @@ import javax.persistence.criteria.Selection;
 
 import org.springframework.data.jpa.domain.Specification;
 
+import com.okiimport.app.model.Analista;
 import com.okiimport.app.model.Cliente;
 import com.okiimport.app.model.MarcaVehiculo;
 import com.okiimport.app.model.OrdenCompra;
@@ -89,6 +90,7 @@ public class RequerimientoDAO extends AbstractJpaDao<Requerimiento> {
 				//2. Generamos los Joins
 				Map<String, JoinType> entidades = new HashMap<String, JoinType>();
 				entidades.put("cliente", JoinType.INNER);
+				entidades.put("analista", JoinType.LEFT);
 				Map<String, Join<?,?>> joins = crearJoins(entidades);
 				
 				//3. Creamos las Restricciones de la busqueda
@@ -273,6 +275,15 @@ public class RequerimientoDAO extends AbstractJpaDao<Requerimiento> {
 						restricciones.add(this.criteriaBuilder.like(
 								this.criteriaBuilder.lower(joins.get("cliente").get("nombre").as(String.class)),
 								"%"+ String.valueOf(cliente.getNombre()).toLowerCase() + "%"));
+				}
+				
+				//Analista
+				Analista analista = regFiltro.getAnalista();
+				if(analista!=null && joins.get("analista") != null){
+					if(analista.getNombre() != null)
+						restricciones.add(this.criteriaBuilder.like(
+								this.criteriaBuilder.lower(joins.get("analista").get("nombre").as(String.class)),
+								"%"+ String.valueOf(analista.getNombre()).toLowerCase() + "%"));
 				}
 				
 				//Marca Vehiculo
