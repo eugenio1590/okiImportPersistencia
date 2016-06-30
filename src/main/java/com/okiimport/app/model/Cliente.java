@@ -59,7 +59,7 @@ public class Cliente extends Persona implements Serializable {
 	/**METODOS OVERRIDE*/
 	@Override
 	public Integer getTipoMenu() {
-		return null;
+		return this.tipoMenu=4;
 	}
 	
 	@Override
