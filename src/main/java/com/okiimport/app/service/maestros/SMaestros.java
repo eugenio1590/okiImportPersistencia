@@ -11,11 +11,10 @@ import com.okiimport.app.model.Analista;
 import com.okiimport.app.model.Cliente;
 import com.okiimport.app.model.MarcaVehiculo;
 import com.okiimport.app.model.Motor;
-import com.okiimport.app.model.Pago;
-import com.okiimport.app.model.PagoCliente;
 import com.okiimport.app.model.Persona;
 import com.okiimport.app.model.Proveedor;
 import com.okiimport.app.model.Requerimiento;
+import com.okiimport.app.model.Vehiculo;
 import com.okiimport.app.model.enumerados.EEstatusRequerimiento;
 
 @Service
@@ -114,7 +113,11 @@ public interface SMaestros {
 	@Transactional(readOnly=true)
 	Map<String, Object> consultarPaises(int page, int limit);
 	
+	//Vehiculo
+	@Transactional(readOnly=true)
+	Map<String, Object> consultarVehiculos(Cliente cliente, int page, int limit);
 	
-	
+	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
+	Vehiculo registrarVehiculo(Vehiculo vehiculo);
 
 }

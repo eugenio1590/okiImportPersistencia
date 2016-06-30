@@ -42,6 +42,10 @@ public class MarcaVehiculo extends AbstractEntity implements Serializable {
 	//bi-directional many-to-many association to Proveedor
 	@ManyToMany(mappedBy="marcaVehiculos", fetch=FetchType.LAZY)
 	private List<Proveedor> proveedores;
+	
+	//bi-directional one-to-many association to Vehiculo
+	@OneToMany(mappedBy="marcaVehiculo", fetch=FetchType.LAZY, orphanRemoval=true)
+	private List<Vehiculo> vehiculos;
 
 	public MarcaVehiculo() {
 		proveedores=new ArrayList<Proveedor>();
@@ -104,6 +108,28 @@ public class MarcaVehiculo extends AbstractEntity implements Serializable {
 
 	public void setProveedores(List<Proveedor> proveedores) {
 		this.proveedores = proveedores;
+	}
+	
+	public List<Vehiculo> getVehiculos() {
+		return vehiculos;
+	}
+
+	public void setVehiculos(List<Vehiculo> vehiculos) {
+		this.vehiculos = vehiculos;
+	}
+	
+	public Vehiculo addVehiculo(Vehiculo vehiculo){
+		getVehiculos().add(vehiculo);
+		vehiculo.setMarcaVehiculo(this);
+		
+		return vehiculo;
+	}
+	
+	public Vehiculo removeVehiculo(Vehiculo vehiculo){
+		getVehiculos().remove(vehiculo);
+		vehiculo.setMarcaVehiculo(null);
+		
+		return vehiculo;
 	}
 	
 	/**METODOS PROPIOS DE LA CLASE*/
