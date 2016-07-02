@@ -88,6 +88,12 @@ public class Cotizacion extends AbstractEntity implements Serializable{
 		this.fechaCreacion = fechaCreacion;
 	}
 	
+	public Cotizacion(Date fechaCreacion, Proveedor proveedor){
+		this(fechaCreacion);
+		this.proveedor=proveedor;
+		
+	}
+	
 	public Cotizacion(String mensaje, Boolean tipo){
 		this(tipo);
 		this.mensaje = mensaje;
