@@ -547,6 +547,7 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 	
 	@Override
 	public Vehiculo registrarVehiculo(Vehiculo vehiculo){
+		vehiculo.setEstatus(EEstatusGeneral.ACTIVO);
 		return this.vehiculoRepository.save(vehiculo);
 	}
 
