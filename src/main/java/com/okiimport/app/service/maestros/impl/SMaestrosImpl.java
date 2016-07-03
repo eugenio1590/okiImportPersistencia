@@ -526,6 +526,37 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 		return parametros;
 	}
 
+	//Metodo para consultar el correo Proveedor
+	public Boolean consultarCorreoProveedor(String correo) {
+		Proveedor proveedor=new Proveedor();
+		
+		proveedor=this.proveedorRepository.findByCorreo(correo);
+		
+		if(proveedor!=null){
+			System.out.println("correo existe es ---- "+proveedor.getCorreo());
+			return true;
+		}else{
+			return false;
+			}
+		
+	}
+	
+	public Boolean consultarCorreoCliente(String correo) {
+		Cliente cliente=new Cliente();
+		
+		cliente=this.clienteRepository.findByCorreo(correo);
+		
+		if(cliente!=null){
+			System.out.println("correo existe es ---- "+cliente.getCorreo());
+			return true;
+		}else{
+			return false;
+			}
+		
+	}
+	
+	
+//
 	
 
 	/** METODOS PROPIOS DE LA CLASE */

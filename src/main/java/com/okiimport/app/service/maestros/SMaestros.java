@@ -114,6 +114,12 @@ public interface SMaestros {
 	@Transactional(readOnly=true)
 	Map<String, Object> consultarPaises(int page, int limit);
 	
+	@Transactional(readOnly=true)
+	Boolean consultarCorreoCliente(String correo);
+	
+	@Transactional(readOnly=true)
+	Boolean consultarCorreoProveedor(String correo);
+	
 	
 	
 
