@@ -132,11 +132,20 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		for(DetalleRequerimiento detalle:requerimiento.getDetalleRequerimientos())
 			detalle.setEstatus(EEstatusDetalleRequerimiento.SOLICITADO);
 		return requerimiento = actualizarRequerimiento(requerimiento);
-		
 	}
 	
 	public Requerimiento actualizarRequerimiento(Requerimiento requerimiento){
 		return this.requerimientoRepository.save(requerimiento);
+	}
+	
+	public void actualizarDetallesRequerimiento(Requerimiento requerimiento){
+		List<DetalleRequerimiento> detalles = requerimiento.getDetalleRequerimientos();
+		if(detalles.size() > 0){
+				for (DetalleRequerimiento detalleRequerimiento : detalles) {
+				detalleRequerimiento.setEstatus(EEstatusDetalleRequerimiento.OFERTADO);
+				this.detalleRequerimientoRepository.save(detalleRequerimiento);
+			}
+		}
 	}
 	
 	public void asignarRequerimiento(Requerimiento requerimiento, SMaestros sMaestros) {
@@ -478,7 +487,7 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 			this.detalleCotizacionRepository.save(detalleCotizacion);
 			
 			DetalleRequerimiento detalleRequerimiento = detalleCotizacion.getDetalleRequerimiento();
-			detalleRequerimiento.setEstatus(EEstatusDetalleRequerimiento.ENVIADO_PROVEEDOR);
+			//detalleRequerimiento.setEstatus(EEstatusDetalleRequerimiento.ENVIADO_PROVEEDOR);
 			this.detalleRequerimientoRepository.save(detalleRequerimiento);
 			
 			Requerimiento requerimiento = detalleRequerimiento.getRequerimiento();
@@ -512,7 +521,7 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 			this.detalleCotizacionRepository.save(detalle);
 			DetalleRequerimiento detalleRequerimiento = detalle.getDetalleRequerimiento();
 			
-			detalleRequerimiento.setEstatus(EEstatusDetalleRequerimiento.CON_COTIZACIONES_A);
+			detalleRequerimiento.setEstatus(EEstatusDetalleRequerimiento.COTIZADO);
 			this.detalleRequerimientoRepository.save(detalleRequerimiento);
 		}
 		return cotizacion;
