@@ -9,7 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.okiimport.app.model.Analista;
 import com.okiimport.app.model.Cliente;
+import com.okiimport.app.model.HistoricoMoneda;
 import com.okiimport.app.model.MarcaVehiculo;
+import com.okiimport.app.model.Moneda;
 import com.okiimport.app.model.Motor;
 import com.okiimport.app.model.Pago;
 import com.okiimport.app.model.PagoCliente;
@@ -114,7 +116,13 @@ public interface SMaestros {
 	@Transactional(readOnly=true)
 	Map<String, Object> consultarPaises(int page, int limit);
 	
+	//Moneda
 	
+	@Transactional(readOnly=true)
+	public Moneda registrarMoneda(Moneda moneda) ;
+	
+	@Transactional(readOnly=true)
+	public HistoricoMoneda registrarHistorico(HistoricoMoneda historico);
 	
 
 }

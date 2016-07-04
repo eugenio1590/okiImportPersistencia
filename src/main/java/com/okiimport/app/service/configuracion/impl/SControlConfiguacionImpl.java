@@ -57,6 +57,7 @@ public class SControlConfiguacionImpl extends AbstractServiceImpl implements SCo
 
 	//Moneda
 	public Map<String, Object> consultarMonedasConHistorico(int page, int limite) {
+		System.out.println("*********");
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		Integer total = 0;
 		List<Moneda> monedas = null;
@@ -99,7 +100,6 @@ public class SControlConfiguacionImpl extends AbstractServiceImpl implements SCo
 		return historico;
 	}
 
-	@Override
 	public HistoricoMoneda consultarActualConversionMonedaBase() {
 		return historicoMonedaRepository.findByMonedaPaisTrueAndEstatus(EEstatusGeneral.ACTIVO);
 	}

@@ -38,7 +38,7 @@ public class Moneda extends AbstractEntity implements Serializable {
 	private EEstatusGeneral estatus;
 	
 	//bi-directional one-to-many association to HistoricoMoneda
-	@OneToMany(mappedBy="moneda", fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="moneda", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
 	private List<HistoricoMoneda> historicoMonedas;
 	
 	//bi-directional one-to-many association to Pais

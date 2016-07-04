@@ -10,6 +10,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
+import com.okiimport.app.dao.configuracion.HistoricoMonedaRepository;
+import com.okiimport.app.dao.configuracion.MonedaRepository;
 import com.okiimport.app.dao.maestros.AnalistaRepository;
 import com.okiimport.app.dao.maestros.BancoRepository;
 import com.okiimport.app.dao.maestros.CiudadRepository;
@@ -33,7 +35,9 @@ import com.okiimport.app.model.Ciudad;
 import com.okiimport.app.model.ClasificacionRepuesto;
 import com.okiimport.app.model.Cliente;
 import com.okiimport.app.model.Estado;
+import com.okiimport.app.model.HistoricoMoneda;
 import com.okiimport.app.model.MarcaVehiculo;
+import com.okiimport.app.model.Moneda;
 import com.okiimport.app.model.Motor;
 import com.okiimport.app.model.Pago;
 import com.okiimport.app.model.PagoCliente;
@@ -77,6 +81,12 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 
 	@Autowired
 	private PaisRepository paisRepository;
+	
+	@Autowired
+	private MonedaRepository monedaRepository;
+
+	@Autowired
+	private HistoricoMonedaRepository historicoRepository;
 
 	
 
@@ -544,4 +554,11 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 		return dao;
 	}
 
+	public Moneda registrarMoneda(Moneda moneda) {
+		return this.monedaRepository.save(moneda);
+	}
+	
+	public HistoricoMoneda registrarHistorico(HistoricoMoneda historico) {
+		return this.historicoRepository.save(historico);
+	}
 }
