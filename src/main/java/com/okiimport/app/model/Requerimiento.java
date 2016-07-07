@@ -430,8 +430,42 @@ public class Requerimiento extends AbstractEntity implements Serializable {
 	}
 	
 	public boolean cotizar(){
-		return (estatus.equals(EEstatusRequerimiento.CON_COTIZACIONES_I) || estatus.equals(EEstatusRequerimiento.ENVIADO_PROVEEDOR) || estatus.equals(EEstatusRequerimiento.CON_COTIZACIONES_A));
+		boolean resultado=false;
+		if(estatus.equals(EEstatusRequerimiento.CON_COTIZACIONES_I) || estatus.equals(EEstatusRequerimiento.ENVIADO_PROVEEDOR) || estatus.equals(EEstatusRequerimiento.CON_COTIZACIONES_A)){
+			Date hoy = new Date();
+			int transcurridos = 0;
+			resultado=true;
+				if(fechaUltimaModificacion != null){
+					transcurridos = obtener_dias_entre_2_fechas(fechaUltimaModificacion, hoy);
+					if(transcurridos > 4)
+						resultado=false;
+				}else if(fechaCreacion != null){
+					transcurridos = obtener_dias_entre_2_fechas(fechaCreacion, hoy);
+					if(transcurridos > 4)
+						resultado=false;
+				} 
+			
+		}
+		
+		//return (estatus.equals(EEstatusRequerimiento.CON_COTIZACIONES_I) || estatus.equals(EEstatusRequerimiento.ENVIADO_PROVEEDOR) || estatus.equals(EEstatusRequerimiento.CON_COTIZACIONES_A));
+		return resultado;
 	}
+	
+	public boolean verSeleccionarCotizacion(){
+		Date hoy = new Date();
+		int transcurridos = 0;
+		if(fechaUltimaModificacion != null){
+			transcurridos = obtener_dias_entre_2_fechas(fechaUltimaModificacion, hoy);
+			if(transcurridos > 4)
+				return false;
+		}else if(fechaCreacion != null){
+			transcurridos = obtener_dias_entre_2_fechas(fechaCreacion, hoy);
+			if(transcurridos > 4)
+				return false;
+		} 
+		return true;
+	}
+	
 	
 	public boolean editarCotizacion(){
 		return ( estatus.equals(EEstatusRequerimiento.CON_COTIZACIONES_I));
