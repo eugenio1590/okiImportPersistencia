@@ -45,6 +45,13 @@ public class DetalleCotizacion extends AbstractEntity implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private EEstatusDetalleCotizacion estatus;
 	
+	@Column(name="cantidad_seleccionada")
+	private Long cantidadSeleccionada= new Long(0);
+	
+	@Column(name="estatus_favorito")
+	private Boolean estatusFavorito;
+	
+	
 	@Transient
 	private Float total = new Float(0);
 	
@@ -174,6 +181,22 @@ public class DetalleCotizacion extends AbstractEntity implements Serializable {
 		this.detalleOfertas = detalleOfertas;
 	}
 	
+	public Long getCantidadSeleccionada() {
+		return cantidadSeleccionada;
+	}
+
+	public void setCantidadSeleccionada(Long cantidadSeleccionada) {
+		this.cantidadSeleccionada = cantidadSeleccionada;
+	}
+
+	public Boolean getEstatusFavorito() {
+		return estatusFavorito;
+	}
+
+	public void setEstatusFavorito(Boolean estatusFavorito) {
+		this.estatusFavorito = estatusFavorito;
+	}
+
 	public DetalleOferta addDetalleOferta(DetalleOferta detalleOferta){
 		getDetalleOfertas().add(detalleOferta);
 		detalleOferta.setDetalleCotizacion(this);
