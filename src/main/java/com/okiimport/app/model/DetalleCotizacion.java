@@ -49,7 +49,7 @@ public class DetalleCotizacion extends AbstractEntity implements Serializable {
 	private Long cantidadSeleccionada= new Long(0);
 	
 	@Column(name="estatus_favorito")
-	private Boolean estatusFavorito;
+	private Boolean estatusFavorito=new Boolean(false);
 	
 	
 	@Transient
@@ -259,4 +259,11 @@ public class DetalleCotizacion extends AbstractEntity implements Serializable {
 	public boolean isVisibleParaRecotizar(){
 		return (this.precioVenta == null && this.precioFlete == null && this.precioVenta == null);
 	}
+	
+	@Transient
+	public boolean mostrarEsatusFavorito(){
+		return this.getEstatusFavorito();
+	}
+	
+	
 }

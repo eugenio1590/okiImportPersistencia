@@ -171,4 +171,10 @@ public interface STransaccion {
 		@Transactional(readOnly=true)
 		Map<String, Object> consultarPagosClientes(PagoCliente pagoFiltro,  String fieldSort, Boolean sortDirection, 
 				 int page, int limit);
+	
+		@Transactional(readOnly=true)
+	List<DetalleCotizacion> consultarDetalleContizacionEmitidosPorRequerimiento(Integer idRequerimiento);
+		
+		@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
+		void actualizarDetalleCotizacion(DetalleCotizacion detalle);
 }

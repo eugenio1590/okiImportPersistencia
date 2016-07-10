@@ -139,6 +139,10 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		return this.requerimientoRepository.save(requerimiento);
 	}
 	
+	public void actualizarDetalleCotizacion(DetalleCotizacion detalle){
+		this.detalleCotizacionRepository.save(detalle);
+	}
+	
 	public void asignarRequerimiento(Requerimiento requerimiento, SMaestros sMaestros) {
 		List<EEstatusRequerimiento> estatus = EEstatusRequerimiento.getEstatusGeneral();
 		List<Analista> analistas = sMaestros.consultarCantRequerimientos(estatus, 0, 1);
@@ -551,6 +555,15 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		return detalleCotizacionRepository.findByCotizacion_IdCotizacion(idCotizacion);
 	}
 	
+	// Agregue este metodo para la lista detalle cotizacion
+	public List<DetalleCotizacion> consultarDetalleContizacionEmitidosPorRequerimiento(Integer idRequerimiento){
+		Specification<DetalleCotizacion> specfDetalleCotizacion = (new DetalleCotizacionDAO())
+				.consultarDetallesCotizacionEmitidos(idRequerimiento);
+		
+		List<DetalleCotizacion> detallesCotizacion = this.detalleCotizacionRepository.findAll(specfDetalleCotizacion);
+		return detallesCotizacion;
+	}
+	//************************************
 	public Map<DetalleRequerimiento, List<DetalleCotizacion>> consultarDetallesCotizacionEmitidos(Integer idRequerimiento){
 		Specification<DetalleCotizacion> specfDetalleCotizacion = (new DetalleCotizacionDAO())
 				.consultarDetallesCotizacionEmitidos(idRequerimiento);
