@@ -123,6 +123,11 @@ public class Requerimiento extends AbstractEntity implements Serializable {
 		this.cliente = cliente;
 	}
 	
+	public Requerimiento(Cliente cliente, Analista analista){
+		this(cliente);
+		this.analista = analista;
+	}
+	
 	public Requerimiento(MarcaVehiculo marcaVehiculo){
 		this.marcaVehiculo = marcaVehiculo;
 	}
