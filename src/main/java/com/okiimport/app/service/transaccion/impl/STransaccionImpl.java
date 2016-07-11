@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -791,9 +792,12 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		if(ordenesCompra!=null && !ordenesCompra.isEmpty()){
 			Requerimiento requerimientoF;
 			for(OrdenCompra ordenCompraF : ordenesCompra){
+				//Hibernate.initialize(ordenCompraF.getDetalleOfertas());
 				requerimientoF = this.requerimientoRepository.findAll(new RequerimientoDAO().consultarPorOrdenCompra(ordenCompraF)).get(0);
 				ordenCompraF.setRequerimiento(requerimientoF);
-				ordenCompraF.setDetalleOfertas(this.detalleOfertaRepository.findByOrdenCompra(ordenCompraF));
+				List<DetalleOferta>  detalles =  this.detalleOfertaRepository.findByOrdenCompra(ordenCompraF);
+				if(!detalles.isEmpty())
+				ordenCompraF.setDetalleOfertas(detalles);
 			}
 		}
 		parametros.put("total", total);

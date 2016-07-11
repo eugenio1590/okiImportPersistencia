@@ -21,6 +21,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.Hibernate;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.okiimport.app.model.enumerados.EEstatusOrdenCompra;
 import com.okiimport.app.resource.model.AbstractEntity;
@@ -128,8 +130,8 @@ public class OrdenCompra extends AbstractEntity implements Serializable {
 	
 	public DetalleOferta addDetalleOferta(DetalleOferta detalleOferta){
 		getDetalleOfertas().add(detalleOferta);
+		Hibernate.initialize(detalleOferta.getOrdenCompra());
 		detalleOferta.setOrdenCompra(this);
-		
 		return detalleOferta;
 	}
 	
