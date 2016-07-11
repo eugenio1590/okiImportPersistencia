@@ -48,6 +48,12 @@ public class DetalleCotizacion extends AbstractEntity implements Serializable {
 	@Transient
 	private Float total = new Float(0);
 	
+	@Transient
+	private Boolean visible = true;
+	
+	
+	
+
 	//bi-directional many-to-one association to Cotizacion
 	@ManyToOne
 	@JoinColumn(name="id_cotizacion")
@@ -172,6 +178,14 @@ public class DetalleCotizacion extends AbstractEntity implements Serializable {
 
 	public void setDetalleOfertas(List<DetalleOferta> detalleOfertas) {
 		this.detalleOfertas = detalleOfertas;
+	}
+	
+	public Boolean getVisible() {
+		return visible;
+	}
+
+	public void setVisible(Boolean visible) {
+		this.visible = visible;
 	}
 	
 	public DetalleOferta addDetalleOferta(DetalleOferta detalleOferta){

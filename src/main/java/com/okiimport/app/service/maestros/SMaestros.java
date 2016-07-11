@@ -50,6 +50,9 @@ public interface SMaestros {
 	
 	@Transactional(readOnly=true)
 	Cliente consultarCliente(Cliente cliente);
+	
+	@Transactional(readOnly=true)
+	Boolean consultarCorreoCliente(String correo);
 
 	//Analistas
 	@Transactional(readOnly=true)
@@ -95,6 +98,9 @@ public interface SMaestros {
 	
 	@Transactional(readOnly=true)
 	List<Proveedor> consultarProveedoresHaAprobar(Requerimiento requerimiento);
+	
+	@Transactional(readOnly=true)
+	Boolean consultarCorreoProveedor(String correo);
 	
 	//Clasificacion Repuesto
 	@Transactional(readOnly=true)

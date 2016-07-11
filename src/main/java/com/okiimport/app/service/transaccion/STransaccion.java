@@ -33,6 +33,9 @@ public interface STransaccion {
 	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
 	Requerimiento actualizarRequerimiento(Requerimiento requerimiento);
 	
+	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
+	void actualizarDetallesRequerimiento(Requerimiento requerimiento);
+	
 	@Transactional(readOnly=true)
 	void asignarRequerimiento(Requerimiento requerimiento, SMaestros sMaestros);
 	

@@ -35,6 +35,7 @@ public class Estado extends AbstractEntity implements Serializable {
 	private List<Ciudad> ciudads;
 
 	public Estado() {
+		this.nombre="";
 	}
 	
 	public Estado(String nombre){

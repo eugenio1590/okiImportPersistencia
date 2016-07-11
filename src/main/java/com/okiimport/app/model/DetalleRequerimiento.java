@@ -32,6 +32,7 @@ public class DetalleRequerimiento extends AbstractEntity implements Serializable
 	@Column(name="codigo_oem")
 	private String codigoOem;
 
+	@Enumerated(EnumType.STRING)
 	private EEstatusDetalleRequerimiento estatus;
 
 	private byte[] foto;
@@ -137,6 +138,10 @@ public class DetalleRequerimiento extends AbstractEntity implements Serializable
 
 	public void setDetalleCotizacions(List<DetalleCotizacion> detalleCotizacions) {
 		this.detalleCotizacions = detalleCotizacions;
+	}
+	
+	public String determinarEstatus(){
+		return (estatus!=null) ? estatus.getNombre() : "";
 	}
 	
 	/**METODOS OVERRIDE*/
