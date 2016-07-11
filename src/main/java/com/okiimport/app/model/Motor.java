@@ -33,6 +33,10 @@ public class Motor extends AbstractEntity implements Serializable {
 	//bi-directional one-to-many association to Requerimiento
 	@OneToMany(mappedBy="motor")
 	private List<Requerimiento> requerimientos;
+	
+	//bi-directional one-to-many association to Vehiculo
+	@OneToMany(mappedBy="motor")
+	private List<Vehiculo> vehiculos;
 
 	public Motor() {
 	}
@@ -77,6 +81,28 @@ public class Motor extends AbstractEntity implements Serializable {
 		requerimiento.setMotor(null);
 
 		return requerimiento;
+	}
+
+	public List<Vehiculo> getVehiculos() {
+		return vehiculos;
+	}
+
+	public void setVehiculos(List<Vehiculo> vehiculos) {
+		this.vehiculos = vehiculos;
+	}
+	
+	public Vehiculo addVehiculo(Vehiculo vehiculo){
+		getVehiculos().add(vehiculo);
+		vehiculo.setMotor(this);
+		
+		return vehiculo;
+	}
+	
+	public Vehiculo removeVehiculo(Vehiculo vehiculo){
+		getVehiculos().remove(vehiculo);
+		vehiculo.setMotor(null);
+		
+		return vehiculo;
 	}
 
 }

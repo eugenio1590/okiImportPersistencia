@@ -2,12 +2,9 @@ package com.okiimport.app.model.enumerados;
 
 public enum EEstatusDetalleRequerimiento {
 	
-	SOLICITADO("SC", "Solicitado"),
-	ENVIADO_PROVEEDOR("EP", "Enviado a Proveedores"),
-	CON_COTIZACIONES_A("CT", "Con Cotizaciones Asignadas"),
+	SOLICITADO("S", "Solicitado"), //Emitido
+	COTIZADO("C", "Cotizado"),
 	OFERTADO("O", "Ofertado"),
-	COMPRADO("CP", "Comprado"),
-	CERRADO("C", "Cerrado")
 	;
 	
 	private String value;

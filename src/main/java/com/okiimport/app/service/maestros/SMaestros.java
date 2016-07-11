@@ -13,11 +13,10 @@ import com.okiimport.app.model.HistoricoMoneda;
 import com.okiimport.app.model.MarcaVehiculo;
 import com.okiimport.app.model.Moneda;
 import com.okiimport.app.model.Motor;
-import com.okiimport.app.model.Pago;
-import com.okiimport.app.model.PagoCliente;
 import com.okiimport.app.model.Persona;
 import com.okiimport.app.model.Proveedor;
 import com.okiimport.app.model.Requerimiento;
+import com.okiimport.app.model.Vehiculo;
 import com.okiimport.app.model.enumerados.EEstatusRequerimiento;
 
 @Service
@@ -51,6 +50,9 @@ public interface SMaestros {
 	
 	@Transactional(readOnly=true)
 	Cliente consultarCliente(Cliente cliente);
+	
+	@Transactional(readOnly=true)
+	Boolean consultarCorreoCliente(String correo);
 
 	//Analistas
 	@Transactional(readOnly=true)
@@ -97,6 +99,9 @@ public interface SMaestros {
 	@Transactional(readOnly=true)
 	List<Proveedor> consultarProveedoresHaAprobar(Requerimiento requerimiento);
 	
+	@Transactional(readOnly=true)
+	Boolean consultarCorreoProveedor(String correo);
+	
 	//Clasificacion Repuesto
 	@Transactional(readOnly=true)
 	Map<String,Object> consultarClasificacionRepuesto(int page, int limit);
@@ -116,13 +121,18 @@ public interface SMaestros {
 	@Transactional(readOnly=true)
 	Map<String, Object> consultarPaises(int page, int limit);
 	
-	//Moneda
+	//Vehiculo
+	@Transactional(readOnly=true)
+	Map<String, Object> consultarVehiculos(Cliente cliente, int page, int limit);
+    
+    @Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
+    Vehiculo registrarVehiculo(Vehiculo vehiculo);
 	
+    //Moneda
 	@Transactional(readOnly=true)
 	public Moneda registrarMoneda(Moneda moneda) ;
 	
 	@Transactional(readOnly=true)
 	public HistoricoMoneda registrarHistorico(HistoricoMoneda historico);
-	
 
 }

@@ -23,12 +23,11 @@ import com.okiimport.app.dao.maestros.MotorRepository;
 import com.okiimport.app.dao.maestros.PaisRepository;
 import com.okiimport.app.dao.maestros.PersonaRepository;
 import com.okiimport.app.dao.maestros.ProveedorRepository;
+import com.okiimport.app.dao.maestros.VehiculoRepository;
 import com.okiimport.app.dao.maestros.impl.AnalistaDAO;
 import com.okiimport.app.dao.maestros.impl.ClienteDAO;
 import com.okiimport.app.dao.maestros.impl.MotorDAO;
 import com.okiimport.app.dao.maestros.impl.ProveedorDAO;
-import com.okiimport.app.dao.pago.PagoClienteRepository;
-import com.okiimport.app.dao.pago.impl.PagoClienteDAO;
 import com.okiimport.app.model.Analista;
 import com.okiimport.app.model.Banco;
 import com.okiimport.app.model.Ciudad;
@@ -39,12 +38,11 @@ import com.okiimport.app.model.HistoricoMoneda;
 import com.okiimport.app.model.MarcaVehiculo;
 import com.okiimport.app.model.Moneda;
 import com.okiimport.app.model.Motor;
-import com.okiimport.app.model.Pago;
-import com.okiimport.app.model.PagoCliente;
 import com.okiimport.app.model.Pais;
 import com.okiimport.app.model.Persona;
 import com.okiimport.app.model.Proveedor;
 import com.okiimport.app.model.Requerimiento;
+import com.okiimport.app.model.Vehiculo;
 import com.okiimport.app.model.enumerados.EEstatusGeneral;
 import com.okiimport.app.model.enumerados.EEstatusRequerimiento;
 import com.okiimport.app.resource.service.AbstractServiceImpl;
@@ -88,7 +86,8 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 	@Autowired
 	private HistoricoMonedaRepository historicoRepository;
 
-	
+	@Autowired
+	private VehiculoRepository vehiculoRepository;
 
 	// Marcas
 	public Map<String, Object> consultarMarcas(int page, int limit) {
@@ -190,13 +189,9 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 	// Cliente
 	public Cliente registrarOActualizarCliente(Cliente cliente) {
 		Cliente temp = clienteRepository.findByCedula(cliente.getCedula());
-		if (temp == null)
-			cliente = clienteRepository.save(cliente);
-		else {
+		if(temp != null)
 			cliente.setId(temp.getId());
-			cliente = clienteRepository.save(cliente);
-		}
-		return cliente;
+		return clienteRepository.save(cliente);
 	}
 
 	public Cliente consultarCliente(Cliente cliente) {
@@ -208,6 +203,20 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 		if (clientes != null && clientes.size() > 0)
 			return clientes.get(0);
 		return null;
+	}
+	
+	public Boolean consultarCorreoCliente(String correo) {
+		Cliente cliente=new Cliente();
+
+		cliente=this.clienteRepository.findByCorreo(correo);
+
+		if(cliente!=null){
+			System.out.println("correo existe es ---- "+cliente.getCorreo());
+			return true;
+		}else{
+			return false;
+		}
+
 	}
 
 	// Analista
@@ -430,6 +439,21 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 			return proveedores.get(0);
 		return null;
 	}
+	
+	//Metodo para consultar el correo Proveedor
+	public Boolean consultarCorreoProveedor(String correo) {
+		Proveedor proveedor=new Proveedor();
+
+		proveedor=this.proveedorRepository.findByCorreo(correo);
+
+		if(proveedor!=null){
+			System.out.println("correo existe es ---- "+proveedor.getCorreo());
+			return true;
+		}else{
+			return false;
+		}
+
+	}
 
 	// Clasificacion Repuesto
 	public Map<String, Object> consultarClasificacionRepuesto(int page,
@@ -535,8 +559,31 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 		parametros.put("paises", paises);
 		return parametros;
 	}
-
 	
+	//Vehiculos
+	@Override
+	public Map<String, Object> consultarVehiculos(Cliente cliente, int page, int limit){
+		Map<String, Object> parametros = new HashMap<String, Object>();
+		Integer total = 0;
+		List<Vehiculo> vehiculos = null;
+		if (limit > 0) {
+			Page<Vehiculo> pageVehiculo = this.vehiculoRepository.findByCliente(cliente, new PageRequest(page, limit));
+			total = Long.valueOf(pageVehiculo.getTotalElements()).intValue();
+			vehiculos = pageVehiculo.getContent();
+		} else {
+			vehiculos = this.vehiculoRepository.findByCliente(cliente);
+			total = vehiculos.size();
+		}
+		
+		parametros.put("total", total);
+		parametros.put("vehiculos", vehiculos);
+		return parametros;
+	}
+	
+	@Override
+	public Vehiculo registrarVehiculo(Vehiculo vehiculo){
+		return this.vehiculoRepository.save(vehiculo);
+	}
 
 	/** METODOS PROPIOS DE LA CLASE */
 	@SuppressWarnings({ "rawtypes", "unchecked" })

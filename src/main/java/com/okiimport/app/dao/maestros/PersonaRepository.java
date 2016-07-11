@@ -9,4 +9,5 @@ import com.okiimport.app.resource.dao.IGenericJPARepository;
 public interface PersonaRepository<T extends Persona> extends IGenericJPARepository<T, Integer> {
 	T findByUsuarioUsernameIgnoreCase(String username);
 	T findByCedula(String cedula);
+	T findByCorreo(String correo);
 }
