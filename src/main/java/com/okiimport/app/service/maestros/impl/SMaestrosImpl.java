@@ -189,13 +189,9 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 	// Cliente
 	public Cliente registrarOActualizarCliente(Cliente cliente) {
 		Cliente temp = clienteRepository.findByCedula(cliente.getCedula());
-		if (temp == null)
-			cliente = clienteRepository.save(cliente);
-		else {
+		if(temp != null)
 			cliente.setId(temp.getId());
-			cliente = clienteRepository.save(cliente);
-		}
-		return cliente;
+		return clienteRepository.save(cliente);
 	}
 
 	public Cliente consultarCliente(Cliente cliente) {
