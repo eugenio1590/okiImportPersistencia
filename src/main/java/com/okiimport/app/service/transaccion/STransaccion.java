@@ -177,4 +177,7 @@ public interface STransaccion {
 		
 		@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
 		void actualizarDetalleCotizacion(DetalleCotizacion detalle);
+		
+		@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
+		void actualizarDetallesOferta(DetalleOferta detalle);
 }

@@ -688,6 +688,10 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		return detalleOfertaRepository.findByOferta(oferta);
 	}
 	
+	public void actualizarDetallesOferta(DetalleOferta detalle){
+		this.detalleOfertaRepository.save(detalle);
+	}
+	
 	public Map<String, Object> consultarSolicitudesCompraProveedor(Requerimiento requerimiento, Proveedor proveedor, int page, int limit){
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		Integer total = 0;
