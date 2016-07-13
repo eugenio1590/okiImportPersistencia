@@ -172,10 +172,11 @@ public class DetalleOferta extends AbstractEntity implements Serializable{
 	public Float calcularPrecioVenta(){
 		Float costo = calcularCosto();
 		Float porctGanancia = this.oferta.getPorctGanancia();
+		Float porctIva=this.oferta.getPorctIva();
 //		Float costo = (detalleCotizacion instanceof DetalleCotizacion) 
 //				? this.detalleCotizacion.calcularTotal() : 
 //					((DetalleCotizacionInternacional) this.detalleCotizacion).calcularTotal();
-		return (porctGanancia!=0) ? (costo*(1+this.oferta.getPorctIva()))/porctGanancia : new Float(0);
+		return (porctGanancia!=0) ? (costo*(1+porctGanancia)*(1+porctIva)) : new Float(0);
 	}
 	
 	public Float calcularPrecioVentaSinFlete(){
@@ -183,7 +184,8 @@ public class DetalleOferta extends AbstractEntity implements Serializable{
 		if(this.cantidadSeleccionada>0)
 		   costo=this.detalleCotizacion.getPrecioVenta()*this.cantidadSeleccionada;
 		Float porctGanancia = this.oferta.getPorctGanancia();
-		return (porctGanancia!=0) ? (costo*(1+this.oferta.getPorctIva()))/porctGanancia : new Float(0);
+		Float porctIva=this.oferta.getPorctIva();
+		return (porctGanancia!=0) ? (costo*(1+porctGanancia)*(1+porctIva)) : new Float(0);
 	}
 	
 	public Float calcularPrecioVentaConverter(){
@@ -191,8 +193,11 @@ public class DetalleOferta extends AbstractEntity implements Serializable{
 	}
 	
 	public Float calcularPrecioVentaUnit(){
-		return calcularPrecioVenta() / getDetalleCotizacion().getCantidad();
-	}
+		float costo=this.detalleCotizacion.getPrecioVenta();
+		Float porctGanancia = this.oferta.getPorctGanancia();
+		Float porctIva=this.oferta.getPorctIva();
+		return (porctGanancia!=0) ? (costo*(1+porctGanancia)*(1+porctIva)) : new Float(0);
+		}
 	
 	@Transient
 	public Proveedor getProveedor(){
