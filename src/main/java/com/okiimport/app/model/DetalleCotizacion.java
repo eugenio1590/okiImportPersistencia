@@ -45,14 +45,12 @@ public class DetalleCotizacion extends AbstractEntity implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private EEstatusDetalleCotizacion estatus;
 	
+
 	@Transient
 	private Float total = new Float(0);
 	
 	@Transient
 	private Boolean visible = true;
-	
-	
-	
 
 	//bi-directional many-to-one association to Cotizacion
 	@ManyToOne
@@ -250,4 +248,5 @@ public class DetalleCotizacion extends AbstractEntity implements Serializable {
 	public boolean isVisibleParaRecotizar(){
 		return (this.precioVenta == null && this.precioFlete == null && this.precioVenta == null);
 	}
+	
 }

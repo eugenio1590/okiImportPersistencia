@@ -149,6 +149,10 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		}
 	}
 	
+	public void actualizarDetalleCotizacion(DetalleCotizacion detalle){
+		this.detalleCotizacionRepository.save(detalle);
+	}
+	
 	public void asignarRequerimiento(Requerimiento requerimiento, SMaestros sMaestros) {
 		List<EEstatusRequerimiento> estatus = EEstatusRequerimiento.getEstatusGeneral();
 		List<Analista> analistas = sMaestros.consultarCantRequerimientos(estatus, 0, 1);
@@ -583,6 +587,15 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		return detalleCotizacionRepository.findByCotizacion_IdCotizacion(idCotizacion);
 	}
 	
+	// Agregue este metodo para la lista detalle cotizacion
+	public List<DetalleCotizacion> consultarDetalleContizacionEmitidosPorRequerimiento(Integer idRequerimiento){
+		Specification<DetalleCotizacion> specfDetalleCotizacion = (new DetalleCotizacionDAO())
+				.consultarDetallesCotizacionEmitidos(idRequerimiento);
+		
+		List<DetalleCotizacion> detallesCotizacion = this.detalleCotizacionRepository.findAll(specfDetalleCotizacion);
+		return detallesCotizacion;
+	}
+	//************************************
 	public Map<DetalleRequerimiento, List<DetalleCotizacion>> consultarDetallesCotizacionEmitidos(Integer idRequerimiento){
 		Specification<DetalleCotizacion> specfDetalleCotizacion = (new DetalleCotizacionDAO())
 				.consultarDetallesCotizacionEmitidos(idRequerimiento);
@@ -705,6 +718,10 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	//Detalles Oferta
 	public List<DetalleOferta> consultarDetallesOferta(Oferta oferta){
 		return detalleOfertaRepository.findByOferta(oferta);
+	}
+	
+	public void actualizarDetallesOferta(DetalleOferta detalle){
+		this.detalleOfertaRepository.save(detalle);
 	}
 	
 	public Map<String, Object> consultarSolicitudesCompraProveedor(Requerimiento requerimiento, Proveedor proveedor, int page, int limit){

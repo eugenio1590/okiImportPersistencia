@@ -57,6 +57,15 @@ public class DetalleOferta extends AbstractEntity implements Serializable{
 	@ManyToOne
 	@JoinColumn(name="id_detalle_cotizacion")
 	private DetalleCotizacion detalleCotizacion;
+	
+	@Column(name="cantidad_seleccionada")
+	private Long cantidadSeleccionada= new Long(0);
+	
+	@Column(name="estatus_favorito")
+	private Boolean estatusFavorito=new Boolean(false);
+	
+	@Transient
+	private Float precioTotal;
 
 	public DetalleOferta() {
 	}
@@ -120,6 +129,36 @@ public class DetalleOferta extends AbstractEntity implements Serializable{
 	public void setDetalleCotizacion(DetalleCotizacion detalleCotizacion) {
 		this.detalleCotizacion = detalleCotizacion;
 	}
+	
+	public Long getCantidadSeleccionada() {
+		return cantidadSeleccionada;
+	}
+
+	public void setCantidadSeleccionada(Long cantidadSeleccionada) {
+		this.cantidadSeleccionada = cantidadSeleccionada;
+	}
+
+	public Boolean getEstatusFavorito() {
+		return estatusFavorito;
+	}
+
+	public void setEstatusFavorito(Boolean estatusFavorito) {
+		this.estatusFavorito = estatusFavorito;
+	}
+	
+	public Float getPrecioTotal() {
+		Float costo = (float) 0;
+		if(this.cantidadSeleccionada>0)
+		   costo=this.detalleCotizacion.getPrecioVenta()*this.cantidadSeleccionada;
+		Float porctGanancia = this.oferta.getPorctGanancia();
+		return (porctGanancia!=0) ? (costo*(1+this.oferta.getPorctIva()))/porctGanancia : new Float(0);
+	}
+
+	public void setPrecioTotal(Float precioTotal) {
+		this.precioTotal = precioTotal;
+	}
+	
+	
 
 	/**METODOS PROPIOS DE LA CLASE*/
 	public Float calcularCosto(){
@@ -136,6 +175,14 @@ public class DetalleOferta extends AbstractEntity implements Serializable{
 //		Float costo = (detalleCotizacion instanceof DetalleCotizacion) 
 //				? this.detalleCotizacion.calcularTotal() : 
 //					((DetalleCotizacionInternacional) this.detalleCotizacion).calcularTotal();
+		return (porctGanancia!=0) ? (costo*(1+this.oferta.getPorctIva()))/porctGanancia : new Float(0);
+	}
+	
+	public Float calcularPrecioVentaSinFlete(){
+		Float costo = (float) 0;
+		if(this.cantidadSeleccionada>0)
+		   costo=this.detalleCotizacion.getPrecioVenta()*this.cantidadSeleccionada;
+		Float porctGanancia = this.oferta.getPorctGanancia();
 		return (porctGanancia!=0) ? (costo*(1+this.oferta.getPorctIva()))/porctGanancia : new Float(0);
 	}
 	
@@ -167,4 +214,10 @@ public class DetalleOferta extends AbstractEntity implements Serializable{
 
 		return detalleCotizacion;
 	}
+	
+	@Transient
+	public boolean mostrarEsatusFavorito(){
+		return this.getEstatusFavorito();
+	}
+	
 }
