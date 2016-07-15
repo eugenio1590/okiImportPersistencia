@@ -26,6 +26,7 @@ import com.okiimport.app.dao.maestros.ProveedorRepository;
 import com.okiimport.app.dao.maestros.VehiculoRepository;
 import com.okiimport.app.dao.maestros.impl.AnalistaDAO;
 import com.okiimport.app.dao.maestros.impl.ClienteDAO;
+import com.okiimport.app.dao.maestros.impl.MarcaDAO;
 import com.okiimport.app.dao.maestros.impl.MotorDAO;
 import com.okiimport.app.dao.maestros.impl.ProveedorDAO;
 import com.okiimport.app.model.Analista;
@@ -98,6 +99,32 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 			Page<MarcaVehiculo> pageMarcaVehiculo = this.marcaVehiculoRepository
 					.findByEstatus(EEstatusGeneral.ACTIVO, new PageRequest(
 							page, limit));
+			total = Long.valueOf(pageMarcaVehiculo.getTotalElements())
+					.intValue();
+			marcasVehiculo = pageMarcaVehiculo.getContent();
+		} else {
+			marcasVehiculo = this.marcaVehiculoRepository
+					.findByEstatus(EEstatusGeneral.ACTIVO);
+			total = marcasVehiculo.size();
+		}
+		Parametros.put("total", total);
+		Parametros.put("marcas", marcasVehiculo);
+		return Parametros;
+	}
+	
+	public Map<String, Object> consultarMarcasF(MarcaVehiculo marca, String fieldSort,
+			Boolean sortDirection, int page, int limit) {
+		Map<String, Object> Parametros = new HashMap<String, Object>();
+		Integer total = 0;
+		List<MarcaVehiculo> marcasVehiculo = null;
+		Sort sortMarca = new Sort(getDirection(sortDirection,
+				Sort.Direction.ASC), getFieldSort(fieldSort, "idMarcaVehiculo"));
+		Specification<MarcaVehiculo> specfMarca = (new MarcaDAO()).consultarMarcaVehiculos(marca);
+		
+		if (limit > 0) {
+			
+			Page<MarcaVehiculo> pageMarcaVehiculo = this.marcaVehiculoRepository.findAll(specfMarca,
+					new PageRequest(page, limit, sortMarca));
 			total = Long.valueOf(pageMarcaVehiculo.getTotalElements())
 					.intValue();
 			marcasVehiculo = pageMarcaVehiculo.getContent();
@@ -297,6 +324,30 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 		return parametros;
 	}
 
+	public Map<String, Object> consultarAnalistasF(Analista analista, String fieldSort,
+			Boolean sortDirection, int page, int limit) {
+		Map<String, Object> parametros = new HashMap<String, Object>();
+		Integer total = 0;
+		List<Analista> analistas = null;
+		Sort sortAnalista = new Sort(getDirection(sortDirection,
+				Sort.Direction.ASC), getFieldSort(fieldSort, "id"));
+		Specification<Analista> specfAnalista = (new AnalistaDAO())
+				.consultarPersona(analista);
+		if (limit > 0) {
+			Page<Analista> pageAnalista = this.analistaRepository.findAll(
+					specfAnalista, new PageRequest(page, limit, sortAnalista));
+			total = Long.valueOf(pageAnalista.getTotalElements()).intValue();
+			analistas = pageAnalista.getContent();
+		} else {
+			analistas = this.analistaRepository.findAll(specfAnalista,
+					sortAnalista);
+			total = analistas.size();
+		}
+		parametros.put("total", total);
+		parametros.put("analistas", analistas);
+		return parametros;
+	}
+	
 	public Analista registrarAnalista(Analista analista) {
 		return this.analistaRepository.save(analista);
 	}
