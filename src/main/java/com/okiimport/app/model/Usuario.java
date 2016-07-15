@@ -45,6 +45,9 @@ public class Usuario extends AbstractEntity implements Serializable {
 	
 	@Column(nullable=false)
 	private Boolean activo;
+	
+	@Transient
+	private String paswordRepeat;
 
 	//bi-directional one-to-many association to PersistentLogin
 	@OneToMany(mappedBy="usuario",fetch=FetchType.LAZY, cascade=CascadeType.ALL)
@@ -118,6 +121,14 @@ public class Usuario extends AbstractEntity implements Serializable {
 
 	public void setActivo(Boolean activo) {
 		this.activo = activo;
+	}
+
+	public String getPaswordRepeat() {
+		return paswordRepeat;
+	}
+
+	public void setPaswordRepeat(String paswordRepeat) {
+		this.paswordRepeat = paswordRepeat;
 	}
 
 	public List<PersistentLogin> getPersistentLogins() {
