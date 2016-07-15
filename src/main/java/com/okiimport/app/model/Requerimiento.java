@@ -356,7 +356,7 @@ public class Requerimiento extends AbstractEntity implements Serializable {
 	public String determinarTransmision(){
 		String texto = null;
 		if(transmisionV!=null)
-			texto = (transmisionV) ? "Automatico" : "Sincronico";
+			texto = (transmisionV) ? "Automático" : "Sincrónico";
 		return texto;
 	}
 	
