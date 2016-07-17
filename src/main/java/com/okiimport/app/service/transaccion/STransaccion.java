@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.okiimport.app.model.Analista;
 import com.okiimport.app.model.Compra;
 import com.okiimport.app.model.Cotizacion;
 import com.okiimport.app.model.DetalleCotizacion;
@@ -183,4 +184,7 @@ public interface STransaccion {
 		
 		@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
 		void actualizarDetallesOferta(DetalleOferta detalle);
+		
+		@Transactional(readOnly=true)
+		Boolean validarAnalistaEnRequerimientos(Analista analista);
 }

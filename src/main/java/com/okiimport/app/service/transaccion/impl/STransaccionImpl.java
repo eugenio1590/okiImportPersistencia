@@ -568,6 +568,20 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	}
 	
 	@Override
+	public Boolean validarAnalistaEnRequerimientos(Analista analista) {
+		List<EEstatusRequerimiento> estatus =  new ArrayList<EEstatusRequerimiento>();
+		estatus.add(EEstatusRequerimiento.CON_COTIZACIONES_A);
+		estatus.add(EEstatusRequerimiento.CON_COTIZACIONES_I);
+		estatus.add(EEstatusRequerimiento.CON_RECOTIZACIONES);
+		estatus.add(EEstatusRequerimiento.EMITIDO);
+		estatus.add(EEstatusRequerimiento.CONCRETADO);
+		estatus.add(EEstatusRequerimiento.ENVIADO_PROVEEDOR);
+		estatus.add(EEstatusRequerimiento.OFERTADO);
+		estatus.add(EEstatusRequerimiento.RECIBIDO_EDITADO);
+		return this.requerimientoRepository.findByAnalistaAndEstatusIn(analista, estatus).size()==0;
+	}
+	
+	@Override
 	public Cotizacion registrarRecotizacion(Requerimiento requerimiento, Proveedor proveedor, List<DetalleCotizacion> detalles){
 		requerimiento.setEstatus(EEstatusRequerimiento.CON_RECOTIZACIONES);
 		this.requerimientoRepository.save(requerimiento);
