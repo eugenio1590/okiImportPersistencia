@@ -123,14 +123,19 @@ public class OrdenCompra extends AbstractEntity implements Serializable {
 	}
 
 	public void setDetalleOfertas(List<DetalleOferta> detalleOfertas) {
-		if(detalleOfertas!=null && !detalleOfertas.isEmpty())
-			for(DetalleOferta detalle : detalleOfertas)
-				addDetalleOferta(detalle);
+		try{
+			if(detalleOfertas!=null && !detalleOfertas.isEmpty())
+				for(DetalleOferta detalle : detalleOfertas)
+					addDetalleOferta(detalle);
+		}catch (Exception e){
+			e.printStackTrace();
+			this.detalleOfertas = detalleOfertas;
+		}
 	}
 	
 	public DetalleOferta addDetalleOferta(DetalleOferta detalleOferta){
 		getDetalleOfertas().add(detalleOferta);
-		Hibernate.initialize(detalleOferta.getOrdenCompra());
+		//Hibernate.initialize(detalleOferta.getOrdenCompra());
 		detalleOferta.setOrdenCompra(this);
 		return detalleOferta;
 	}
