@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.okiimport.app.model.enumerados.EEstatusGeneral;
 import com.okiimport.app.resource.model.AbstractEntity;
@@ -51,6 +52,9 @@ public class Vehiculo extends AbstractEntity implements Serializable {
 	
 	@Enumerated(EnumType.STRING)
 	private EEstatusGeneral estatus;
+	
+	@Transient
+	private String name;
 	
 	//bi-directional many-to-one association to MarcaVehiculo
 	@ManyToOne
@@ -149,6 +153,18 @@ public class Vehiculo extends AbstractEntity implements Serializable {
 
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
+	}
+	
+	//Transient
+	public void setName(String name){
+		this.name = name;
+	}
+		
+	public String getName(){
+		StringBuilder builder = new StringBuilder("");
+		builder.append(anno).append(" - ").append(this.modelo).append(" - ").append(this.marcaVehiculo.getNombre());
+		setName(builder.toString());
+		return this.name;
 	}
 
 }

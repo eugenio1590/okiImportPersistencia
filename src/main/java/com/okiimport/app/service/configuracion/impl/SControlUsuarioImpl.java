@@ -69,6 +69,7 @@ public class SControlUsuarioImpl extends AbstractServiceImpl implements SControl
 		Persona persona = usuario.getPersona();
 		persona = sMaestros.acutalizarPersona(persona);
 		usuario.setPersona(persona);
+		usuario.setUsername(persona.getCorreo());
 		return actualizarUsuario(usuario, true);
 	}
 	
