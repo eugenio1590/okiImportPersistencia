@@ -562,16 +562,16 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 	
 	//Vehiculos
 	@Override
-	public Map<String, Object> consultarVehiculos(Cliente cliente, int page, int limit){
+	public Map<String, Object> consultarVehiculos(Vehiculo vehiculo, int page, int limit){
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		Integer total = 0;
 		List<Vehiculo> vehiculos = null;
 		if (limit > 0) {
-			Page<Vehiculo> pageVehiculo = this.vehiculoRepository.findByCliente(cliente, new PageRequest(page, limit));
+			Page<Vehiculo> pageVehiculo = this.vehiculoRepository.findByCliente(vehiculo.getCliente(), new PageRequest(page, limit));
 			total = Long.valueOf(pageVehiculo.getTotalElements()).intValue();
 			vehiculos = pageVehiculo.getContent();
 		} else {
-			vehiculos = this.vehiculoRepository.findByCliente(cliente);
+			vehiculos = this.vehiculoRepository.findByCliente(vehiculo.getCliente());
 			total = vehiculos.size();
 		}
 		
