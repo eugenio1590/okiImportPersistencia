@@ -74,6 +74,10 @@ public class Vehiculo extends AbstractEntity implements Serializable {
 	public Vehiculo() {
 		// TODO Auto-generated constructor stub
 	}
+	
+	public Vehiculo(Cliente cliente){
+		this.cliente = cliente;
+	}
 
 	public Integer getId() {
 		return id;
