@@ -24,7 +24,10 @@ import com.okiimport.app.model.enumerados.EEstatusRequerimiento;
 public interface SMaestros {
 	//Marcas
 	@Transactional(readOnly=true)
-	Map<String,Object> consultarMarcas(int page, int limit);
+	Map<String, Object> consultarMarcas(int page, int limit);
+	
+	@Transactional(readOnly=true)
+	Map<String, Object> consultarMarcasF(MarcaVehiculo marca, String fieldSort, Boolean sortDirection, int page, int limit);
 	
 	@Transactional(readOnly=true)
 	Map<String, Object> consultarMarcasVehiculoProveedor(Integer idProveedor, int page, int limit);
@@ -68,6 +71,10 @@ public interface SMaestros {
 	
 	@Transactional(readOnly=true)
 	Map<String, Object> consultarAnalistas(Analista analista, int page, int limit);
+	
+	@Transactional(readOnly=true)
+	Map<String, Object> consultarAnalistasF(Analista analista, String fieldSort,
+			Boolean sortDirection, int page, int limit);
 	/*public Map<String, Object> consultarAnalistas(Analista analistaF, String fieldSort, Boolean sortDirection, 
 			int pagina, int limit);*/
 	

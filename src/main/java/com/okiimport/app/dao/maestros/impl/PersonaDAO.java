@@ -64,6 +64,11 @@ public abstract class PersonaDAO<T extends Persona> extends AbstractJpaDao<T> {
 	/**METODOS PROPIOS DE LA CLASE*/
 	protected void agregarFiltros(T personaF, List<Predicate> restricciones){
 		if(personaF!=null){
+			if(personaF.getId()!=null)
+				restricciones.add(criteriaBuilder.like(
+						criteriaBuilder.lower(this.entity.get("id").as(String.class)),
+						"%"+String.valueOf(personaF.getId()).toLowerCase()+"%"));
+			
 			if(personaF.getCedula()!=null){
 				System.out.println("Restriccion Cedula: "+personaF.getCedula());
 				restricciones.add(this.criteriaBuilder.like(
