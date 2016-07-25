@@ -134,6 +134,9 @@ public interface SMaestros {
     
     @Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
     Vehiculo registrarVehiculo(Vehiculo vehiculo);
+    
+	@Transactional(readOnly=true)
+	Map<String, Object> consultarVehiculosCliente(Integer idCliente, int page, int limit);
 	
     //Moneda
 	@Transactional(readOnly=true)

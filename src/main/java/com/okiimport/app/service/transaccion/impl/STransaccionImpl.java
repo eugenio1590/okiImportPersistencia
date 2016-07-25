@@ -17,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
 import com.okiimport.app.dao.maestros.DepositoRepository;
+import com.okiimport.app.dao.maestros.VehiculoRepository;
 import com.okiimport.app.dao.pago.PagoClienteRepository;
 import com.okiimport.app.dao.pago.impl.PagoClienteDAO;
 import com.okiimport.app.dao.transaccion.CompraRepository;
@@ -47,6 +48,7 @@ import com.okiimport.app.model.OrdenCompra;
 import com.okiimport.app.model.PagoCliente;
 import com.okiimport.app.model.Proveedor;
 import com.okiimport.app.model.Requerimiento;
+import com.okiimport.app.model.Vehiculo;
 import com.okiimport.app.model.enumerados.EEstatusCompra;
 import com.okiimport.app.model.enumerados.EEstatusCotizacion;
 import com.okiimport.app.model.enumerados.EEstatusDetalleRequerimiento;
@@ -100,6 +102,9 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	
 	@Autowired
 	private PagoClienteRepository pagoClienteRepository;
+	
+	@Autowired
+	private VehiculoRepository vehiculoRepository;
 	
 	private SControlConfiguracion sControlConfiguracion;
 
@@ -909,6 +914,12 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 			parametros.put("pagoClientes", pagoClientes);
 			return parametros;
 		}
+		
+		//VEHICULOS
+		public Vehiculo actualizarVehiculo(Vehiculo vehiculo){
+			return this.vehiculoRepository.save(vehiculo);
+		}
+		
 	
 	/**METODOS PROPIOS DE LA CLASE*/
 	private void llenarNroOfertas(List<Requerimiento> requerimientos){
