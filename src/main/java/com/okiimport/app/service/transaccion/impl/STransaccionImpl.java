@@ -92,9 +92,6 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	private OrdenCompraRepository ordenCompraRepository;
 	
 	@Autowired
-	private PagoClienteRepository pagoRepository;
-	
-	@Autowired
 	private DepositoRepository depositoRepository;
 	
 	@Autowired
@@ -843,6 +840,7 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 			parametros.put("pagoClientes", pagoClientes);
 			return parametros;
 		}
+		
 	
 	/**METODOS PROPIOS DE LA CLASE*/
 	private void llenarNroOfertas(List<Requerimiento> requerimientos){

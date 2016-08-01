@@ -85,6 +85,18 @@ public class SPagoImpl extends AbstractServiceImpl implements SPago{
 		return valor;
 	}
 	
+	public Boolean registrarPagoEfectivo(PagoCliente pago){
+		Boolean valor = false;
+		try{
+			System.out.println("Dentro del catch...");
+			this.pagoRepository.save(pago);
+			valor = true;
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return valor;
+	}
+	
 	/**METODOS ESTATICOS DE LA CLASE*/
 	private static DecimalFormat getDecimalFormat(){
 		if(decimalFormat==null){
