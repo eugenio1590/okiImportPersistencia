@@ -3,7 +3,9 @@ package com.okiimport.app.dao.maestros;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
 import com.okiimport.app.model.Cliente;
@@ -17,5 +19,5 @@ public interface VehiculoRepository extends IGenericJPARepository<Vehiculo, Inte
 	Page<Vehiculo> findByCliente(Cliente cliente, Pageable pageable);
 	List<Vehiculo> findByClienteId(Integer id);
 	Page<Vehiculo> findByClienteId(Integer id, Pageable pageable);
-
+	
 }

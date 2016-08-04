@@ -138,6 +138,10 @@ public interface SMaestros {
 	@Transactional(readOnly=true)
 	Map<String, Object> consultarVehiculosCliente(Integer idCliente, int page, int limit);
 	
+	/*@Transactional(readOnly=true)
+	Map<String, Object> consultarVehiculosF(Integer idCliente,Vehiculo vehiculo, String fieldSort,
+			Boolean sortDirection, int page, int limit);*/
+	
     //Moneda
 	@Transactional(readOnly=true)
 	public Moneda registrarMoneda(Moneda moneda) ;

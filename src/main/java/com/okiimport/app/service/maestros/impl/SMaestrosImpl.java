@@ -29,6 +29,7 @@ import com.okiimport.app.dao.maestros.impl.ClienteDAO;
 import com.okiimport.app.dao.maestros.impl.MarcaDAO;
 import com.okiimport.app.dao.maestros.impl.MotorDAO;
 import com.okiimport.app.dao.maestros.impl.ProveedorDAO;
+import com.okiimport.app.dao.maestros.impl.VehiculoDAO;
 import com.okiimport.app.model.Analista;
 import com.okiimport.app.model.Banco;
 import com.okiimport.app.model.Ciudad;
@@ -636,11 +637,15 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 		return this.vehiculoRepository.save(vehiculo);
 	}
 	
+	//metodo funcional muestrala lista mas no filtra = /
 	public Map<String, Object> consultarVehiculosCliente(
 			Integer idCliente, int page, int limit) {
 		Map<String, Object> Parametros = new HashMap<String, Object>();
 		Integer total = 0;
 		List<Vehiculo> vehiculos = null;
+		
+		
+		
 		if (limit > 0) {
 			Page<Vehiculo> pageVehiculo = this.vehiculoRepository.findByClienteId(idCliente, new PageRequest(page,
 					limit));
@@ -655,6 +660,67 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 		Parametros.put("vehiculos", vehiculos);
 		return Parametros;
 	}
+	
+	/*@Override
+	public Map<String, Object> consultarVehiculosF(Vehiculo vehiculo, String fieldSort,
+			Boolean sortDirection, int page, int limit){
+		Map<String, Object> parametros = new HashMap<String, Object>();
+		Integer total = 0;
+		List<Vehiculo> vehiculos = null;
+		
+		Sort sortVehiculo = new Sort(getDirection(sortDirection,
+				Sort.Direction.ASC), getFieldSort(fieldSort, "id"));
+		Specification<Vehiculo> specfVehiculo = (new VehiculoDAO()).
+				consultarVehiculos(vehiculo);
+		
+		if (limit > 0) {
+			Page<Vehiculo> pageVehiculo = this.vehiculoRepository.findAll(specfVehiculo,
+					new PageRequest(page, limit, sortVehiculo));
+			total = Long.valueOf(pageVehiculo.getTotalElements()).intValue();
+			vehiculos = pageVehiculo.getContent();
+		} else {
+			vehiculos = this.vehiculoRepository.findAll(specfVehiculo, sortVehiculo);
+			total = vehiculos.size();
+		}
+		
+		if (limit > 0) {
+			Page<Vehiculo> pageVehiculo = this.vehiculoRepository.findByCliente(vehiculo.getCliente(), new PageRequest(page, limit));
+			total = Long.valueOf(pageVehiculo.getTotalElements()).intValue();
+			vehiculos = pageVehiculo.getContent();
+		} else {
+			vehiculos = this.vehiculoRepository.findByCliente(vehiculo.getCliente());
+			total = vehiculos.size();
+		}
+		
+		parametros.put("total", total);
+		parametros.put("vehiculos", vehiculos);
+		return parametros;
+	}*/
+	
+	// Metodo no funcional 
+	/*public Map<String, Object> consultarVehiculosF(Integer idCliente,Vehiculo vehiculo, String fieldSort,
+			Boolean sortDirection, int page, int limit) {
+		Map<String, Object> parametros = new HashMap<String, Object>();
+		Integer total = 0;
+		List<Vehiculo> vehiculos = null;
+		Sort sortVehiculo = new Sort(getDirection(sortDirection,
+				Sort.Direction.ASC), getFieldSort(fieldSort, "id"));
+		Specification<Vehiculo> specfVehiculo = (new VehiculoDAO()).
+				consultarVehiculos(vehiculo);
+		if (limit > 0) {
+			Page<Vehiculo> pageVehiculo = this.vehiculoRepository.findByClienteId(idCliente,specfVehiculo,
+					new PageRequest(page, limit,sortVehiculo ));
+			total = Long.valueOf(pageVehiculo.getTotalElements()).intValue();
+			vehiculos = pageVehiculo.getContent();
+		} else {
+			vehiculos = this.vehiculoRepository.findByCliente(vehiculo.getCliente());
+			total = vehiculos.size();
+			total = vehiculos.size();
+		}
+		parametros.put("total", total);
+		parametros.put("vehiculos", vehiculos);
+		return parametros;
+	}*/
 
 	/** METODOS PROPIOS DE LA CLASE */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -679,4 +745,5 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 	public HistoricoMoneda registrarHistorico(HistoricoMoneda historico) {
 		return this.historicoRepository.save(historico);
 	}
+
 }
