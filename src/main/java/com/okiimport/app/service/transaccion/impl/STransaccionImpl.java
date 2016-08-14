@@ -35,6 +35,7 @@ import com.okiimport.app.dao.transaccion.impl.OfertaDAO;
 import com.okiimport.app.dao.transaccion.impl.OrdenCompraDAO;
 import com.okiimport.app.dao.transaccion.impl.RequerimientoDAO;
 import com.okiimport.app.dao.transaccion.impl.detalle.cotizacion.DetalleCotizacionDAO;
+import com.okiimport.app.dao.transaccion.impl.detalle.oferta.DetalleOfertaDAO;
 import com.okiimport.app.model.Analista;
 import com.okiimport.app.model.Compra;
 import com.okiimport.app.model.Configuracion;
@@ -739,6 +740,13 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		return detalleOfertaRepository.findByOferta(oferta);
 	}
 	
+	//Carrito de compra de un cliente
+	public List<DetalleOferta> consultarDetallesOfertaInShoppingCar(Integer idCliente){
+		Specification<DetalleOferta> specDetallesOfertas = (new DetalleOfertaDAO()).consultarDetallesOfertaInShoppingCar(idCliente);
+		List<DetalleOferta> detallesOfertas = detalleOfertaRepository.findAll(specDetallesOfertas);
+		return detallesOfertas;
+	}
+	
 	public void actualizarDetallesOferta(DetalleOferta detalle){
 		this.detalleOfertaRepository.save(detalle);
 	}
@@ -805,6 +813,7 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		compra.setDetalleOfertas(null);
 		compra.setEstatus(EEstatusCompra.ENVIADA);
 		compra = registrarOActualizarCompra(compra);
+
 		if(detalleCompra!=null && !detalleCompra.isEmpty()){
 			for(DetalleOferta detalle : detalleCompra){
 				detalle = detalleOfertaRepository.findOne(detalle.getIdDetalleOferta());
@@ -929,4 +938,5 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 			requerimiento.setNroOfertas(nroOfertas);
 		}
 	}
+
 }

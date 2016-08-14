@@ -147,6 +147,10 @@ public interface STransaccion {
 	@Transactional(readOnly=true)
 	List<DetalleOferta> consultarDetallesOferta(Oferta oferta);
 	
+	//Carrito de compra de un cliente
+	@Transactional(readOnly=true)
+	List<DetalleOferta> consultarDetallesOfertaInShoppingCar(Integer idCliente);
+	
 	@Transactional(readOnly=true)
 	Map<String, Object> consultarSolicitudesCompraProveedor(Requerimiento requerimiento, Proveedor proveedor, int page, int limit);
 	
