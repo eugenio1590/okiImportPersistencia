@@ -19,6 +19,7 @@ import com.okiimport.app.model.OrdenCompra;
 import com.okiimport.app.model.PagoCliente;
 import com.okiimport.app.model.Proveedor;
 import com.okiimport.app.model.Requerimiento;
+import com.okiimport.app.model.Vehiculo;
 import com.okiimport.app.service.configuracion.SControlConfiguracion;
 import com.okiimport.app.service.configuracion.SControlUsuario;
 import com.okiimport.app.service.maestros.SMaestros;
@@ -81,6 +82,11 @@ public interface STransaccion {
 	@Transactional(readOnly=true)
 	Map<String, Object> consultarDetallesRequerimiento(int idRequerimiento, int pagina, int limit);
 	
+	//Vehiculo
+	
+	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
+	Vehiculo actualizarVehiculo(Vehiculo vehiculo);
+	
 	//Cotizaciones
 	@Transactional(readOnly=true)
 	Map<String, Object> ConsultarCotizacionesRequerimiento(Cotizacion cotFiltro, String fieldSort, Boolean sortDirection, Integer idrequerimiento,
@@ -140,6 +146,10 @@ public interface STransaccion {
 	//Detalle Oferta
 	@Transactional(readOnly=true)
 	List<DetalleOferta> consultarDetallesOferta(Oferta oferta);
+	
+	//Carrito de compra de un cliente
+	@Transactional(readOnly=true)
+	List<DetalleOferta> consultarDetallesOfertaInShoppingCar(Integer idCliente);
 	
 	@Transactional(readOnly=true)
 	Map<String, Object> consultarSolicitudesCompraProveedor(Requerimiento requerimiento, Proveedor proveedor, int page, int limit);

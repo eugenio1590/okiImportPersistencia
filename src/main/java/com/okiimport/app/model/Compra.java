@@ -57,7 +57,7 @@ public class Compra extends AbstractEntity implements Serializable {
 	private HistoricoMoneda historicoMoneda;
 	
 	//bi-directional one-to-many association to DetalleOferta
-	@OneToMany(mappedBy="compra", fetch=FetchType.LAZY)
+	@OneToMany(mappedBy="compra", fetch=FetchType.EAGER)
 	private List<DetalleOferta> detalleOfertas;
 
 	@Transient
