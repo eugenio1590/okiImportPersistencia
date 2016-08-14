@@ -106,7 +106,7 @@ public class Requerimiento extends AbstractEntity implements Serializable {
 	private Motor motor;
 	
 	//bi-directional one-to-many association to DetalleRequerimiento
-	@OneToMany(mappedBy="requerimiento", fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="requerimiento", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
 	private List<DetalleRequerimiento> detalleRequerimientos;
 	
 	//bi-directional one-to-many association to Compra
@@ -356,7 +356,7 @@ public class Requerimiento extends AbstractEntity implements Serializable {
 	public String determinarTransmision(){
 		String texto = null;
 		if(transmisionV!=null)
-			texto = (transmisionV) ? "Automático" : "Sincrónico";
+			texto = (transmisionV) ? "Automï¿½tico" : "Sincrï¿½nico";
 		return texto;
 	}
 	

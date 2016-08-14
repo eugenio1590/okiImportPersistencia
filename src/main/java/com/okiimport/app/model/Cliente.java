@@ -26,6 +26,7 @@ public class Cliente extends Persona implements Serializable {
 	public Cliente() {
 	}
 	
+	
 	public Cliente(Persona persona) {
 		super(persona);
 	}
@@ -55,6 +56,7 @@ public class Cliente extends Persona implements Serializable {
 
 		return requerimiento;
 	}
+	
 
 	/**METODOS OVERRIDE*/
 	@Override
