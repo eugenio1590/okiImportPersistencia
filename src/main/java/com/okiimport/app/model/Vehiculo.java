@@ -75,6 +75,20 @@ public class Vehiculo extends AbstractEntity implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 	
+	public String determinarTransmision(){
+		String texto = null;
+		if(transmision!=null)
+			texto = (transmision) ? "Automático" : "Sincrónico";
+		return texto;
+	}
+	
+	public String determinarTraccion(){
+		String texto = null;
+		if(traccion!=null)
+			texto = (traccion) ? "4x2" : "4x4";
+		return texto;
+	}
+	
 	public Vehiculo(Cliente cliente){
 		this.cliente = cliente;
 	}
