@@ -37,6 +37,7 @@ import com.okiimport.app.dao.transaccion.impl.RequerimientoDAO;
 import com.okiimport.app.dao.transaccion.impl.detalle.cotizacion.DetalleCotizacionDAO;
 import com.okiimport.app.dao.transaccion.impl.detalle.oferta.DetalleOfertaDAO;
 import com.okiimport.app.model.Analista;
+import com.okiimport.app.model.Cliente;
 import com.okiimport.app.model.Compra;
 import com.okiimport.app.model.Configuracion;
 import com.okiimport.app.model.Cotizacion;
@@ -96,9 +97,6 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	private OrdenCompraRepository ordenCompraRepository;
 	
 	@Autowired
-	private PagoClienteRepository pagoRepository;
-	
-	@Autowired
 	private DepositoRepository depositoRepository;
 	
 	@Autowired
@@ -108,6 +106,9 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	private VehiculoRepository vehiculoRepository;
 	
 	private SControlConfiguracion sControlConfiguracion;
+	
+	@Autowired
+	private SMaestros sMaestros;
 
 	public STransaccionImpl() {
 		super();
@@ -795,6 +796,34 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		return parametros;
 	}
 	
+	public Map<String, Object> consultarComprasDelCliente(String cedula, String fieldSort, Boolean sortDirection,
+			int page, int limit) {
+		Map<String, Object> parametros = new HashMap<String, Object>();
+//		Integer total = 0;
+		List<Compra> compras = null;
+		Cliente c = null;
+		//Sort sortCompra = new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idCompra"));
+		c = sMaestros.consultarCliente(new Cliente(cedula));
+		System.out.println("******* SERVICE ********");
+		System.out.println("C_-> "+c.getCedula());
+		if(c != null){
+			Page<Compra> pageCompra = this.compraRepository.findByRequerimientoClienteAndEstatus(c, EEstatusCompra.EN_ESPERA, new PageRequest(page, limit));
+			compras = pageCompra.getContent();
+			if(compras.size() > 0){
+				System.out.println("compras.size() -> "+compras.size());
+				parametros.put("total", Long.valueOf((pageCompra!=null) ? pageCompra.getTotalElements():0).intValue());
+				parametros.put("compras", compras);
+			}
+			else {
+				System.out.println("Compras en cero...");
+				parametros.put("total", 0);
+				parametros.put("compras", new ArrayList<Compra>());
+			}
+		}
+		
+		return parametros;
+	}
+	
 	public Compra registrarOActualizarCompra(Compra compra){			
 		return compra=this.compraRepository.save(compra);
 	}
@@ -900,35 +929,34 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
     }
 	
 	// PAGOS
-		@Override
-		public Map<String, Object> consultarPagosClientes(PagoCliente pagoFiltro,  String fieldSort, Boolean sortDirection, 
-				 int page, int limit) {
-			Map<String, Object> parametros = new HashMap<String, Object>();
-			Integer total = 0;
-			List<PagoCliente> pagoClientes = null;
-			Sort sortPagosCliente = new Sort(getDirection(sortDirection,
-					Sort.Direction.ASC), getFieldSort(fieldSort, "id"));
-			Specification<PagoCliente> specfPagoCliente = (new PagoClienteDAO())
-					.consultarPagoCliente(pagoFiltro);
-			if (limit > 0) {
-				Page<PagoCliente> pagePagoCliente = this.pagoClienteRepository
-						.findAll(specfPagoCliente, new PageRequest(page, limit,sortPagosCliente));
-				total = Long.valueOf(pagePagoCliente.getTotalElements()).intValue();
-				pagoClientes = pagePagoCliente.getContent();
-			} else {
-				pagoClientes = this.pagoClienteRepository.findAll(specfPagoCliente,sortPagosCliente);
-				total = pagoClientes.size();
-			}
-			parametros.put("total", total);
-			parametros.put("pagoClientes", pagoClientes);
-			return parametros;
+	@Override
+	public Map<String, Object> consultarPagosClientes(PagoCliente pagoFiltro,  String fieldSort, Boolean sortDirection, 
+			 int page, int limit) {
+		Map<String, Object> parametros = new HashMap<String, Object>();
+		Integer total = 0;
+		List<PagoCliente> pagoClientes = null;
+		Sort sortPagosCliente = new Sort(getDirection(sortDirection,
+				Sort.Direction.ASC), getFieldSort(fieldSort, "id"));
+		Specification<PagoCliente> specfPagoCliente = (new PagoClienteDAO())
+				.consultarPagoCliente(pagoFiltro);
+		if (limit > 0) {
+			Page<PagoCliente> pagePagoCliente = this.pagoClienteRepository
+					.findAll(specfPagoCliente, new PageRequest(page, limit,sortPagosCliente));
+			total = Long.valueOf(pagePagoCliente.getTotalElements()).intValue();
+			pagoClientes = pagePagoCliente.getContent();
+		} else {
+			pagoClientes = this.pagoClienteRepository.findAll(specfPagoCliente,sortPagosCliente);
+			total = pagoClientes.size();
 		}
+		parametros.put("total", total);
+		parametros.put("pagoClientes", pagoClientes);
+		return parametros;
+	}
 		
-		//VEHICULOS
-		public Vehiculo actualizarVehiculo(Vehiculo vehiculo){
-			return this.vehiculoRepository.save(vehiculo);
-		}
-		
+	//VEHICULOS
+	public Vehiculo actualizarVehiculo(Vehiculo vehiculo){
+		return this.vehiculoRepository.save(vehiculo);
+	}
 	
 	/**METODOS PROPIOS DE LA CLASE*/
 	private void llenarNroOfertas(List<Requerimiento> requerimientos){

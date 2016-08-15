@@ -159,6 +159,10 @@ public interface STransaccion {
 	Map<String, Object> consultarComprasPorRequerimiento(Compra compraF, int idRequerimiento, String fieldSort, Boolean sortDirection,
 			int pagina, int limite);
 	
+	@Transactional(readOnly=true)
+	Map<String, Object> consultarComprasDelCliente(String cedula, String fieldSort, Boolean sortDirection,
+			int page, int limit);
+	
 	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
 	Compra registrarOActualizarCompra(Compra compra);
 	

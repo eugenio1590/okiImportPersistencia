@@ -18,6 +18,7 @@ import com.okiimport.app.dao.maestros.CiudadRepository;
 import com.okiimport.app.dao.maestros.ClasificacionRepuestoRepository;
 import com.okiimport.app.dao.maestros.ClienteRepository;
 import com.okiimport.app.dao.maestros.EstadoRepository;
+import com.okiimport.app.dao.maestros.FormaPagoRepository;
 import com.okiimport.app.dao.maestros.MarcaVehiculoRepository;
 import com.okiimport.app.dao.maestros.MotorRepository;
 import com.okiimport.app.dao.maestros.PaisRepository;
@@ -37,6 +38,7 @@ import com.okiimport.app.model.ClasificacionRepuesto;
 import com.okiimport.app.model.Cliente;
 import com.okiimport.app.model.Estado;
 import com.okiimport.app.model.HistoricoMoneda;
+import com.okiimport.app.model.FormaPago;
 import com.okiimport.app.model.MarcaVehiculo;
 import com.okiimport.app.model.Moneda;
 import com.okiimport.app.model.Motor;
@@ -45,6 +47,7 @@ import com.okiimport.app.model.Persona;
 import com.okiimport.app.model.Proveedor;
 import com.okiimport.app.model.Requerimiento;
 import com.okiimport.app.model.Vehiculo;
+import com.okiimport.app.model.enumerados.EEstatusFormaPago;
 import com.okiimport.app.model.enumerados.EEstatusGeneral;
 import com.okiimport.app.model.enumerados.EEstatusRequerimiento;
 import com.okiimport.app.resource.service.AbstractServiceImpl;
@@ -54,6 +57,9 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 
 	@Autowired
 	private MarcaVehiculoRepository marcaVehiculoRepository;
+	
+	@Autowired
+	private FormaPagoRepository formaPagoRepository;
 
 	@Autowired
 	private EstadoRepository estadoRepository;
@@ -137,6 +143,28 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 		Parametros.put("total", total);
 		Parametros.put("marcas", marcasVehiculo);
 		return Parametros;
+	}
+	
+	// Formas de pago
+	public Map<String, Object> consultarFormasPago(int page, int limit) {
+			Map<String, Object> Parametros = new HashMap<String, Object>();
+			Integer total = 0;
+			List<FormaPago> formas = null;
+			if (limit > 0) {
+				Page<FormaPago> pageformas = this.formaPagoRepository
+						.findByEstatus(EEstatusFormaPago.ACTIVO, new PageRequest(
+								page, limit));
+				total = Long.valueOf(pageformas.getTotalElements())
+						.intValue();
+				formas = pageformas.getContent();
+			} else {
+				formas = this.formaPagoRepository
+						.findByEstatus(EEstatusFormaPago.ACTIVO);
+				total = formas.size();
+			}
+			Parametros.put("total", total);
+			Parametros.put("formasPago", formas);
+			return Parametros;
 	}
 
 	public MarcaVehiculo registrarMarca(MarcaVehiculo marca) {
@@ -246,7 +274,7 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 		}
 
 	}
-
+	
 	// Analista
 	public Map<String, Object> consultarAnalistasSinUsuarios(Persona personaF,
 			String fieldSort, Boolean sortDirection, int pagina, int limit) {

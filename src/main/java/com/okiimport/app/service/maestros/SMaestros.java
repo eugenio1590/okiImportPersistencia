@@ -35,6 +35,10 @@ public interface SMaestros {
 	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
 	MarcaVehiculo registrarMarca(MarcaVehiculo marca);
 	
+	//Formas de pago
+	@Transactional(readOnly=true)
+	Map<String,Object> consultarFormasPago(int page, int limit);
+	
 	//Estados
 	@Transactional(readOnly=true)
 	Map<String,Object> consultarEstados(int page, int limit);
