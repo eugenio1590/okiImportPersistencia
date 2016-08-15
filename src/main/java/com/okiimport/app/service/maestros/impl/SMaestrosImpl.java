@@ -223,7 +223,7 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 			return clientes.get(0);
 		return null;
 	}
-
+	
 	// Analista
 	public Map<String, Object> consultarAnalistasSinUsuarios(Persona personaF,
 			String fieldSort, Boolean sortDirection, int pagina, int limit) {

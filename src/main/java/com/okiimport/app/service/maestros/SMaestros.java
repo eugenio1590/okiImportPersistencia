@@ -51,7 +51,7 @@ public interface SMaestros {
 	
 	@Transactional(readOnly=true)
 	Cliente consultarCliente(Cliente cliente);
-
+	
 	//Analistas
 	@Transactional(readOnly=true)
 	Map<String, Object> consultarAnalistasSinUsuarios(Persona personaF,  String fieldSort, Boolean sortDirection, 

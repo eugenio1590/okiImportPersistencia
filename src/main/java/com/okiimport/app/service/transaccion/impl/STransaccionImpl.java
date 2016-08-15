@@ -34,6 +34,7 @@ import com.okiimport.app.dao.transaccion.impl.OrdenCompraDAO;
 import com.okiimport.app.dao.transaccion.impl.RequerimientoDAO;
 import com.okiimport.app.dao.transaccion.impl.detalle.cotizacion.DetalleCotizacionDAO;
 import com.okiimport.app.model.Analista;
+import com.okiimport.app.model.Cliente;
 import com.okiimport.app.model.Compra;
 import com.okiimport.app.model.Configuracion;
 import com.okiimport.app.model.Cotizacion;
@@ -98,6 +99,9 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	private PagoClienteRepository pagoClienteRepository;
 	
 	private SControlConfiguracion sControlConfiguracion;
+	
+	@Autowired
+	private SMaestros sMaestros;
 
 	public STransaccionImpl() {
 		super();
@@ -713,6 +717,34 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		
 		parametros.put("total", total);
 		parametros.put("compras", compras);
+		return parametros;
+	}
+	
+	public Map<String, Object> consultarComprasDelCliente(String cedula, String fieldSort, Boolean sortDirection,
+			int page, int limit) {
+		Map<String, Object> parametros = new HashMap<String, Object>();
+//		Integer total = 0;
+		List<Compra> compras = null;
+		Cliente c = null;
+		//Sort sortCompra = new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idCompra"));
+		c = sMaestros.consultarCliente(new Cliente(cedula));
+		System.out.println("******* SERVICE ********");
+		System.out.println("C_-> "+c.getCedula());
+		if(c != null){
+			Page<Compra> pageCompra = this.compraRepository.findByRequerimientoClienteAndEstatus(c, EEstatusCompra.EN_ESPERA, new PageRequest(page, limit));
+			compras = pageCompra.getContent();
+			if(compras.size() > 0){
+				System.out.println("compras.size() -> "+compras.size());
+				parametros.put("total", Long.valueOf((pageCompra!=null) ? pageCompra.getTotalElements():0).intValue());
+				parametros.put("compras", compras);
+			}
+			else {
+				System.out.println("Compras en cero...");
+				parametros.put("total", 0);
+				parametros.put("compras", new ArrayList<Compra>());
+			}
+		}
+		
 		return parametros;
 	}
 	
