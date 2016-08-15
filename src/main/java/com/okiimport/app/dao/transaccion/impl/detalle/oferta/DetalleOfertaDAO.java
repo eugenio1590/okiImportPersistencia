@@ -11,15 +11,18 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.Query;
 
 import org.springframework.data.jpa.domain.Specification;
 
 import com.okiimport.app.model.DetalleOferta;
 import com.okiimport.app.model.DetalleRequerimiento;
+import com.okiimport.app.model.enumerados.EEstatusCotizacion;
 import com.okiimport.app.resource.dao.AbstractJpaDao;
 
 public class DetalleOfertaDAO extends AbstractJpaDao<DetalleOferta>{
 
+	
 	public Specification<DetalleOferta> consultarDetallesOferta(final Integer idOferta, final List<DetalleRequerimiento> detallesRequerimiento){
 		return new Specification<DetalleOferta>(){
 
@@ -51,6 +54,40 @@ public class DetalleOfertaDAO extends AbstractJpaDao<DetalleOferta>{
 				
 				// 3. Ejecutamos
 				return crearPredicate(restricciones);
+			}
+			
+		};
+	}
+
+	public Specification<DetalleOferta> consultarDetallesOfertaInShoppingCar(final Integer idCliente){
+		return new Specification<DetalleOferta>(){
+
+			@Override
+			public Predicate toPredicate(Root<DetalleOferta> entity, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+				// 1. Inicializar Variables
+				inicializar(entity, criteriaQuery, criteriaBuilder);
+				
+				// 2. Generamos los Joins
+				Map<String, JoinType> entidades = new HashMap<String, JoinType>();
+				entidades.put("detalleCotizacion", JoinType.INNER);
+
+				Map<String, Join<?,?>> joins = crearJoins(entidades);
+				
+				criteriaQuery.distinct(true);
+				
+				// 3. Creamos las Restricciones de la busqueda
+				List<Predicate> restricciones = new ArrayList<Predicate>();
+				Join<?,?> joinCliente = joins.get("detalleCotizacion").join("detalleRequerimiento").join("requerimiento").join("cliente");
+
+				if(idCliente!=null)
+					restricciones.add(criteriaBuilder.equal(joinCliente.get("id"),idCliente));
+		
+				restricciones.add(entity.get("estatusFavorito").in(true));
+				
+				// 3. Ejecutamos
+				return crearPredicate(restricciones);
+				
+				
 			}
 			
 		};

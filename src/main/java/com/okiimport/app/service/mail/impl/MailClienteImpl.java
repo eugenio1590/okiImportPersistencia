@@ -1,9 +1,13 @@
 package com.okiimport.app.service.mail.impl;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.okiimport.app.model.Cliente;
+import com.okiimport.app.model.Compra;
+import com.okiimport.app.model.DetalleOferta;
 import com.okiimport.app.model.Requerimiento;
 import com.okiimport.app.service.mail.MailCliente;
 import com.okiimport.app.service.mail.MailService;
@@ -64,6 +68,38 @@ public class MailClienteImpl extends AbstractMailImpl implements MailCliente {
 
 					mailService.send(cliente.getCorreo(), "Tiene una Cotizacion en su Requerimiento Nro. "+requerimiento.getIdRequerimiento(),
 							"enviarCotizacionCliente.html", model);
+				}
+				catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+	
+	public void enviarInformacionCompra(final Compra compra, final MailService mailService) {
+		super.sendMail(new Runnable(){
+			@Override
+			public void run() {
+				try {
+					final Cliente cliente = compra.getRequerimiento().getCliente();
+					final Requerimiento req = compra.getRequerimiento();
+					final Map<String, Object> model = new HashMap<String, Object>();
+					final List<DetalleOferta> detalles = compra.getDetalleOfertas();
+					Double monto = 0.00;
+					for(DetalleOferta detalle: detalles){
+						monto+= detalle.calcularPrecioVentaUnit() * detalle.getCantidadSeleccionada();
+					}
+					
+					DecimalFormat myFormatter = new DecimalFormat("###.##");
+					String montoFormated = myFormatter.format(monto);
+					model.put("cliente", cliente);
+					model.put("compra", compra);
+					model.put("monto", montoFormated);
+					model.put("requerimiento", req);
+					model.put("fecha", dateFormat.format(calendar.getTime()));
+
+					mailService.send(cliente.getCorreo(), "Nro Compra #"+compra.getIdCompra(),
+							"enviarInfoCompra.html", model);
 				}
 				catch(Exception e){
 					e.printStackTrace();
