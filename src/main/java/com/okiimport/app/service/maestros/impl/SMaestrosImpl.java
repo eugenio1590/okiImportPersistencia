@@ -642,23 +642,46 @@ public class SMaestrosImpl extends AbstractServiceImpl implements SMaestros {
 	
 	//Vehiculos
 	@Override
-	public Map<String, Object> consultarVehiculos(Vehiculo vehiculo, int page, int limit){
+	public Map<String, Object> consultarVehiculosPorCliente(Vehiculo vehiculo, int page, int limit){
 		Map<String, Object> parametros = new HashMap<String, Object>();
 		Integer total = 0;
 		List<Vehiculo> vehiculos = null;
+		Sort sortVehiculo = new Sort(Sort.Direction.ASC, "id");
+		Specification<Vehiculo> specfVehiculo = (new VehiculoDAO()).consultarVehiculosPorCliente(vehiculo);
 		if (limit > 0) {
-			Page<Vehiculo> pageVehiculo = this.vehiculoRepository.findByCliente(vehiculo.getCliente(), new PageRequest(page, limit));
+			Page<Vehiculo> pageVehiculo = this.vehiculoRepository
+					.findAll(specfVehiculo, new PageRequest(page, limit,
+							sortVehiculo));
 			total = Long.valueOf(pageVehiculo.getTotalElements()).intValue();
 			vehiculos = pageVehiculo.getContent();
 		} else {
-			vehiculos = this.vehiculoRepository.findByCliente(vehiculo.getCliente());
+			vehiculos = this.vehiculoRepository.findAll(specfVehiculo,
+					sortVehiculo);
 			total = vehiculos.size();
 		}
-		
 		parametros.put("total", total);
 		parametros.put("vehiculos", vehiculos);
 		return parametros;
 	}
+	
+		@Override
+		public Map<String, Object> consultarVehiculos(Vehiculo vehiculo, int page, int limit){
+			Map<String, Object> parametros = new HashMap<String, Object>();
+			Integer total = 0;
+			List<Vehiculo> vehiculos = null;
+			if (limit > 0) {
+				Page<Vehiculo> pageVehiculo = this.vehiculoRepository.findByCliente(vehiculo.getCliente(), new PageRequest(page, limit));
+				total = Long.valueOf(pageVehiculo.getTotalElements()).intValue();
+				vehiculos = pageVehiculo.getContent();
+			} else {
+				vehiculos = this.vehiculoRepository.findByCliente(vehiculo.getCliente());
+				total = vehiculos.size();
+			}
+			
+			parametros.put("total", total);
+			parametros.put("vehiculos", vehiculos);
+			return parametros;
+		}
 	
 	@Override
 	public Vehiculo registrarVehiculo(Vehiculo vehiculo){

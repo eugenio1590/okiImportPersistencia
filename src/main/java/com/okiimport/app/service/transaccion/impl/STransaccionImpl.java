@@ -804,8 +804,8 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 		Cliente c = null;
 		//Sort sortCompra = new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idCompra"));
 		c = sMaestros.consultarCliente(new Cliente(cedula));
-		System.out.println("******* SERVICE ********");
-		System.out.println("C_-> "+c.getCedula());
+		//System.out.println("******* SERVICE ********");
+		//System.out.println("C_-> "+c.getCedula());
 		if(c != null){
 			Page<Compra> pageCompra = this.compraRepository.findByRequerimientoClienteAndEstatus(c, EEstatusCompra.EN_ESPERA, new PageRequest(page, limit));
 			compras = pageCompra.getContent();
