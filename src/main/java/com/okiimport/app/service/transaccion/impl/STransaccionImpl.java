@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
+import com.okiimport.app.dao.maestros.ClienteRepository;
 import com.okiimport.app.dao.maestros.DepositoRepository;
 import com.okiimport.app.dao.maestros.VehiculoRepository;
 import com.okiimport.app.dao.pago.PagoClienteRepository;
@@ -104,6 +105,9 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	
 	@Autowired
 	private VehiculoRepository vehiculoRepository;
+	
+	@Autowired
+	private ClienteRepository clienteRepository;
 	
 	private SControlConfiguracion sControlConfiguracion;
 	
@@ -799,26 +803,26 @@ public class STransaccionImpl extends AbstractServiceImpl implements STransaccio
 	public Map<String, Object> consultarComprasDelCliente(String cedula, String fieldSort, Boolean sortDirection,
 			int page, int limit) {
 		Map<String, Object> parametros = new HashMap<String, Object>();
-//		Integer total = 0;
 		List<Compra> compras = null;
 		Cliente c = null;
-		//Sort sortCompra = new Sort(getDirection(sortDirection, Sort.Direction.ASC), getFieldSort(fieldSort, "idCompra"));
-		c = sMaestros.consultarCliente(new Cliente(cedula));
-		//System.out.println("******* SERVICE ********");
-		//System.out.println("C_-> "+c.getCedula());
+		c = this.clienteRepository.findByCedula(cedula);
+
 		if(c != null){
 			Page<Compra> pageCompra = this.compraRepository.findByRequerimientoClienteAndEstatus(c, EEstatusCompra.EN_ESPERA, new PageRequest(page, limit));
 			compras = pageCompra.getContent();
 			if(compras.size() > 0){
-				System.out.println("compras.size() -> "+compras.size());
+				//System.out.println("compras.size() -> "+compras.size());
 				parametros.put("total", Long.valueOf((pageCompra!=null) ? pageCompra.getTotalElements():0).intValue());
 				parametros.put("compras", compras);
 			}
 			else {
-				System.out.println("Compras en cero...");
+				//System.out.println("Compras en cero...");
 				parametros.put("total", 0);
 				parametros.put("compras", new ArrayList<Compra>());
 			}
+		} else {
+			parametros.put("total", 0);
+			parametros.put("compras", new ArrayList<Compra>());
 		}
 		
 		return parametros;
