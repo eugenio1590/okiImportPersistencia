@@ -78,7 +78,7 @@ public class Vehiculo extends AbstractEntity implements Serializable {
 	public String determinarTransmision(){
 		String texto = null;
 		if(transmision!=null)
-			texto = (transmision) ? "Automático" : "Sincrónico";
+			texto = (transmision) ? "Automatico" : "Sincronico";
 		return texto;
 	}
 	
