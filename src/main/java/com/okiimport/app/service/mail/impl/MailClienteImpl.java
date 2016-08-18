@@ -11,6 +11,7 @@ import com.okiimport.app.model.DetalleOferta;
 import com.okiimport.app.model.Requerimiento;
 import com.okiimport.app.service.mail.MailCliente;
 import com.okiimport.app.service.mail.MailService;
+import com.okiimport.app.service.transaccion.STransaccion;
 
 public class MailClienteImpl extends AbstractMailImpl implements MailCliente {
 
@@ -84,12 +85,8 @@ public class MailClienteImpl extends AbstractMailImpl implements MailCliente {
 					final Cliente cliente = compra.getRequerimiento().getCliente();
 					final Requerimiento req = compra.getRequerimiento();
 					final Map<String, Object> model = new HashMap<String, Object>();
-					final List<DetalleOferta> detalles = compra.getDetalleOfertas();
-					Double monto = 0.00;
-					for(DetalleOferta detalle: detalles){
-						monto+= detalle.calcularPrecioVentaUnit() * detalle.getCantidadSeleccionada();
-					}
-					
+					float monto = compra.getPrecioVenta();
+										
 					DecimalFormat myFormatter = new DecimalFormat("###.##");
 					String montoFormated = myFormatter.format(monto);
 					model.put("cliente", cliente);
