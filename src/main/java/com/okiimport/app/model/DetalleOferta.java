@@ -182,10 +182,12 @@ public class DetalleOferta extends AbstractEntity implements Serializable{
 	public Float calcularPrecioVentaSinFlete(){
 		Float costo = (float) 0;
 		if(this.cantidadSeleccionada>0)
-		   costo=this.detalleCotizacion.getPrecioVenta()*this.cantidadSeleccionada;
-		Float porctGanancia = this.oferta.getPorctGanancia();
-		Float porctIva=this.oferta.getPorctIva();
-		return (porctGanancia!=0) ? (costo*(1+porctIva)/(1-porctGanancia)) : new Float(0);
+			costo=calcularPrecioVenta()*this.cantidadSeleccionada;
+		return costo;
+		  // costo=this.detalleCotizacion.getPrecioVenta()*this.cantidadSeleccionada;
+		//Float porctGanancia = this.oferta.getPorctGanancia();
+		//Float porctIva=this.oferta.getPorctIva();
+		//return (porctGanancia!=0) ? (costo*(1+porctIva)/(1-porctGanancia)) : new Float(0);
 	}
 	
 	public Float calcularPrecioVentaConverter(){
