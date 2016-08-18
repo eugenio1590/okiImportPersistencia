@@ -271,11 +271,13 @@ public class RequerimientoDAO extends AbstractJpaDao<Requerimiento> {
 				//Cliente
 				Cliente cliente = regFiltro.getCliente();
 				if (cliente != null && joins.get("cliente") != null) {
-					if (cliente.getNombre() != null)
+					if (cliente.getNombre() != null){
 						restricciones.add(this.criteriaBuilder.like(
 								this.criteriaBuilder.lower(joins.get("cliente").get("nombre").as(String.class)),
 								"%"+ String.valueOf(cliente.getNombre()).toLowerCase() + "%"));
+					}
 				}
+				
 				
 				//Analista
 				Analista analista = regFiltro.getAnalista();
